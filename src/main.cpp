@@ -7,12 +7,16 @@
 #include <glm/ext/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
 
-
-#include "shader.h"
+#include <vector>
 #include "Camera.h"
 #include "VAO.h"
 #include "VBO.h"
 #include "EBO.h"
+using glm::mat4;
+using glm::vec3;
+using glm::radians;
+using glm::lookAt;
+using std::vector;
 
 Camera camera(glm::vec3(0.0f, 0.0f, 3.0f));
 
@@ -33,6 +37,106 @@ void mouse_callback(GLFWwindow* window, double xposIn, double yposIn);
 void scroll_callback(GLFWwindow* window, double xoffset, double yoffset);
 
 
+class Line {
+    int shaderProgram;
+    unsigned int VBO, VAO;
+    vector<float> vertices;
+    vec3 startPoint;
+    vec3 endPoint;
+    mat4 MVP = mat4(1.0);
+    vec3 lineColor;
+public:
+    Line(vec3 start, vec3 end) {
+
+        startPoint = start;
+        endPoint = end;
+        lineColor = vec3(1,1,1);
+
+        const char *vertexShaderSource = "#version 330 core\n"
+                                         "layout (location = 0) in vec3 aPos;\n"
+                                         "uniform mat4 MVP;\n"
+                                         "void main()\n"
+                                         "{\n"
+                                         "   gl_Position = MVP * vec4(aPos.x, aPos.y, aPos.z, 1.0);\n"
+                                         "}\0";
+        const char *fragmentShaderSource = "#version 330 core\n"
+                                           "out vec4 FragColor;\n"
+                                           "uniform vec3 color;\n"
+                                           "void main()\n"
+                                           "{\n"
+                                           "   FragColor = vec4(color, 1.0f);\n"
+                                           "}\n\0";
+
+        // vertex shader
+        int vertexShader = glCreateShader(GL_VERTEX_SHADER);
+        glShaderSource(vertexShader, 1, &vertexShaderSource, NULL);
+        glCompileShader(vertexShader);
+        // check for shader compile errors
+
+        // fragment shader
+        int fragmentShader = glCreateShader(GL_FRAGMENT_SHADER);
+        glShaderSource(fragmentShader, 1, &fragmentShaderSource, NULL);
+        glCompileShader(fragmentShader);
+        // check for shader compile errors
+
+        // link shaders
+        shaderProgram = glCreateProgram();
+        glAttachShader(shaderProgram, vertexShader);
+        glAttachShader(shaderProgram, fragmentShader);
+        glLinkProgram(shaderProgram);
+        // check for linking errors
+
+        glDeleteShader(vertexShader);
+        glDeleteShader(fragmentShader);
+
+        vertices = {
+                start.x, start.y, start.z,
+                end.x, end.y, end.z,
+
+        };
+
+        glGenVertexArrays(1, &VAO);
+        glGenBuffers(1, &VBO);
+        glBindVertexArray(VAO);
+
+        glBindBuffer(GL_ARRAY_BUFFER, VBO);
+        glBufferData(GL_ARRAY_BUFFER, sizeof(vertices)*vertices.size(), vertices.data(), GL_STATIC_DRAW);
+
+        glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*)0);
+        glEnableVertexAttribArray(0);
+
+        glBindBuffer(GL_ARRAY_BUFFER, 0);
+        glBindVertexArray(0);
+
+    }
+
+    int setMVP(mat4 mvp) {
+        MVP = mvp;
+        return 1;
+    }
+
+    int setColor(vec3 color) {
+        lineColor = color;
+        return 1;
+    }
+
+    int draw() {
+        glUseProgram(shaderProgram);
+
+        glUniformMatrix4fv(glGetUniformLocation(shaderProgram, "MVP"), 1, GL_FALSE, &MVP[0][0]);
+        glUniform3fv(glGetUniformLocation(shaderProgram, "color"), 1, &lineColor[0]);
+
+        glBindVertexArray(VAO);
+        glDrawArrays(GL_LINES, 0, 2);
+        return 1;
+    }
+
+    ~Line() {
+        glDeleteVertexArrays(1, &VAO);
+        glDeleteBuffers(1, &VBO);
+        glDeleteProgram(shaderProgram);
+    }
+};
 int main() {
 	glfwInit();
 
@@ -60,7 +164,16 @@ int main() {
 	}
 
 	glEnable(GL_DEPTH_TEST);
-	
+
+    // 3d lines example
+    Line line1(vec3(0,0,0), vec3(1,0,0));
+    line1.setColor(vec3(1,0,0));
+    Line line2(vec3(0,0,0), vec3(0,1,0));
+    line2.setColor(vec3(0,1,0));
+    Line line3(vec3(0,0,0), vec3(0,0,1));
+    line3.setColor(vec3(0,0,1));
+    glm::mat4 projection = glm::perspective(glm::radians(45.0f), (float) WIDTH / (float)HEIGHT, 0.1f, 100.0f);
+
 
 	Shader shaders(vertShaderPath,fragShaderPath); //TODO: read from another directory
 	float vertices[] = {
@@ -113,7 +226,7 @@ int main() {
 
 	glm::vec3 cubePositions[] = {
 	   glm::vec3(0.0f,  0.0f,  0.0f),
-	   glm::vec3(2.0f,  5.0f, -15.0f),
+	   glm::vec3(2.0f,  5.0f, -100.0f),
 	   glm::vec3(-1.5f, -2.2f, -2.5f),
 	   glm::vec3(-3.8f, -2.0f, -12.3f),
 	   glm::vec3(2.4f, -0.4f, -3.5f),
@@ -135,12 +248,6 @@ int main() {
 	VAO1.unBindVAO();
 	VBO1.unBindVBO();
 	EBO1.unBindEBO();
-
-	//float texCoords[] = {
-	//	0.0f, 0.0f,  // lower-left corner  
-	//	1.0f, 0.0f,  // lower-right corner
-	//	0.5f, 1.0f   // top-center corner
-	//};
 	unsigned int texture1;
 	glGenTextures(1, &texture1);
 	glBindTexture(GL_TEXTURE_2D, texture1);
@@ -182,20 +289,6 @@ int main() {
 	shaders.use();
 	shaders.setInt("texture1", 0);
 	shaders.setInt("texture2", 1);
-
-
-	//init ImGui
-	//IMGUI_CHECKVERSION();
-	//ImGui::CreateContext();
-
-	//ImGuiIO& io = ImGui::GetIO(); (void)io;
-	//ImGui::StyleColorsDark();
-	//ImGui_ImplGlfw_InitForOpenGL(window, true);
-	//ImGui_ImplOpenGL3_Init("#version 330");
-
-	//glPolygonMode(GL_Fromt_AND_BACK, GL_LINE);
-
-	//Main Loop
 	while (!glfwWindowShouldClose(window)) 
 	{
 
@@ -215,11 +308,6 @@ int main() {
 		glBindTexture(GL_TEXTURE_2D, texture1);
 		glActiveTexture(GL_TEXTURE1);
 		glBindTexture(GL_TEXTURE_2D, texture2);
-
-	//ImGui_ImplOpenGL3_NewFrame();
-	//ImGui_ImplGlfw_NewFrame();
-	//ImGui::NewFrame();
-
 		shaders.use();
 
 		glm::mat4 projection = glm::perspective(glm::radians(camera.Zoom), (float)WIDTH / (float)HEIGHT, 0.1f, 100.0f);
@@ -240,40 +328,24 @@ int main() {
 
 			glDrawArrays(GL_TRIANGLES, 0, 36);
 		}
+        line1.setMVP(projection * view);
+        line2.setMVP(projection * view);
+        line3.setMVP(projection * view);
 
-		//unsigned int transformLoc = glGetUniformLocation(shaders.ID, "transform");
-		//glUniformMatrix4fv(transformLoc, 1, GL_FALSE, glm::value_ptr(transform));
-
-		//glDrawElements(GL_TRIANGLES,36,GL_UNSIGNED_INT,0);
-
-	//glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
-
-	
-	//ImGui::Begin("I'm ImGui");
-	//ImGui::Text("Hello Triangle");
-	//ImGui::End();
-
-	/*ImGui::Render();
-	ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());*/
+        line1.draw();
+        line2.draw();
+        line3.draw();
 
 		glfwSwapBuffers(window);
 		glfwPollEvents();
 	}
 
-	/*ImGui_ImplOpenGL3_Shutdown();
-	ImGui_ImplGlfw_Shutdown();
-	ImGui::DestroyContext();*/
-
 	VAO1.deleteVAO();
 	VBO1.deleteVBO();
 	EBO1.deleteEBO();
 	shaders.del();
-	
-	//glDeleteVertexArrays(1, &VAO);
-	//glDeleteBuffers(1, &VBO);
-	//glDeleteBuffers(1, &EBO);
 
-	//glfwDestroyWindow(window);
+	glfwDestroyWindow(window);
 	glfwTerminate();
 	return 0;
 }
