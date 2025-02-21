@@ -54,7 +54,7 @@ int main() {
     glfwSetCursorPosCallback(window, mouse_callback);
     glfwSetScrollCallback(window, scroll_callback);
 
-    glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
+    glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_NORMAL);
 
     if (!gladLoadGLLoader((GLADloadproc) glfwGetProcAddress)) {
         std::cout << "Failed to initialize GLAD" << std::endl;
@@ -214,8 +214,7 @@ int main() {
 
         VAO1.bindVAO();
         for (unsigned int i = 0; i < 10; i++) {
-            // calculate the model matrix for each object and pass it to shader before drawing
-            glm::mat4 model = glm::mat4(1.0f); // make sure to initialize matrix to identity matrix first
+            glm::mat4 model = glm::mat4(1.0f);
             model = glm::translate(model, cubePositions[i]);
             float angle = 20.0f * i;
             model = glm::rotate(model, glm::radians(angle), glm::vec3(1.0f, 0.3f, 0.5f));
@@ -254,19 +253,20 @@ void processInput(GLFWwindow *window) {
     if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS) {
         glfwSetWindowShouldClose(window, true);
     }
-
-    if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS)
-        camera.ProcessKeyboard(FORWARD, deltaTime);
-    if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS)
-        camera.ProcessKeyboard(BACKWARD, deltaTime);
-    if (glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS)
-        camera.ProcessKeyboard(LEFT, deltaTime);
-    if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS)
-        camera.ProcessKeyboard(RIGHT, deltaTime);
+//    if (glfwGetMouseButton(window, GLFW_MOUSE_BUTTON_MIDDLE)) {
+////        if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS)
+////            camera.ProcessMovement(UP, deltaTime);
+////        if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS)
+////            camera.ProcessMovement(DOWN, deltaTime);
+////        if (glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS)
+////            camera.ProcessMovement(LEFT, deltaTime);
+////        if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS)
+////            camera.ProcessMovement(RIGHT, deltaTime);
+//
+//    }
 }
 
 void mouse_callback(GLFWwindow *window, double xposIn, double yposIn) {
-
 
     float xpos = static_cast<float>(xposIn);
     float ypos = static_cast<float>(yposIn);
@@ -278,12 +278,28 @@ void mouse_callback(GLFWwindow *window, double xposIn, double yposIn) {
     }
 
     float xoffset = xpos - lastX;
-    float yoffset = lastY - ypos; // reversed since y-coordinates go from bottom to top
+    float yoffset = lastY - ypos;
 
+    if (glfwGetMouseButton(window, GLFW_MOUSE_BUTTON_MIDDLE)) {
+        if (abs(xoffset) > 1.0f) {
+            if (lastX < xpos)
+                camera.ProcessMovement(deltaTime, LEFT);
+            if (lastX > xpos)
+                camera.ProcessMovement(deltaTime, RIGHT);
+        }
+        if (abs(yoffset) > 1.0f) {
+            if (lastY < ypos)
+                camera.ProcessMovement(deltaTime, UP);
+            if (lastY > ypos)
+                camera.ProcessMovement(deltaTime, DOWN);
+        }
+    }
     lastX = xpos;
     lastY = ypos;
 
-    camera.ProcessMouseMovement(xoffset, yoffset);
+    if (glfwGetMouseButton(window, GLFW_MOUSE_BUTTON_RIGHT)) {
+        camera.ProcessMouseRotation(xoffset, yoffset);
+    }
 
 }
 

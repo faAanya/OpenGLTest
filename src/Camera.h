@@ -6,8 +6,8 @@
 #include <glm/gtc/matrix_transform.hpp>
 
 enum CAMERA_MOVEMENT {
-	FORWARD,
-	BACKWARD,
+	UP,
+	DOWN,
 	LEFT,
 	RIGHT
 };
@@ -16,9 +16,13 @@ enum CAMERA_MOVEMENT {
 
 const float YAW = -90.0f;
 const float PITCH = 0.0f;
-const float SPEED = 2.5f;
+const float SPEED = 15.0f;
+const float ZOOM_SPEED = 5.0f;
 const float SENSITIVITY = 0.1f;
 const float ZOOM = 45.0f;
+
+const float MAX_ZOOM = 450.0f;
+const float MIN_ZOOM = 1;
 
 class Camera {
 public:
@@ -38,6 +42,7 @@ public:
 	Camera(glm::vec3 position = glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3 up = glm::vec3(0.0f, 1.0f, 0.0f), float yaw = YAW, float pitch = PITCH) : Front(glm::vec3(0.0f, 0.0f, -1.0f)), MovementSpeed(SPEED), MouseSensitivity(SENSITIVITY), Zoom(ZOOM) {
 		Position = position;
 		WorldUp = up;
+        Up = up;
 		Yaw = yaw;
 		Pitch = pitch;
 		updateCameraVectors();
@@ -56,20 +61,21 @@ public:
 		return glm::lookAt(Position, Position + Front, Up);
 	}
 	
-	void ProcessKeyboard(CAMERA_MOVEMENT direction, float deltaTime)
+	void ProcessMovement(float deltaTime, CAMERA_MOVEMENT direction)
 	{
 		float velocity = MovementSpeed * deltaTime;
-		if (direction == FORWARD)
-			Position += Front * velocity;
-		if (direction == BACKWARD)
-			Position -= Front * velocity;
+
+		if (direction == UP)
+			Position += (Up * velocity);
+		if (direction == DOWN)
+			Position -= (Up * velocity);
 		if (direction == LEFT)
-			Position -= Right * velocity;
+			Position -= (Right * velocity);
 		if (direction == RIGHT)
-			Position += Right * velocity;
+			Position += (Right * velocity);
 	}
 
-	void ProcessMouseMovement(float xoffset, float yoffset, GLboolean constrainPitch = true)
+	void ProcessMouseRotation(float xoffset, float yoffset, GLboolean constrainPitch = true)
 	{
 		xoffset *= MouseSensitivity;
 		yoffset *= MouseSensitivity;
@@ -89,18 +95,17 @@ public:
 
 	void ProcessMouseScroll(float yoffset)
 	{
-		Zoom -= (float)yoffset;
-		if (Zoom < 1.0f)
-			Zoom = 1.0f;
-		if (Zoom > 45.0f)
-			Zoom = 45.0f;
+		Zoom -= (float)yoffset * ZOOM_SPEED;
+		if (Zoom < MIN_ZOOM)
+			Zoom = MIN_ZOOM;
+		if (Zoom > MAX_ZOOM)
+			Zoom = MAX_ZOOM;
 	}
 
 private:
 
 	void updateCameraVectors()
 	{
-
 		glm::vec3 front;
 		front.x = cos(glm::radians(Yaw)) * cos(glm::radians(Pitch));
 		front.y = sin(glm::radians(Pitch));

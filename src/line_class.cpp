@@ -1,5 +1,4 @@
 #include <glad/glad.h>
-#include <iostream>
 #include <GLFW/glfw3.h>
 #include "stb_image.h"
 #include <glm/glm.hpp>
@@ -7,9 +6,7 @@
 
 #include <vector>
 #include "line_class.h"
-#include "VAO.h"
 #include "VBO.h"
-#include "EBO.h"
 
 using glm::mat4;
 using glm::vec3;
