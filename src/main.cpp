@@ -1,18 +1,20 @@
 #include <glad/glad.h>
 #include <iostream>
+#include "imgui.h"
+#include "imgui_impl_glfw.h"
+#include "imgui_impl_opengl3.h"
 #include <GLFW/glfw3.h>
-#include "shader.h"
+#include "include/shader.h"
 #include "stb_image.h"
 #include <glm/glm.hpp>
 #include <glm/ext/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
-#include "imgui.h"
 
-#include "Camera.h"
-#include "line_class.h"
-#include "VAO.h"
-#include "VBO.h"
-#include "EBO.h"
+
+#include "include/Camera.h"
+#include "include/line_class.h"
+#include "include/VAO.h"
+#include "include/VBO.h"
 
 
 Camera camera(glm::vec3(0.0f, 0.0f, 3.0f));
@@ -181,6 +183,14 @@ int main() {
 //    shaders.setInt("texture1", 0);
 //    shaders.setInt("texture2", 1);
 
+    IMGUI_CHECKVERSION();
+    ImGui::CreateContext();
+    ImGuiIO &io = ImGui::GetIO();
+    (void) io;
+    ImGui::StyleColorsDark();
+    ImGui_ImplGlfw_InitForOpenGL(window, true);
+    ImGui_ImplOpenGL3_Init("#version 330");
+
     while (!glfwWindowShouldClose(window)) {
 
         float currentFrame = static_cast<float>(glfwGetTime());
@@ -195,6 +205,9 @@ int main() {
 
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
+        ImGui_ImplOpenGL3_NewFrame();
+        ImGui_ImplGlfw_NewFrame();
+        ImGui::NewFrame();
         /* glActiveTexture(GL_TEXTURE0);
          glBindTexture(GL_TEXTURE_2D, texture1);
          glActiveTexture(GL_TEXTURE1);
@@ -203,7 +216,7 @@ int main() {
 
         lightShader.use();
         lightShader.setVec3("objectColor", 1.0f, 0.5f, 0.31f);
-        lightShader.setVec3("lightColor", 1f, 1.0f, 1.0f);
+        lightShader.setVec3("lightColor", 1.0f, 1.0f, 1.0f);
 
         glm::mat4 projection = glm::perspective(glm::radians(camera.Zoom), (float) WIDTH / (float) HEIGHT, 0.1f,
                                                 100.0f);
@@ -242,10 +255,19 @@ int main() {
         line2.draw();
         line3.draw();
 
+        ImGui::Begin("Window");
+        ImGui::End();
+
+        ImGui::Render();
+        ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
+
         glfwSwapBuffers(window);
         glfwPollEvents();
     }
 
+    ImGui_ImplOpenGL3_Shutdown()`;
+    ImGui_ImplGlfw_Shutdown();
+    ImGui::DestroyContext();
     VAO1.deleteVAO();
     VBO1.deleteVBO();
 

@@ -1,12 +1,12 @@
-#include <glad/glad.h>
-#include <GLFW/glfw3.h>
+#include "glad/glad.h"
+#include "GLFW/glfw3.h"
 #include "stb_image.h"
-#include <glm/glm.hpp>
-#include <glm/ext/matrix_transform.hpp>
+#include "glm/glm.hpp"
+#include "glm/ext/matrix_transform.hpp"
 
 #include <vector>
-#include "line_class.h"
-#include "VBO.h"
+#include "include/line_class.h"
+#include "include/VBO.h"
 
 using glm::mat4;
 using glm::vec3;

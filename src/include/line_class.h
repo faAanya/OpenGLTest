@@ -1,12 +1,12 @@
 #ifndef Line_H
 #define Line_H
 
-#include <glad/glad.h>
+#include "glad/glad.h"
 #include <iostream>
-#include <GLFW/glfw3.h>
+#include "GLFW/glfw3.h"
 #include "stb_image.h"
-#include <glm/glm.hpp>
-#include <glm/ext/matrix_transform.hpp>
+#include "glm/glm.hpp"
+#include "glm/ext/matrix_transform.hpp"
 #include <vector>
 #include "VAO.h"
 #include "shader.h"
