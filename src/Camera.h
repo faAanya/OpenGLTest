@@ -21,7 +21,7 @@ const float ZOOM_SPEED = 5.0f;
 const float SENSITIVITY = 0.1f;
 const float ZOOM = 45.0f;
 
-const float MAX_ZOOM = 450.0f;
+const float MAX_ZOOM = 150.0f;
 const float MIN_ZOOM = 1;
 
 class Camera {
