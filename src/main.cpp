@@ -29,10 +29,10 @@ bool isFirstMouse = true;
 
 const char *vertShaderPath = "resources\\shader.vert";
 const char *fragShaderPath = "resources\\shader.frag";
-const char *lightVertShaderPath = "resources\\lightningShader.vert";
-const char *lightFragShaderPath = "resources\\lightningShader.frag";
-const char *lightSourceVertShaderPath = "resources\\lightSource.vert";
-const char *lightSourceFragShaderPath = "resources\\lightSource.frag";
+const char *lightVertShaderPath = "resources\\shaders\\lightningShader.vert";
+const char *lightFragShaderPath = "resources\\shaders\\lightningShader.frag";
+const char *lightSourceVertShaderPath = "resources\\shaders\\lightSource.vert";
+const char *lightSourceFragShaderPath = "resources\\shaders\\lightSource.frag";
 glm::vec3 lightPos(1.2f, 1.0f, 2.0f);
 
 void framebuffer_size_callback(GLFWwindow *window, int width, int height);
@@ -142,8 +142,8 @@ int main() {
     lightVAO.bindVAO();
     lightVAO.LinkVBO(VBO1, 0, 3, 8 * sizeof(float), (void *) 0);
 
-    unsigned int diffuseMap = loadTexture("resources\\container2.png");
-    unsigned int specularMap = loadTexture("resources\\container2_specular.png");
+    unsigned int diffuseMap = loadTexture("resources\\textures\\container2.png");
+    unsigned int specularMap = loadTexture("resources\\textures\\container2_specular.png");
 
 
     lightShader.use();
