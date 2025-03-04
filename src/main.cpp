@@ -154,7 +154,7 @@ int main() {
 
     VAO1.LinkVBO(VBO1, 0, 3, 8 * sizeof(float), (void *) 0);
     VAO1.LinkVBO(VBO1, 1, 3, 8 * sizeof(float), (void *) (3 * (sizeof(float))));
-    VAO1.LinkVBO(VBO1, 2, 2, 8 * sizeof(float), (void *) (6 * (sizeof(float))));
+    VAO1.LinkVBO(VBO1, 2, 3, 8 * sizeof(float), (void *) (6 * (sizeof(float))));
 
     VAO lightVAO;
     lightVAO.bindVAO();
