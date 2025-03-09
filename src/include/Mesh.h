@@ -2,15 +2,15 @@
 #define MESH_H
 #include <iostream>
 #include <vector>
-#include <glad/glad.h>
-#include <glm/glm.hpp>
-#include <glm/ext/matrix_transform.hpp>
-#include <glm/gtc/type_ptr.hpp>
+#include "glad/glad.h"
+#include "glm/glm.hpp"
+#include "glm/ext/matrix_transform.hpp"
+#include "glm/gtc/type_ptr.hpp"
 
-#include "include/shader.h"
-#include "include/VAO.h"
-#include "include/VBO.h"
-#include "include/EBO.h"
+#include "shader.h"
+#include "VAO.h"
+#include "VBO.h"
+#include "EBO.h"
 using namespace std;
 using namespace glm;
 struct Vertex{
