@@ -1,6 +1,7 @@
 file (GLOB_RECURSE SOURCES "*.cpp")
 add_executable(OpenGLTest ${SOURCES}
-        include/Mesh.h)
+        include/Mesh.h
+        include/Model.h)
 
 target_include_directories(OpenGLTest PUBLIC ${CMAKE_CURRENT_SOURCE_DIR})
 target_link_libraries(

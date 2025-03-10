@@ -9,7 +9,7 @@
 #include <glm/glm.hpp>
 #include <glm/ext/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
-
+#include <include/Model.h>
 
 #include "include/Camera.h"
 #include "include/line_class.h"
@@ -176,7 +176,7 @@ int main() {
     unsigned int diffuseMap = loadTexture("resources\\textures\\container2.png");
     unsigned int specularMap = loadTexture("resources\\textures\\container2_specular.png");
 
-
+    Model ourModel("resources\\objects\\backpack.obj");
     lightShader.use();
     lightShader.setInt("material.diffuse", 0);
     lightShader.setInt("material.specular", 1);
