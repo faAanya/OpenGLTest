@@ -10,12 +10,12 @@
 #include <glm/ext/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
 #include <include/Model.h>
-
+#include <filesystem>
 #include "include/Camera.h"
 #include "include/line_class.h"
 #include "include/VAO.h"
 #include "include/VBO.h"
-
+#include "include/Texture.h"
 
 Camera camera(glm::vec3(0.0f, 0.0f, 3.0f));
 
@@ -83,6 +83,7 @@ int main() {
 
     Shader lightShader(lightVertShaderPath, lightFragShaderPath);
     Shader lightSource(lightSourceVertShaderPath, lightSourceFragShaderPath);
+    string path = "resources\\objects\\backpack.obj";
     float vertices[] = {
 
             -0.5f, -0.5f, -0.5f, 0.0f, 0.0f, -1.0f, 0.0f, 0.0f,
@@ -155,11 +156,11 @@ int main() {
     glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
 
     glBindVertexArray(cubeVAO);
-    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)0);
+    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void *) 0);
     glEnableVertexAttribArray(0);
-    glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)(3 * sizeof(float)));
+    glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void *) (3 * sizeof(float)));
     glEnableVertexAttribArray(1);
-    glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)(6 * sizeof(float)));
+    glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void *) (6 * sizeof(float)));
     glEnableVertexAttribArray(2);
 
     // second, configure the light's VAO (VBO stays the same; the vertices are the same for the light object which is also a 3D cube)
@@ -169,17 +170,16 @@ int main() {
 
     glBindBuffer(GL_ARRAY_BUFFER, VBO);
     // note that we update the lamp's position attribute's stride to reflect the updated buffer data
-    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)0);
+    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void *) 0);
     glEnableVertexAttribArray(0);
 
 
-    unsigned int diffuseMap = loadTexture("resources\\textures\\container2.png");
-    unsigned int specularMap = loadTexture("resources\\textures\\container2_specular.png");
+    Texture diffuseMap("resources\\textures\\container2.png", GL_TEXTURE_2D, GL_TEXTURE0, GL_RGBA, GL_UNSIGNED_BYTE);
+    Texture specularMap("resources\\textures\\container2_specular.png", GL_TEXTURE_2D, GL_TEXTURE1, GL_RGBA,
+                        GL_UNSIGNED_BYTE);
+    diffuseMap.texUnit(lightShader, "material.diffuse", 0);
+    specularMap.texUnit(lightShader, "material.specular", 1);
 
-    Model ourModel("resources\\objects\\backpack.obj");
-    lightShader.use();
-    lightShader.setInt("material.diffuse", 0);
-    lightShader.setInt("material.specular", 1);
 //
 //    IMGUI_CHECKVERSION();
 //    ImGui::CreateContext();
@@ -265,11 +265,9 @@ int main() {
         lightShader.setMat4("view", view);
         glm::mat4 model = glm::mat4(1.0f);
         lightShader.setMat4("model", model);
+        diffuseMap.Bind();
+        specularMap.Bind();
 
-        glActiveTexture(GL_TEXTURE0);
-        glBindTexture(GL_TEXTURE_2D, diffuseMap);
-        glActiveTexture(GL_TEXTURE1);
-        glBindTexture(GL_TEXTURE_2D, specularMap);
 
         glBindVertexArray(cubeVAO);
         for (unsigned int i = 0; i < 10; i++) {
@@ -287,8 +285,7 @@ int main() {
         lightSource.setMat4("view", view);
 
         glBindVertexArray(lightCubeVAO);
-        for (unsigned int i = 0; i < 4; i++)
-        {
+        for (unsigned int i = 0; i < 4; i++) {
             model = glm::mat4(1.0f);
             model = glm::translate(model, pointLightPositions[i]);
             model = glm::scale(model, glm::vec3(0.2f)); // Make it a smaller cube
@@ -323,6 +320,7 @@ int main() {
     glDeleteVertexArrays(1, &cubeVAO);
     glDeleteVertexArrays(1, &lightCubeVAO);
     glDeleteBuffers(1, &VBO);
+    lightShader.del();
 
 //    glfwDestroyWindow(window);
     glfwTerminate();
@@ -380,34 +378,34 @@ void scroll_callback(GLFWwindow *window, double xoffset, double yoffset) {
     camera.ProcessMouseScroll(yoffset);
 }
 
-unsigned int loadTexture(char const *path) {
-
-    stbi_set_flip_vertically_on_load(true);
-    unsigned int textureID;
-    glGenTextures(1, &textureID);
-    int width, height, nrChannels;
-    unsigned char *data = stbi_load(path, &width, &height, &nrChannels, 0);
-
-    if (data) {
-        GLenum format;
-        if (nrChannels == 1)
-            format = GL_RED;
-        else if (nrChannels == 3)
-            format = GL_RGB;
-        else if (nrChannels == 4)
-            format = GL_RGBA;
-        glBindTexture(GL_TEXTURE_2D, textureID);
-        glTexImage2D(GL_TEXTURE_2D, 0, format, width, height, 0, format, GL_UNSIGNED_BYTE, data);
-        glGenerateMipmap(GL_TEXTURE_2D);
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-
-        stbi_image_free(data);
-    } else {
-        std::cout << "Failed to load texture" << std::endl;
-        stbi_image_free(data);
-    }
-    return textureID;
-}
+//unsigned int loadTexture(char const *path) {
+//
+//    stbi_set_flip_vertically_on_load(true);
+//    unsigned int textureID;
+//    glGenTextures(1, &textureID);
+//    int width, height, nrChannels;
+//    unsigned char *data = stbi_load(path, &width, &height, &nrChannels, 0);
+//
+//    if (data) {
+//        GLenum format;
+//        if (nrChannels == 1)
+//            format = GL_RED;
+//        else if (nrChannels == 3)
+//            format = GL_RGB;
+//        else if (nrChannels == 4)
+//            format = GL_RGBA;
+//        glBindTexture(GL_TEXTURE_2D, textureID);
+//        glTexImage2D(GL_TEXTURE_2D, 0, format, width, height, 0, format, GL_UNSIGNED_BYTE, data);
+//        glGenerateMipmap(GL_TEXTURE_2D);
+//        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+//        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+//        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
+//        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+//
+//        stbi_image_free(data);
+//    } else {
+//        std::cout << "Failed to load texture" << std::endl;
+//        stbi_image_free(data);
+//    }
+//    return textureID;
+//}
