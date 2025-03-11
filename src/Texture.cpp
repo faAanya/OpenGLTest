@@ -10,6 +10,7 @@ Texture::Texture(const char *image, GLenum texType, GLenum slot, GLenum format, 
     unsigned char *data = stbi_load(image, &width, &height, &nrChannels, 0);
 
     glGenTextures(1, &ID);
+    glActiveTexture(slot);
 
     if (data) {
         GLenum format;
@@ -19,8 +20,9 @@ Texture::Texture(const char *image, GLenum texType, GLenum slot, GLenum format, 
             format = GL_RGB;
         else if (nrChannels == 4)
             format = GL_RGBA;
-        glBindTexture(GL_TEXTURE_2D, ID);
+        glBindTexture(texType, ID);
         glTexImage2D(GL_TEXTURE_2D, 0, format, width, height, 0, format, GL_UNSIGNED_BYTE, data);
+
         glGenerateMipmap(GL_TEXTURE_2D);
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
