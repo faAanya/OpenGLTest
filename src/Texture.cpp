@@ -1,6 +1,6 @@
 #include "include/Texture.h"
 
-Texture::Texture(const char *image, GLenum texType, GLenum slot, GLenum format, GLenum pixelType) {
+Texture::Texture(const char *image, const char* texType, GLenum slot, GLenum pixelType) {
 
     std::cout << image << " " << ID;
     type = texType;
@@ -20,7 +20,7 @@ Texture::Texture(const char *image, GLenum texType, GLenum slot, GLenum format, 
             format = GL_RGB;
         else if (nrChannels == 4)
             format = GL_RGBA;
-        glBindTexture(texType, ID);
+        glBindTexture(GL_TEXTURE_2D, ID);
         glTexImage2D(GL_TEXTURE_2D, 0, format, width, height, 0, format, GL_UNSIGNED_BYTE, data);
 
         glGenerateMipmap(GL_TEXTURE_2D);
@@ -36,17 +36,17 @@ Texture::Texture(const char *image, GLenum texType, GLenum slot, GLenum format, 
     }
 }
 
-void Texture::texUnit(Shader shader, const char *uniform, GLuint unit) {
+void Texture::texUnit(Shader& shader, const char *uniform, GLuint unit) {
     shader.use();
     shader.setInt(uniform, unit);
 }
 
 void Texture::Bind(){
-    glBindTexture(type, ID);
+    glBindTexture(GL_TEXTURE_2D, ID);
 }
 
 void Texture::UnBind() {
-    glBindTexture(type, 0);
+    glBindTexture(GL_TEXTURE_2D, 0);
 }
 
 void Texture::Delete(){

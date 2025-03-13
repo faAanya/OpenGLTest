@@ -22,8 +22,8 @@ class Line
 {
     int shaderProgram;
     VAO Vao;
-    VBO Vbo = VBO(nullptr, 0);
-    vector<float> vertices;
+    VBO Vbo = VBO(vertices);
+    vector<Vertex> vertices;
     vec3 startPoint;
     vec3 endPoint;
     mat4 MVP = mat4(1.0);

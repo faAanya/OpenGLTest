@@ -3,7 +3,9 @@ add_executable(OpenGLTest ${SOURCES}
         include/Mesh.h
         include/Model.h
         include/Texture.h
-        Texture.cpp)
+        Texture.cpp
+        Mesh.cpp
+)
 
 target_include_directories(OpenGLTest PUBLIC ${CMAKE_CURRENT_SOURCE_DIR})
 target_link_libraries(

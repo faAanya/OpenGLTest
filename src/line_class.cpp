@@ -50,10 +50,10 @@ Line::Line(vec3 start, vec3 end) {
     glDeleteShader(vertexShader);
     glDeleteShader(fragmentShader);
 
-    vertices = {
-            start.x, start.y, start.z,
-            end.x, end.y, end.z,
-    };
+//    vertices = {
+//            start.x, start.y, start.z,
+//            end.x, end.y, end.z,
+//    };
     
     Vao.bindVAO();
     Vbo = VBO( vertices);

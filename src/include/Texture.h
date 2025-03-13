@@ -9,15 +9,16 @@
 class Texture{
 public:
     GLuint ID;
-    GLenum type;
+    const char* type;
+    GLuint unit;
 
-    Texture(const char* image, GLenum texType, GLenum   slot, GLenum format, GLenum pixelType);
+    Texture(const char* image, const char* texType, GLenum slot, GLenum pixelType);
 
-    void texUnit(Shader shader, const char* uniform, GLuint unit);
+    void texUnit(Shader& shader, const char* uniform, GLuint unit);
     void Bind();
     void UnBind();
     void Delete();
 
 };
 
-#endif TEXTURE_H
+#endif
