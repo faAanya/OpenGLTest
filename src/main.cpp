@@ -17,6 +17,7 @@
 #include "include/VBO.h"
 #include "include/Texture.h"
 
+
 Camera camera(glm::vec3(0.0f, 0.0f, 3.0f));
 
 const unsigned int WIDTH = 800;
@@ -155,17 +156,13 @@ int main() {
     lightVAO.bindVAO();
     lightVAO.LinkVBO(VBO1, 0, 3, 8 * sizeof(float), (void *) 0);
 
-    Texture textures[] = {
-
-    };
-
-    Texture diffuseMap("resources\\textures\\container2.png", "diffuse", 0, GL_UNSIGNED_BYTE);
-    Texture specularMap("resources\\textures\\container2_specular.png", "specular", 1, GL_UNSIGNED_BYTE);
+    Texture diffuseMap("resources\\textures\\container2.png", GL_TEXTURE_2D, GL_TEXTURE0, GL_UNSIGNED_BYTE);
+    Texture specularMap("resources\\textures\\container2_specular.png", GL_TEXTURE_2D, GL_TEXTURE1,GL_UNSIGNED_BYTE);
 
     diffuseMap.texUnit(lightShader, "material.diffuse", 0);
     specularMap.texUnit(lightShader, "material.specular", 1);
 
-//
+
 //    IMGUI_CHECKVERSION();
 //    ImGui::CreateContext();
 //    ImGuiIO &io = ImGui::GetIO();

@@ -1,10 +1,10 @@
 #include "include/Texture.h"
 
-Texture::Texture(const char *image, const char* texType, GLenum slot, GLenum pixelType) {
+Texture::Texture(const char *image, GLenum texType, GLenum slot, GLenum pixelType) {
 
     std::cout << image << " " << ID;
-    type = texType;
-    int width, height, nrChannels;
+//    type = texType;
+    int width, height , nrChannels;
     stbi_set_flip_vertically_on_load(true);
 
     unsigned char *data = stbi_load(image, &width, &height, &nrChannels, 0);
