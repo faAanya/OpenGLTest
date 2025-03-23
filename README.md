@@ -1,20 +1,61 @@
-# OpenModelder
+# OpenModelder 🖌️
 
-### Plot
-This is my final project for college. <br>
-This is program for modelling simple 3D shapes, adding light, materials, textures, saving file in different formats and loading models. <br>
-The abillity to do all that is made in a form of scripts. User writes scripts, and all magic happens.
+A simple 3D modeling tool powered by OpenGL and Lua scripting for creating, lighting, and exporting 3D models.
 
-### Technologies
-OpenGl
-C++ 
-Lua
-### Libraries
-ImGui
-Assimp
-GLFW
-GLM
-Glad
+![OpenGL](https://img.shields.io/badge/OpenGL-%23FFFFFF.svg?style=for-the-badge&logo=opengl)
+![C++](https://img.shields.io/badge/C++-%2300599C.svg?style=for-the-badge&logo=c%2B%2B&logoColor=white)
+![Lua](https://img.shields.io/badge/Lua-2C2D72?style=for-the-badge&logo=lua&logoColor=white)  
+![Assimp](https://img.shields.io/badge/Assimp-FF6F00?style=for-the-badge&logo=assimp&logoColor=white)
+![GLFW](https://img.shields.io/badge/GLFW-3C873A?style=for-the-badge)
+![GLM](https://img.shields.io/badge/GLM-000000?style=for-the-badge)
+![ImGui](https://img.shields.io/badge/ImGui-00BFFF?style=for-the-badge)
+
+> **College Final Project**  
+> Model, texture, and export 3D scenes through scriptable workflows.
+
+---
+
+## 🚀 Features
+- **3D Modeling**: Create basic shapes (cubes, spheres, cones)
+- **Dynamic Lighting**: Add point/directional lights with customizable properties
+- **Material System**: Configure textures, specular maps, and material properties
+- **Scriptable Interface**: Control everything via Lua scripts
+- **Cross-format Export**: Save models in OBJ, FBX, and GLTF formats
+- **Model Import**: Load existing 3D models using Assimp
+
+---
+
+## 🛠️ Tech Stack
+| Category       | Technologies                          |
+|----------------|---------------------------------------|
+| **Core**       | OpenGL 4.6, C++17, Lua 5.4            |
+| **Libraries**  | GLFW, GLM, Assimp, Glad               |
+| **UI**         | Dear ImGui                            |
+| **Build**      | CMake                                 |
+
+---
+
+## 📜 Script Example
+```lua
+-- Create a red metallic sphere
+sphere = create_sphere(1.0)
+set_position(sphere, {0, 0, 0})
+set_material(sphere, {
+    color = {1, 0, 0},
+    metallic = 0.8,
+    roughness = 0.2
+})
+
+-- Add directional light
+light = create_light("directional")
+set_light_properties(light, {
+    intensity = 1.5,
+    direction = {-1, -1, -1},
+    color = {1, 1, 0.9}
+})
+
+-- Export to GLTF
+export_scene("scene.gltf")
 
 # Info for project OpenGL
 
