@@ -1,3 +1,21 @@
+# OpenModelder
+
+### Plot
+This is my final project for college. <br>
+This is program for modelling simple 3D shapes, adding light, materials, textures, saving file in different formats and loading models. <br>
+The abillity to do all that is made in a form of scripts. User writes scripts, and all magic happens.
+
+### Technologies
+OpenGl
+C++ 
+Lua
+### Libraries
+ImGui
+Assimp
+GLFW
+GLM
+Glad
+
 # Info for project OpenGL
 
 ### Tutorials
