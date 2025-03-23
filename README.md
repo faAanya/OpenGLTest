@@ -33,31 +33,6 @@ A simple 3D modeling tool powered by OpenGL and Lua scripting for creating, ligh
 | **UI**         | Dear ImGui                            |
 | **Build**      | CMake                                 |
 
----
-
-## 📜 Script Example
-```lua
--- Create a red metallic sphere
-sphere = create_sphere(1.0)
-set_position(sphere, {0, 0, 0})
-set_material(sphere, {
-    color = {1, 0, 0},
-    metallic = 0.8,
-    roughness = 0.2
-})
-
--- Add directional light
-light = create_light("directional")
-set_light_properties(light, {
-    intensity = 1.5,
-    direction = {-1, -1, -1},
-    color = {1, 1, 0.9}
-})
-
--- Export to GLTF
-export_scene("scene.gltf")
-
-# Info for project OpenGL
 
 ### Tutorials
 1. OpengGL Tutorial with A LOT usefull info:<br>
