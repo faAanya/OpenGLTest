@@ -26,7 +26,8 @@ public:
     VAO VAO;
 
     Mesh(vector<Vertex> vertices, vector<unsigned int> indices,
-         vector<Texture> textures);
+         vector<Texture> &textures);
+    Mesh(vector<Vertex> vertices, vector<Texture>& textures);
 
 
     void Draw(Shader &shader, Camera& camera);
