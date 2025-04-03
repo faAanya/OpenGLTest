@@ -1,8 +1,16 @@
 add_library(glad STATIC glad/glad/glad.c)
 target_include_directories(glad PUBLIC glad)
 
-add_library(imgui_lib STATIC imgui_lib.cpp)
-target_include_directories(imgui_lib PUBLIC imgui)
+add_library (imgui STATIC
+        "${CMAKE_CURRENT_SOURCE_DIR}/imgui/imgui.cpp"
+        "${CMAKE_CURRENT_SOURCE_DIR}/imgui/imgui_draw.cpp"
+        "${CMAKE_CURRENT_SOURCE_DIR}/imgui/imgui_tables.cpp"
+        "${CMAKE_CURRENT_SOURCE_DIR}/imgui/imgui_widgets.cpp"
+        "${CMAKE_CURRENT_SOURCE_DIR}/imgui/backends/imgui_impl_glfw.cpp"
+        "${CMAKE_CURRENT_SOURCE_DIR}/imgui/backends/imgui_impl_opengl3.cpp")
+target_link_libraries (imgui PUBLIC glfw)
+target_include_directories(imgui PUBLIC imgui)
+
 
 add_library(stb_image STATIC stb_image.c)
 target_include_directories(stb_image PUBLIC stb)

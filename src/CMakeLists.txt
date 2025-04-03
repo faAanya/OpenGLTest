@@ -6,7 +6,7 @@ add_executable(OpenGLTest ${SOURCES}
         Texture.cpp
         Mesh.cpp
         lua-maintainer.cpp
-        lua-maintainer.h
+#        lua-maintainer.h
 )
 
 target_include_directories(OpenGLTest PUBLIC ${CMAKE_CURRENT_SOURCE_DIR})
@@ -16,7 +16,6 @@ target_link_libraries(
         glfw
         glm::glm
         stb_image
-        imgui_lib
-        assimp::assimp
+        imgui
         lua
 )

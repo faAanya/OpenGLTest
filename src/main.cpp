@@ -1,8 +1,8 @@
 #include <glad/glad.h>
 #include <iostream>
 #include "imgui.h"
-#include "imgui_impl_glfw.h"
-#include "imgui_impl_opengl3.h"
+#include "backends/imgui_impl_opengl3.h"
+#include "backends/imgui_impl_glfw.h"
 #include <GLFW/glfw3.h>
 #include "include/shader.h"
 #include "stb_image.h"
@@ -145,20 +145,6 @@ int main() {
     Shader lightSource(lightSourceVertShaderPath, lightSourceFragShaderPath);
 
 
-//    VAO VAO1;
-//    VAO1.bindVAO();
-//
-//    VBO VBO1(vertices);
-//
-//    VAO1.LinkVBO(VBO1, 0, 3, 8 * sizeof(float), (void *) 0);
-//    VAO1.LinkVBO(VBO1, 1, 3, 8 * sizeof(float), (void *) (3 * (sizeof(float))));
-//    VAO1.LinkVBO(VBO1, 2, 2, 8 * sizeof(float), (void *) (6 * (sizeof(float))));
-//
-//    VAO lightVAO;
-//    lightVAO.bindVAO();
-//    lightVAO.LinkVBO(VBO1, 0, 3, 8 * sizeof(float), (void *) 0);
-
-
     Texture textures[] = {
 
             Texture("resources\\textures\\container2.png", "diffuse", GL_TEXTURE0, GL_UNSIGNED_BYTE),
@@ -178,13 +164,13 @@ int main() {
 //    printf("lua says x = %d\n", (int)x);
 //    lua_close(L.L);
 
-//    IMGUI_CHECKVERSION();
-//    ImGui::CreateContext();
-//    ImGuiIO &io = ImGui::GetIO();
-//    (void) io;
-//    ImGui::StyleColorsDark();
-//    ImGui_ImplGlfw_InitForOpenGL(window, true);
-//    ImGui_ImplOpenGL3_Init("#version 330");
+    IMGUI_CHECKVERSION();
+    ImGui::CreateContext();
+    ImGuiIO &io = ImGui::GetIO();
+    (void) io;
+    ImGui::StyleColorsDark();
+    ImGui_ImplGlfw_InitForOpenGL(window, true);
+    ImGui_ImplOpenGL3_Init("#version 330");
 
     while (!glfwWindowShouldClose(window)) {
 
@@ -198,9 +184,9 @@ int main() {
 
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-//        ImGui_ImplOpenGL3_NewFrame();
-//        ImGui_ImplGlfw_NewFrame();
-//        ImGui::NewFrame();
+        ImGui_ImplOpenGL3_NewFrame();
+        ImGui_ImplGlfw_NewFrame();
+        ImGui::NewFrame();
 
         lightShader.use();
         lightShader.setVec3("viewPos", camera.Position);
@@ -296,21 +282,21 @@ int main() {
         line2.draw();
         line3.draw();
 
-//        ImGui::Begin("Window");
-////        ImGui::ColorEdit4("Color", color);
-//        ImGui::End();
+        ImGui::Begin("Window");
+//        ImGui::ColorEdit4("Color", color);
+        ImGui::End();
 
-//
-//        ImGui::Render();
-//        ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
+
+        ImGui::Render();
+        ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
 
         glfwSwapBuffers(window);
         glfwPollEvents();
     }
 //
-//    ImGui_ImplOpenGL3_Shutdown();
-//    ImGui_ImplGlfw_Shutdown();
-//    ImGui::DestroyContext();
+    ImGui_ImplOpenGL3_Shutdown();
+    ImGui_ImplGlfw_Shutdown();
+    ImGui::DestroyContext();
 
     lightShader.del();
     lightSource.del();
