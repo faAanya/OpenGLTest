@@ -1,12 +1,11 @@
 file (GLOB_RECURSE SOURCES "*.cpp")
 add_executable(OpenGLTest ${SOURCES}
-        include/Mesh.h
-        include/Model.h
-        include/Texture.h
         Texture.cpp
         Mesh.cpp
         lua-maintainer.cpp
-#        lua-maintainer.h
+        Model.cpp
+        include/funcs.h
+        #        lua-maintainer.h
 )
 
 target_include_directories(OpenGLTest PUBLIC ${CMAKE_CURRENT_SOURCE_DIR})
@@ -17,5 +16,6 @@ target_link_libraries(
         glm::glm
         stb_image
         imgui
+        json
         lua
 )

@@ -119,6 +119,8 @@ int main() {
         glfwTerminate();
         return -1;
     }
+
+
     glfwMakeContextCurrent(window);
     glfwSetFramebufferSizeCallback(window, framebuffer_size_callback);
     glfwSetCursorPosCallback(window, mouse_callback);
@@ -131,26 +133,19 @@ int main() {
         return -1;
     }
 
+
     glEnable(GL_DEPTH_TEST);
-
-    Line line1(vec3(0, 0, 0), vec3(1, 0, 0));
-    line1.setColor(vec3(1, 0, 0));
-    Line line2(vec3(0, 0, 0), vec3(0, 1, 0));
-    line2.setColor(vec3(0, 1, 0));
-    Line line3(vec3(0, 0, 0), vec3(0, 0, 1));
-    line3.setColor(vec3(0, 0, 1));
-
 
     Shader lightShader(lightVertShaderPath, lightFragShaderPath);
     Shader lightSource(lightSourceVertShaderPath, lightSourceFragShaderPath);
 
-
     Texture textures[] = {
 
-            Texture("resources\\textures\\container2.png", "diffuse", GL_TEXTURE0, GL_UNSIGNED_BYTE),
-            Texture("resources\\textures\\container2_specular.png", "specular", GL_TEXTURE1, GL_UNSIGNED_BYTE)
+            Texture("resources\\textures\\container2.png", "diffuse", GL_TEXTURE0),
+            Texture("resources\\textures\\container2_specular.png", "specular", GL_TEXTURE1)
 
     };
+
     vector<Vertex> verts(vertices, vertices + sizeof(vertices) / sizeof(Vertex));
     std::vector<Texture> tex(textures, textures + sizeof(textures) / sizeof(Texture));
     Mesh myMesh(verts, tex);
@@ -163,6 +158,8 @@ int main() {
 //    lua_Number x = lua_tonumber(L.L, 1);
 //    printf("lua says x = %d\n", (int)x);
 //    lua_close(L.L);
+
+
 
     IMGUI_CHECKVERSION();
     ImGui::CreateContext();
@@ -274,13 +271,6 @@ int main() {
         }
         myMesh.Draw(lightShader, camera);
 
-        line1.setMVP(projection * view);
-        line2.setMVP(projection * view);
-        line3.setMVP(projection * view);
-
-        line1.draw();
-        line2.draw();
-        line3.draw();
 
         ImGui::Begin("Window");
 //        ImGui::ColorEdit4("Color", color);
