@@ -10,10 +10,7 @@
 #include <glm/ext/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
 #include <include/Mesh.h>
-#include <filesystem>
 #include "include/Camera.h"
-#include "include/line_class.h"
-#include "include/VAO.h"
 #include "include/VBO.h"
 #include "include/lua-maintainer.h"
 #include "include/Texture.h"
@@ -21,9 +18,9 @@
 
 Camera camera(glm::vec3(0.0f, 0.0f, 3.0f));
 
-const unsigned int WIDTH = 800;
-const unsigned int HEIGHT = 600;
-float lastX = 400, lastY = 300;
+const unsigned int WIDTH = 1280;
+const unsigned int HEIGHT = 720;
+float lastX = 640, lastY = 360;
 
 float deltaTime = 0.0f;
 float lastFrame = 0.0f;
@@ -133,14 +130,6 @@ int main() {
 
     glEnable(GL_DEPTH_TEST);
 
-    Line line1(vec3(0, 0, 0), vec3(1, 0, 0));
-    line1.setColor(vec3(1, 0, 0));
-    Line line2(vec3(0, 0, 0), vec3(0, 1, 0));
-    line2.setColor(vec3(0, 1, 0));
-    Line line3(vec3(0, 0, 0), vec3(0, 0, 1));
-    line3.setColor(vec3(0, 0, 1));
-
-
     Shader lightShader(lightVertShaderPath, lightFragShaderPath);
     Shader lightSource(lightSourceVertShaderPath, lightSourceFragShaderPath);
 
@@ -172,6 +161,9 @@ int main() {
     ImGui_ImplGlfw_InitForOpenGL(window, true);
     ImGui_ImplOpenGL3_Init("#version 330");
 
+    char inputText[256] = "";
+    bool showMessage = false;
+
     while (!glfwWindowShouldClose(window)) {
 
         float currentFrame = static_cast<float>(glfwGetTime());
@@ -192,10 +184,11 @@ int main() {
         lightShader.setVec3("viewPos", camera.Position);
         lightShader.setFloat("material.shininess", 32.0f);
 
-        lightShader.setVec3("dirLight.direction", -0.2f, -1.0f, -0.3f);
-        lightShader.setVec3("dirLight.ambient", 0.2f, 0.2f, 0.2f);
-        lightShader.setVec3("dirLight.diffuse", 0.5f, 0.5f, 0.5f);
-        lightShader.setVec3("dirLight.specular", 1.0f, 1.0f, 1.0f);
+        lightShader.setVec3("dirLights[0].direction", -0.2f, -1.0f, -0.3f);
+        lightShader.setVec3("dirLights[0].ambient", 0.2f, 0.2f, 0.2f);
+        lightShader.setVec3("dirLights[0].diffuse", 0.5f, 0.5f, 0.5f);
+        lightShader.setVec3("dirLights[0].specular", 1.0f, 1.0f, 1.0f);
+        lightShader.setBool("dirLights[0].enabled", true);
 
         lightShader.setVec3("pointLights[0].position", pointLightPositions[0]);
         lightShader.setVec3("pointLights[0].ambient", 0.05f, 0.05f, 0.05f);
@@ -204,6 +197,8 @@ int main() {
         lightShader.setFloat("pointLights[0].constant", 1.0f);
         lightShader.setFloat("pointLights[0].linear", 0.09f);
         lightShader.setFloat("pointLights[0].quadratic", 0.032f);
+        lightShader.setBool("pointLights[0].enabled", true);
+
 
         lightShader.setVec3("pointLights[1].position", pointLightPositions[1]);
         lightShader.setVec3("pointLights[1].ambient", 0.05f, 0.05f, 0.05f);
@@ -212,6 +207,8 @@ int main() {
         lightShader.setFloat("pointLights[1].constant", 1.0f);
         lightShader.setFloat("pointLights[1].linear", 0.09f);
         lightShader.setFloat("pointLights[1].quadratic", 0.032f);
+        lightShader.setBool("pointLights[1].enabled", true);
+
 
         lightShader.setVec3("pointLights[2].position", pointLightPositions[2]);
         lightShader.setVec3("pointLights[2].ambient", 0.05f, 0.05f, 0.05f);
@@ -220,6 +217,8 @@ int main() {
         lightShader.setFloat("pointLights[2].constant", 1.0f);
         lightShader.setFloat("pointLights[2].linear", 0.09f);
         lightShader.setFloat("pointLights[2].quadratic", 0.032f);
+        lightShader.setBool("pointLights[2].enabled", false);
+
 
         lightShader.setVec3("pointLights[3].position", pointLightPositions[3]);
         lightShader.setVec3("pointLights[3].ambient", 0.05f, 0.05f, 0.05f);
@@ -228,17 +227,21 @@ int main() {
         lightShader.setFloat("pointLights[3].constant", 1.0f);
         lightShader.setFloat("pointLights[3].linear", 0.09f);
         lightShader.setFloat("pointLights[3].quadratic", 0.032f);
+        lightShader.setBool("pointLights[3].enabled", true);
 
-        lightShader.setVec3("spotLight.position", camera.Position);
-        lightShader.setVec3("spotLight.direction", camera.Front);
-        lightShader.setFloat("spotLight.cutOff", glm::cos(glm::radians(12.5f)));
-        lightShader.setFloat("spotLight.outerCutOff", glm::cos(glm::radians(15.0f)));
-        lightShader.setFloat("spotLight.constant", 1.0f);
-        lightShader.setFloat("spotLight.linear", 0.09f);
-        lightShader.setFloat("spotLight.quadratic", 0.032f);
-        lightShader.setVec3("spotLight.ambient", 0.0f, 0.0f, 0.0f);
-        lightShader.setVec3("spotLight.diffuse", 1.0f, 1.0f, 1.0f);
-        lightShader.setVec3("spotLight.specular", 1.0f, 1.0f, 1.0f);
+
+        lightShader.setVec3("spotLights[0].position", camera.Position);
+        lightShader.setVec3("spotLights[0].direction", camera.Front);
+        lightShader.setFloat("spotLights[0].cutOff", glm::cos(glm::radians(12.5f)));
+        lightShader.setFloat("spotLights[0].outerCutOff", glm::cos(glm::radians(15.0f)));
+        lightShader.setFloat("spotLights[0].constant", 1.0f);
+        lightShader.setFloat("spotLights[0].linear", 0.09f);
+        lightShader.setFloat("spotLights[0].quadratic", 0.032f);
+        lightShader.setVec3("spotLights[0].ambient", 0.0f, 0.0f, 0.0f);
+        lightShader.setVec3("spotLights[0].diffuse", 1.0f, 1.0f, 1.0f);
+        lightShader.setVec3("spotLights[0].specular", 1.0f, 1.0f, 1.0f);
+        lightShader.setBool("spotLights[0].enabled", false);
+
 
         glm::mat4 projection = glm::perspective(glm::radians(camera.Zoom), (float) WIDTH / (float) HEIGHT, 0.1f,
                                                 100.0f);
@@ -273,17 +276,22 @@ int main() {
             light.Draw(lightSource, camera);
         }
         myMesh.Draw(lightShader, camera);
-
-        line1.setMVP(projection * view);
-        line2.setMVP(projection * view);
-        line3.setMVP(projection * view);
-
-        line1.draw();
-        line2.draw();
-        line3.draw();
-
         ImGui::Begin("Window");
-//        ImGui::ColorEdit4("Color", color);
+
+        ImGui::InputTextMultiline("Text", inputText, sizeof(inputText), ImVec2(250, 100));
+        // Кнопка и обработка нажатия
+        if (ImGui::Button("Submit")) {
+            showMessage = true; // Активируем отображение сообщения
+            // Здесь можно добавить другую логику обработки
+        }
+
+        // Отображение сообщения если кнопка была нажата
+        if (showMessage) {
+            ImGui::Text("You entered: %s", inputText);
+            if (ImGui::Button("Hide message")) {
+                showMessage = false;
+            }
+        }
         ImGui::End();
 
 

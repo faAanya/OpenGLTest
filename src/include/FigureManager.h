@@ -1,0 +1,8 @@
+//
+// Created by Polina Kirpichenok on 06.04.2025.
+//
+
+#ifndef TESTBUILD_FIGUREMANAGER_H
+#define TESTBUILD_FIGUREMANAGER_H
+
+#endif //TESTBUILD_FIGUREMANAGER_H

@@ -13,6 +13,8 @@ struct DirLight {
     vec3 ambient;
     vec3 diffuse;
     vec3 specular;
+
+    bool enabled;
 };
 
 struct PointLight {
@@ -25,6 +27,8 @@ struct PointLight {
     vec3 ambient;
     vec3 diffuse;
     vec3 specular;
+
+    bool enabled;
 };
 
 struct SpotLight {
@@ -40,18 +44,22 @@ struct SpotLight {
     vec3 ambient;
     vec3 diffuse;
     vec3 specular;
+
+    bool enabled;
 };
 
 #define NR_POINT_LIGHTS 4
+#define NR_DIR_LIGHTS 4
+#define NR_SPOT_LIGHTS 4
 
 in vec3 FragPos;
 in vec3 Normal;
 in vec2 TexCoords;
 
 uniform vec3 viewPos;
-uniform DirLight dirLight;
+uniform DirLight dirLights[NR_DIR_LIGHTS];
 uniform PointLight pointLights[NR_POINT_LIGHTS];
-uniform SpotLight spotLight;
+uniform SpotLight spotLights[NR_SPOT_LIGHTS];
 uniform Material material;
 
 vec3 CalcDirLight(DirLight light, vec3 normal, vec3 viewDir);
@@ -60,28 +68,33 @@ vec3 CalcSpotLight(SpotLight light, vec3 normal, vec3 fragPos, vec3 viewDir);
 
 void main()
 {
-    // properties
+
     vec3 norm = normalize(Normal);
     vec3 viewDir = normalize(viewPos - FragPos);
+    vec3 result = vec3(0.0);
+    for(int i = 0; i < NR_DIR_LIGHTS; i++) {
+           if(dirLights[i].enabled) {
+               result += CalcDirLight(dirLights[i], norm, viewDir);
+           }
+       }
 
-    // == =====================================================
-    // Our lighting is set up in 3 phases: directional, point lights and an optional flashlight
-    // For each phase, a calculate function is defined that calculates the corresponding color
-    // per lamp. In the main() function we take all the calculated colors and sum them up for
-    // this fragment's final color.
-    // == =====================================================
-    // phase 1: directional lighting
-  vec3 result = CalcDirLight(dirLight, norm, viewDir);
-    // phase 2: point lights
-    for(int i = 0; i < NR_POINT_LIGHTS; i++)
-    result += CalcPointLight(pointLights[i], norm, FragPos, viewDir);
-    // phase 3: spot light
-    result += CalcSpotLight(spotLight, norm, FragPos, viewDir);
+       for(int i = 0; i < NR_POINT_LIGHTS; i++) {
+           if(pointLights[i].enabled) {
+               result += CalcPointLight(pointLights[i], norm, FragPos, viewDir);
+           }
+       }
+
+       for(int i = 0; i < NR_SPOT_LIGHTS; i++) {
+           if(spotLights[i].enabled) {
+               result += CalcSpotLight(spotLights[i], norm, FragPos, viewDir);
+           }
+       }
+
 
     FragColor = vec4(result, 1.0);
 }
 
-// calculates the color when using a directional light.
+
 vec3 CalcDirLight(DirLight light, vec3 normal, vec3 viewDir)
 {
     vec3 lightDir = normalize(-light.direction);

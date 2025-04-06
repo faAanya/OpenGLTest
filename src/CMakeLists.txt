@@ -6,7 +6,9 @@ add_executable(OpenGLTest ${SOURCES}
         Texture.cpp
         Mesh.cpp
         lua-maintainer.cpp
-#        lua-maintainer.h
+        include/LightManager.h
+        include/FigureManager.h
+        #        lua-maintainer.h
 )
 
 target_include_directories(OpenGLTest PUBLIC ${CMAKE_CURRENT_SOURCE_DIR})
