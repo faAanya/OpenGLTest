@@ -3,14 +3,26 @@
 
 #include "shader.h"
 #include "vector"
+#include "string"
+#include "Object.h"
+#include "glm/glm.hpp"
+#include "glm/ext/matrix_transform.hpp"
+#include "glm/gtc/type_ptr.hpp"
+#include "Camera.h"
 using namespace std;
-class LightCreator {
+using namespace glm;
+
+class PLight : public PObject {
 private:
     Shader &lightShader;
-
+    string type;
+    unsigned int index;
+    void drawPointLight();
+    void drawSpotLight(Camera cam);
+    void drawDirLight();
 public:
-    LightCreator(Shader &shader);
-
+    PLight(string name, vec3 pos, Shader &shader, string type, unsigned int index);
+    void Draw(Camera camera);
 };
 
 

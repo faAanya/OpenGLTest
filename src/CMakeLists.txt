@@ -1,13 +1,8 @@
 file (GLOB_RECURSE SOURCES "*.cpp")
 add_executable(OpenGLTest ${SOURCES}
-        include/Mesh.h
-        include/Model.h
-        include/Texture.h
-        Texture.cpp
         Mesh.cpp
         lua-maintainer.cpp
-        include/LightManager.h
-        include/FigureManager.h
+        Object.cpp
         #        lua-maintainer.h
 )
 

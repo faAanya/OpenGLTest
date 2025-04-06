@@ -18,8 +18,6 @@ target_include_directories(stb_image PUBLIC stb)
 add_subdirectory(glfw)
 add_subdirectory(glm)
 
-add_subdirectory(assimp-master)
-
 SET (LUA_SRC_DIR "${CMAKE_CURRENT_SOURCE_DIR}/lua/src")
 
 add_library(

@@ -15,6 +15,7 @@
 #include "include/lua-maintainer.h"
 #include "include/Texture.h"
 #include "src/lua.hpp"
+#include "include/LightManager.h"
 
 Camera camera(glm::vec3(0.0f, 0.0f, 3.0f));
 
@@ -26,10 +27,16 @@ float deltaTime = 0.0f;
 float lastFrame = 0.0f;
 bool isFirstMouse = true;
 
+unsigned int pointCount;
+unsigned int spotCount;
+unsigned int dirCount = 0;
+
 const char *lightVertShaderPath = "resources\\shaders\\lightningShader.vert";
 const char *lightFragShaderPath = "resources\\shaders\\lightningShader.frag";
 const char *lightSourceVertShaderPath = "resources\\shaders\\lightSource.vert";
 const char *lightSourceFragShaderPath = "resources\\shaders\\lightSource.frag";
+
+
 
 void framebuffer_size_callback(GLFWwindow *window, int width, int height);
 
@@ -145,14 +152,6 @@ int main() {
     Mesh myMesh(verts, tex);
     Mesh light(verts, tex);
 
-//    Lua L = Lua();
-//    luaL_dostring(L.L, "x = 42");
-//
-//    lua_getglobal(L.L, "x");
-//    lua_Number x = lua_tonumber(L.L, 1);
-//    printf("lua says x = %d\n", (int)x);
-//    lua_close(L.L);
-
     IMGUI_CHECKVERSION();
     ImGui::CreateContext();
     ImGuiIO &io = ImGui::GetIO();
@@ -163,6 +162,10 @@ int main() {
 
     char inputText[256] = "";
     bool showMessage = false;
+
+    PLight light1("light 1", vec3(-0.2f, -1.0f, -0.3f),lightShader,"directional",0);
+    PLight point("light 2", pointLightPositions[0],lightShader,"point",0);
+    PLight spot("light 3", vec3(1,1,1),lightShader,"spot",0);
 
     while (!glfwWindowShouldClose(window)) {
 
@@ -180,67 +183,71 @@ int main() {
         ImGui_ImplGlfw_NewFrame();
         ImGui::NewFrame();
 
-        lightShader.use();
+//        lightShader.use();
+//        cout << lightShader.ID;
         lightShader.setVec3("viewPos", camera.Position);
         lightShader.setFloat("material.shininess", 32.0f);
 
-        lightShader.setVec3("dirLights[0].direction", -0.2f, -1.0f, -0.3f);
-        lightShader.setVec3("dirLights[0].ambient", 0.2f, 0.2f, 0.2f);
-        lightShader.setVec3("dirLights[0].diffuse", 0.5f, 0.5f, 0.5f);
-        lightShader.setVec3("dirLights[0].specular", 1.0f, 1.0f, 1.0f);
-        lightShader.setBool("dirLights[0].enabled", true);
+        light1.Draw(camera);
+        point.Draw(camera);
+        spot.Draw(camera);
+//        lightShader.setVec3("dirLights[0].direction", -0.2f, -1.0f, -0.3f);
+//        lightShader.setVec3("dirLights[0].ambient", 0.2f, 0.2f, 0.2f);
+//        lightShader.setVec3("dirLights[0].diffuse", 0.5f, 0.5f, 0.5f);
+//        lightShader.setVec3("dirLights[0].specular", 1.0f, 1.0f, 1.0f);
+//        lightShader.setBool("dirLights[0].enabled", false);
 
-        lightShader.setVec3("pointLights[0].position", pointLightPositions[0]);
-        lightShader.setVec3("pointLights[0].ambient", 0.05f, 0.05f, 0.05f);
-        lightShader.setVec3("pointLights[0].diffuse", 0.8f, 0.8f, 0.8f);
-        lightShader.setVec3("pointLights[0].specular", 1.0f, 1.0f, 1.0f);
-        lightShader.setFloat("pointLights[0].constant", 1.0f);
-        lightShader.setFloat("pointLights[0].linear", 0.09f);
-        lightShader.setFloat("pointLights[0].quadratic", 0.032f);
-        lightShader.setBool("pointLights[0].enabled", true);
-
-
-        lightShader.setVec3("pointLights[1].position", pointLightPositions[1]);
-        lightShader.setVec3("pointLights[1].ambient", 0.05f, 0.05f, 0.05f);
-        lightShader.setVec3("pointLights[1].diffuse", 0.8f, 0.8f, 0.8f);
-        lightShader.setVec3("pointLights[1].specular", 1.0f, 1.0f, 1.0f);
-        lightShader.setFloat("pointLights[1].constant", 1.0f);
-        lightShader.setFloat("pointLights[1].linear", 0.09f);
-        lightShader.setFloat("pointLights[1].quadratic", 0.032f);
-        lightShader.setBool("pointLights[1].enabled", true);
+//        lightShader.setVec3("pointLights[0].position", pointLightPositions[0]);
+//        lightShader.setVec3("pointLights[0].ambient", 0.05f, 0.05f, 0.05f);
+//        lightShader.setVec3("pointLights[0].diffuse", 0.8f, 0.8f, 0.8f);
+//        lightShader.setVec3("pointLights[0].specular", 1.0f, 1.0f, 1.0f);
+//        lightShader.setFloat("pointLights[0].constant", 1.0f);
+//        lightShader.setFloat("pointLights[0].linear", 0.09f);
+//        lightShader.setFloat("pointLights[0].quadratic", 0.032f);
+//        lightShader.setBool("pointLights[0].enabled", true);
 
 
-        lightShader.setVec3("pointLights[2].position", pointLightPositions[2]);
-        lightShader.setVec3("pointLights[2].ambient", 0.05f, 0.05f, 0.05f);
-        lightShader.setVec3("pointLights[2].diffuse", 0.8f, 0.8f, 0.8f);
-        lightShader.setVec3("pointLights[2].specular", 1.0f, 1.0f, 1.0f);
-        lightShader.setFloat("pointLights[2].constant", 1.0f);
-        lightShader.setFloat("pointLights[2].linear", 0.09f);
-        lightShader.setFloat("pointLights[2].quadratic", 0.032f);
-        lightShader.setBool("pointLights[2].enabled", false);
-
-
-        lightShader.setVec3("pointLights[3].position", pointLightPositions[3]);
-        lightShader.setVec3("pointLights[3].ambient", 0.05f, 0.05f, 0.05f);
-        lightShader.setVec3("pointLights[3].diffuse", 0.8f, 0.8f, 0.8f);
-        lightShader.setVec3("pointLights[3].specular", 1.0f, 1.0f, 1.0f);
-        lightShader.setFloat("pointLights[3].constant", 1.0f);
-        lightShader.setFloat("pointLights[3].linear", 0.09f);
-        lightShader.setFloat("pointLights[3].quadratic", 0.032f);
-        lightShader.setBool("pointLights[3].enabled", true);
-
-
-        lightShader.setVec3("spotLights[0].position", camera.Position);
-        lightShader.setVec3("spotLights[0].direction", camera.Front);
-        lightShader.setFloat("spotLights[0].cutOff", glm::cos(glm::radians(12.5f)));
-        lightShader.setFloat("spotLights[0].outerCutOff", glm::cos(glm::radians(15.0f)));
-        lightShader.setFloat("spotLights[0].constant", 1.0f);
-        lightShader.setFloat("spotLights[0].linear", 0.09f);
-        lightShader.setFloat("spotLights[0].quadratic", 0.032f);
-        lightShader.setVec3("spotLights[0].ambient", 0.0f, 0.0f, 0.0f);
-        lightShader.setVec3("spotLights[0].diffuse", 1.0f, 1.0f, 1.0f);
-        lightShader.setVec3("spotLights[0].specular", 1.0f, 1.0f, 1.0f);
-        lightShader.setBool("spotLights[0].enabled", false);
+//        lightShader.setVec3("pointLights[1].position", pointLightPositions[1]);
+//        lightShader.setVec3("pointLights[1].ambient", 0.05f, 0.05f, 0.05f);
+//        lightShader.setVec3("pointLights[1].diffuse", 0.8f, 0.8f, 0.8f);
+//        lightShader.setVec3("pointLights[1].specular", 1.0f, 1.0f, 1.0f);
+//        lightShader.setFloat("pointLights[1].constant", 1.0f);
+//        lightShader.setFloat("pointLights[1].linear", 0.09f);
+//        lightShader.setFloat("pointLights[1].quadratic", 0.032f);
+//        lightShader.setBool("pointLights[1].enabled", false);
+//
+//
+//        lightShader.setVec3("pointLights[2].position", pointLightPositions[2]);
+//        lightShader.setVec3("pointLights[2].ambient", 0.05f, 0.05f, 0.05f);
+//        lightShader.setVec3("pointLights[2].diffuse", 0.8f, 0.8f, 0.8f);
+//        lightShader.setVec3("pointLights[2].specular", 1.0f, 1.0f, 1.0f);
+//        lightShader.setFloat("pointLights[2].constant", 1.0f);
+//        lightShader.setFloat("pointLights[2].linear", 0.09f);
+//        lightShader.setFloat("pointLights[2].quadratic", 0.032f);
+//        lightShader.setBool("pointLights[2].enabled", false);
+//
+//
+//        lightShader.setVec3("pointLights[3].position", pointLightPositions[3]);
+//        lightShader.setVec3("pointLights[3].ambient", 0.05f, 0.05f, 0.05f);
+//        lightShader.setVec3("pointLights[3].diffuse", 0.8f, 0.8f, 0.8f);
+//        lightShader.setVec3("pointLights[3].specular", 1.0f, 1.0f, 1.0f);
+//        lightShader.setFloat("pointLights[3].constant", 1.0f);
+//        lightShader.setFloat("pointLights[3].linear", 0.09f);
+//        lightShader.setFloat("pointLights[3].quadratic", 0.032f);
+//        lightShader.setBool("pointLights[3].enabled", false);
+//
+//
+//        lightShader.setVec3("spotLights[0].position", camera.Position);
+//        lightShader.setVec3("spotLights[0].direction", camera.Front);
+//        lightShader.setFloat("spotLights[0].cutOff", glm::cos(glm::radians(12.5f)));
+//        lightShader.setFloat("spotLights[0].outerCutOff", glm::cos(glm::radians(15.0f)));
+//        lightShader.setFloat("spotLights[0].constant", 1.0f);
+//        lightShader.setFloat("spotLights[0].linear", 0.09f);
+//        lightShader.setFloat("spotLights[0].quadratic", 0.032f);
+//        lightShader.setVec3("spotLights[0].ambient", 0.0f, 0.0f, 0.0f);
+//        lightShader.setVec3("spotLights[0].diffuse", 1.0f, 1.0f, 1.0f);
+//        lightShader.setVec3("spotLights[0].specular", 1.0f, 1.0f, 1.0f);
+//        lightShader.setBool("spotLights[0].enabled", false);
 
 
         glm::mat4 projection = glm::perspective(glm::radians(camera.Zoom), (float) WIDTH / (float) HEIGHT, 0.1f,
