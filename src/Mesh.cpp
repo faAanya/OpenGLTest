@@ -41,7 +41,12 @@ Mesh::Mesh(vector<Vertex> vertices, vector<Texture> &textures) {
     VBO.unBindVBO();
 }
 
-void Mesh::Draw(Shader &shader, Camera &camera) {
+void Mesh::Draw(Shader& shader,
+                Camera& camera,
+                glm::mat4 matrix,
+                glm::vec3 translation,
+                glm::quat rotation,
+                glm::vec3 scale) {
     shader.use();
 
     VAO.bindVAO();
@@ -64,6 +69,9 @@ void Mesh::Draw(Shader &shader, Camera &camera) {
 
     shader.setVec3("viewPos", camera.Position.x, camera.Position.y, camera.Position.z);
 
-    glDrawArrays(GL_TRIANGLES, 0, vertices.size());
+    glm::mat4 trans = glm::mat4(1.0f);
+    glm::mat4 rot = glm::mat4(1.0f);
+    glm::mat4 sca = glm::mat4(1.0f);
 
+    glDrawArrays(GL_TRIANGLES, 0, vertices.size());
 }
