@@ -1,6 +1,5 @@
 #include "include/Object.h"
 
-PObject::PObject(std::string n, glm::vec3 pos) {
-    this->name = n;
+PObject::PObject(string& n, glm::vec3 pos) : name(n) {
     this->position = pos;
 }

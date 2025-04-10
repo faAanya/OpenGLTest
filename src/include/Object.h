@@ -4,16 +4,18 @@
 #include "glm/glm.hpp"
 #include "glm/ext/matrix_transform.hpp"
 #include "glm/gtc/type_ptr.hpp"
-
+#include "include/Mesh.h"
 using namespace std;
 using namespace glm;
+
 class PObject{
 public:
-    string name;
-    vec3 position;
+    PObject(string n, vec3 pos, Mesh &mesh);
 
-//    Object();
-    PObject(string n, vec3 pos);
+    string& name;
+    vec3 position;
+    PObject(string& n, vec3 pos);
+
 };
 
-#endif //TESTBUILD_OBJECT_H
+#endif

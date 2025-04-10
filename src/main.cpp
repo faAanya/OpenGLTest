@@ -15,6 +15,7 @@
 #include "include/lua-maintainer.h"
 #include "include/Texture.h"
 #include "src/lua.hpp"
+#include "include/verts.h"
 #include "include/LightManager.h"
 
 Camera camera(glm::vec3(0.0f, 0.0f, 3.0f));
@@ -37,7 +38,6 @@ const char *lightSourceVertShaderPath = "resources\\shaders\\lightSource.vert";
 const char *lightSourceFragShaderPath = "resources\\shaders\\lightSource.frag";
 
 
-
 void framebuffer_size_callback(GLFWwindow *window, int width, int height);
 
 void processInput(GLFWwindow *window);
@@ -46,49 +46,6 @@ void mouse_callback(GLFWwindow *window, double xposIn, double yposIn);
 
 void scroll_callback(GLFWwindow *window, double xoffset, double yoffset);
 
-Vertex vertices[] = {
-        Vertex{glm::vec3(-0.5f, -0.5f, -0.5f), glm::vec3(0.0f, 0.0f, -1.0f), glm::vec2(0.0f, 0.0f)},
-        Vertex{glm::vec3(0.5f, -0.5f, -0.5f), glm::vec3(0.0f, 0.0f, -1.0f), glm::vec2(1.0f, 0.0f)},
-        Vertex{glm::vec3(0.5f, 0.5f, -0.5f), glm::vec3(0.0f, 0.0f, -1.0f), glm::vec2(1.0f, 1.0f)},
-        Vertex{glm::vec3(0.5f, 0.5f, -0.5f), glm::vec3(0.0f, 0.0f, -1.0f), glm::vec2(1.0f, 1.0f)},
-        Vertex{glm::vec3(-0.5f, 0.5f, -0.5f), glm::vec3(0.0f, 0.0f, -1.0f), glm::vec2(0.0f, 1.0f)},
-        Vertex{glm::vec3(-0.5f, -0.5f, -0.5f), glm::vec3(0.0f, 0.0f, -1.0f), glm::vec2(0.0f, 0.0f)},
-
-        Vertex{glm::vec3(-0.5f, -0.5f, 0.5f), glm::vec3(0.0f, 0.0f, 1.0f), glm::vec2(0.0f, 0.0f)},
-        Vertex{glm::vec3(0.5f, -0.5f, 0.5f), glm::vec3(0.0f, 0.0f, 1.0f), glm::vec2(1.0f, 0.0f)},
-        Vertex{glm::vec3(0.5f, 0.5f, 0.5f), glm::vec3(0.0f, 0.0f, 1.0f), glm::vec2(1.0f, 1.0f)},
-        Vertex{glm::vec3(0.5f, 0.5f, 0.5f), glm::vec3(0.0f, 0.0f, 1.0f), glm::vec2(1.0f, 1.0f)},
-        Vertex{glm::vec3(-0.5f, 0.5f, 0.5f), glm::vec3(0.0f, 0.0f, 1.0f), glm::vec2(0.0f, 1.0f)},
-        Vertex{glm::vec3(-0.5f, -0.5f, 0.5f), glm::vec3(0.0f, 0.0f, 1.0f), glm::vec2(0.0f, 0.0f)},
-
-        Vertex{glm::vec3(-0.5f, 0.5f, 0.5f), glm::vec3(-1.0f, 0.0f, 0.0f), glm::vec2(1.0f, 0.0f)},
-        Vertex{glm::vec3(-0.5f, 0.5f, -0.5f), glm::vec3(-1.0f, 0.0f, 0.0f), glm::vec2(1.0f, 1.0f)},
-        Vertex{glm::vec3(-0.5f, -0.5f, -0.5f), glm::vec3(-1.0f, 0.0f, 0.0f), glm::vec2(0.0f, 1.0f)},
-        Vertex{glm::vec3(-0.5f, -0.5f, -0.5f), glm::vec3(-1.0f, 0.0f, 0.0f), glm::vec2(0.0f, 1.0f)},
-        Vertex{glm::vec3(-0.5f, -0.5f, 0.5f), glm::vec3(-1.0f, 0.0f, 0.0f), glm::vec2(0.0f, 0.0f)},
-        Vertex{glm::vec3(-0.5f, 0.5f, 0.5f), glm::vec3(-1.0f, 0.0f, 0.0f), glm::vec2(1.0f, 0.0f)},
-
-        Vertex{glm::vec3(0.5f, 0.5f, 0.5f), glm::vec3(1.0f, 0.0f, 0.0f), glm::vec2(1.0f, 0.0f)},
-        Vertex{glm::vec3(0.5f, 0.5f, -0.5f), glm::vec3(1.0f, 0.0f, 0.0f), glm::vec2(1.0f, 1.0f)},
-        Vertex{glm::vec3(0.5f, -0.5f, -0.5f), glm::vec3(1.0f, 0.0f, 0.0f), glm::vec2(0.0f, 1.0f)},
-        Vertex{glm::vec3(0.5f, -0.5f, -0.5f), glm::vec3(1.0f, 0.0f, 0.0f), glm::vec2(0.0f, 1.0f)},
-        Vertex{glm::vec3(0.5f, -0.5f, 0.5f), glm::vec3(1.0f, 0.0f, 0.0f), glm::vec2(0.0f, 0.0f)},
-        Vertex{glm::vec3(0.5f, 0.5f, 0.5f), glm::vec3(1.0f, 0.0f, 0.0f), glm::vec2(1.0f, 0.0f)},
-
-        Vertex{glm::vec3(-0.5f, -0.5f, -0.5f), glm::vec3(0.0f, -1.0f, 0.0f), glm::vec2(0.0f, 1.0f)},
-        Vertex{glm::vec3(0.5f, -0.5f, -0.5f), glm::vec3(0.0f, -1.0f, 0.0f), glm::vec2(1.0f, 1.0f)},
-        Vertex{glm::vec3(0.5f, -0.5f, 0.5f), glm::vec3(0.0f, -1.0f, 0.0f), glm::vec2(1.0f, 0.0f)},
-        Vertex{glm::vec3(0.5f, -0.5f, 0.5f), glm::vec3(0.0f, -1.0f, 0.0f), glm::vec2(1.0f, 0.0f)},
-        Vertex{glm::vec3(-0.5f, -0.5f, 0.5f), glm::vec3(0.0f, -1.0f, 0.0f), glm::vec2(0.0f, 0.0f)},
-        Vertex{glm::vec3(-0.5f, -0.5f, -0.5f), glm::vec3(0.0f, -1.0f, 0.0f), glm::vec2(0.0f, 1.0f)},
-
-        Vertex{glm::vec3(-0.5f, 0.5f, -0.5f), glm::vec3(0.0f, 1.0f, 0.0f), glm::vec2(0.0f, 1.0f)},
-        Vertex{glm::vec3(0.5f, 0.5f, -0.5f), glm::vec3(0.0f, 1.0f, 0.0f), glm::vec2(1.0f, 1.0f)},
-        Vertex{glm::vec3(0.5f, 0.5f, 0.5f), glm::vec3(0.0f, 1.0f, 0.0f), glm::vec2(1.0f, 0.0f)},
-        Vertex{glm::vec3(0.5f, 0.5f, 0.5f), glm::vec3(0.0f, 1.0f, 0.0f), glm::vec2(1.0f, 0.0f)},
-        Vertex{glm::vec3(-0.5f, 0.5f, 0.5f), glm::vec3(0.0f, 1.0f, 0.0f), glm::vec2(0.0f, 0.0f)},
-        Vertex{glm::vec3(-0.5f, 0.5f, -0.5f), glm::vec3(0.0f, 1.0f, 0.0f), glm::vec2(0.0f, 1.0f)}
-};
 glm::vec3 cubePositions[] = {
         glm::vec3(0.0f, 0.0f, 0.0f),
         glm::vec3(2.0f, 5.0f, -15.0f),
@@ -147,10 +104,11 @@ int main() {
             Texture("resources\\textures\\container2_specular.png", "specular", GL_TEXTURE1, GL_UNSIGNED_BYTE)
 
     };
-    vector<Vertex> verts(vertices, vertices + sizeof(vertices) / sizeof(Vertex));
+
+    vector<Vertex> vert(verts::cube, verts::cube + sizeof(verts::cube) / sizeof(Vertex));
     std::vector<Texture> tex(textures, textures + sizeof(textures) / sizeof(Texture));
-    Mesh myMesh(verts, tex);
-    Mesh light(verts, tex);
+    Mesh myMesh(vert, tex);
+    Mesh light(vert, tex);
 
     IMGUI_CHECKVERSION();
     ImGui::CreateContext();
@@ -163,9 +121,9 @@ int main() {
     char inputText[256] = "";
     bool showMessage = false;
 
-    PLight light1("light 1", vec3(-0.2f, -1.0f, -0.3f),lightShader,"directional",0);
-    PLight point("light 2", pointLightPositions[0],lightShader,"point",0);
-    PLight spot("light 3", vec3(1,1,1),lightShader,"spot",0);
+    PLight light1("light 1", vec3(-0.2f, -1.0f, -0.3f), lightShader, "directional", 0);
+    PLight point("light 2", pointLightPositions[0], lightShader, "point", 0);
+    PLight spot("light 3", vec3(1, 1, 1), lightShader, "spot", 0);
 
     while (!glfwWindowShouldClose(window)) {
 
@@ -183,72 +141,13 @@ int main() {
         ImGui_ImplGlfw_NewFrame();
         ImGui::NewFrame();
 
-//        lightShader.use();
-//        cout << lightShader.ID;
+        lightShader.use();
         lightShader.setVec3("viewPos", camera.Position);
         lightShader.setFloat("material.shininess", 32.0f);
 
-        light1.Draw(camera);
-        point.Draw(camera);
-        spot.Draw(camera);
-//        lightShader.setVec3("dirLights[0].direction", -0.2f, -1.0f, -0.3f);
-//        lightShader.setVec3("dirLights[0].ambient", 0.2f, 0.2f, 0.2f);
-//        lightShader.setVec3("dirLights[0].diffuse", 0.5f, 0.5f, 0.5f);
-//        lightShader.setVec3("dirLights[0].specular", 1.0f, 1.0f, 1.0f);
-//        lightShader.setBool("dirLights[0].enabled", false);
-
-//        lightShader.setVec3("pointLights[0].position", pointLightPositions[0]);
-//        lightShader.setVec3("pointLights[0].ambient", 0.05f, 0.05f, 0.05f);
-//        lightShader.setVec3("pointLights[0].diffuse", 0.8f, 0.8f, 0.8f);
-//        lightShader.setVec3("pointLights[0].specular", 1.0f, 1.0f, 1.0f);
-//        lightShader.setFloat("pointLights[0].constant", 1.0f);
-//        lightShader.setFloat("pointLights[0].linear", 0.09f);
-//        lightShader.setFloat("pointLights[0].quadratic", 0.032f);
-//        lightShader.setBool("pointLights[0].enabled", true);
-
-
-//        lightShader.setVec3("pointLights[1].position", pointLightPositions[1]);
-//        lightShader.setVec3("pointLights[1].ambient", 0.05f, 0.05f, 0.05f);
-//        lightShader.setVec3("pointLights[1].diffuse", 0.8f, 0.8f, 0.8f);
-//        lightShader.setVec3("pointLights[1].specular", 1.0f, 1.0f, 1.0f);
-//        lightShader.setFloat("pointLights[1].constant", 1.0f);
-//        lightShader.setFloat("pointLights[1].linear", 0.09f);
-//        lightShader.setFloat("pointLights[1].quadratic", 0.032f);
-//        lightShader.setBool("pointLights[1].enabled", false);
-//
-//
-//        lightShader.setVec3("pointLights[2].position", pointLightPositions[2]);
-//        lightShader.setVec3("pointLights[2].ambient", 0.05f, 0.05f, 0.05f);
-//        lightShader.setVec3("pointLights[2].diffuse", 0.8f, 0.8f, 0.8f);
-//        lightShader.setVec3("pointLights[2].specular", 1.0f, 1.0f, 1.0f);
-//        lightShader.setFloat("pointLights[2].constant", 1.0f);
-//        lightShader.setFloat("pointLights[2].linear", 0.09f);
-//        lightShader.setFloat("pointLights[2].quadratic", 0.032f);
-//        lightShader.setBool("pointLights[2].enabled", false);
-//
-//
-//        lightShader.setVec3("pointLights[3].position", pointLightPositions[3]);
-//        lightShader.setVec3("pointLights[3].ambient", 0.05f, 0.05f, 0.05f);
-//        lightShader.setVec3("pointLights[3].diffuse", 0.8f, 0.8f, 0.8f);
-//        lightShader.setVec3("pointLights[3].specular", 1.0f, 1.0f, 1.0f);
-//        lightShader.setFloat("pointLights[3].constant", 1.0f);
-//        lightShader.setFloat("pointLights[3].linear", 0.09f);
-//        lightShader.setFloat("pointLights[3].quadratic", 0.032f);
-//        lightShader.setBool("pointLights[3].enabled", false);
-//
-//
-//        lightShader.setVec3("spotLights[0].position", camera.Position);
-//        lightShader.setVec3("spotLights[0].direction", camera.Front);
-//        lightShader.setFloat("spotLights[0].cutOff", glm::cos(glm::radians(12.5f)));
-//        lightShader.setFloat("spotLights[0].outerCutOff", glm::cos(glm::radians(15.0f)));
-//        lightShader.setFloat("spotLights[0].constant", 1.0f);
-//        lightShader.setFloat("spotLights[0].linear", 0.09f);
-//        lightShader.setFloat("spotLights[0].quadratic", 0.032f);
-//        lightShader.setVec3("spotLights[0].ambient", 0.0f, 0.0f, 0.0f);
-//        lightShader.setVec3("spotLights[0].diffuse", 1.0f, 1.0f, 1.0f);
-//        lightShader.setVec3("spotLights[0].specular", 1.0f, 1.0f, 1.0f);
-//        lightShader.setBool("spotLights[0].enabled", false);
-
+        light1.Draw(lightShader, camera);
+//        point.Draw(camera);
+//        spot.Draw(camera);
 
         glm::mat4 projection = glm::perspective(glm::radians(camera.Zoom), (float) WIDTH / (float) HEIGHT, 0.1f,
                                                 100.0f);
@@ -266,7 +165,7 @@ int main() {
             model = glm::rotate(model, glm::radians(angle), glm::vec3(1.0f, 0.3f, 0.5f));
             lightShader.setMat4("model", model);
 
-            light.Draw(lightShader, camera);
+            myMesh.Draw(lightShader, camera);
         }
 
 
@@ -275,24 +174,29 @@ int main() {
         lightSource.setMat4("view", view);
 
 
-        for (unsigned int i = 0; i < 4; i++) {
-            model = glm::mat4(1.0f);
-            model = glm::translate(model, pointLightPositions[i]);
-            model = glm::scale(model, glm::vec3(0.2f)); // Make it a smaller cube
-            lightSource.setMat4("model", model);
-            light.Draw(lightSource, camera);
-        }
-        myMesh.Draw(lightShader, camera);
+//        for (unsigned int i = 0; i < 4; i++) {
+//            model = glm::mat4(1.0f);
+//            model = glm::translate(model, pointLightPositions[i]);
+//            model = glm::scale(model, glm::vec3(0.2f)); // Make it a smaller cube
+//            lightSource.setMat4("model", model);
+//        }
+        model = glm::mat4(1.0f);
+        model = glm::translate(model, pointLightPositions[0]);
+        model = glm::scale(model, glm::vec3(0.2f)); // Make it a smaller cube
+        lightSource.setMat4("model", model);
+        light.Draw(lightSource, camera);
+
+
         ImGui::Begin("Window");
 
         ImGui::InputTextMultiline("Text", inputText, sizeof(inputText), ImVec2(250, 100));
-        // Кнопка и обработка нажатия
+
         if (ImGui::Button("Submit")) {
-            showMessage = true; // Активируем отображение сообщения
-            // Здесь можно добавить другую логику обработки
+            showMessage = true;
+
         }
 
-        // Отображение сообщения если кнопка была нажата
+
         if (showMessage) {
             ImGui::Text("You entered: %s", inputText);
             if (ImGui::Button("Hide message")) {

@@ -14,7 +14,7 @@ using namespace glm;
 
 class PLight : public PObject {
 private:
-    Shader &lightShader;
+    Shader &objectToLight;
     string type;
     unsigned int index;
     void drawPointLight();
@@ -22,7 +22,7 @@ private:
     void drawDirLight();
 public:
     PLight(string name, vec3 pos, Shader &shader, string type, unsigned int index);
-    void Draw(Camera camera);
+    void Draw(Shader& s,Camera camera);
 };
 
 
