@@ -11,8 +11,6 @@ add_library (imgui STATIC
 target_link_libraries (imgui PUBLIC glfw)
 target_include_directories(imgui PUBLIC imgui)
 
-add_library(json STATIC "json/json.c")
-target_include_directories(json PUBLIC json)
 
 add_library(stb_image STATIC stb_image.c)
 target_include_directories(stb_image PUBLIC stb)

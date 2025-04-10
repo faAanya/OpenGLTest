@@ -10,10 +10,7 @@
 #include <glm/ext/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
 #include <include/Mesh.h>
-#include <filesystem>
 #include "include/Camera.h"
-#include "include/line_class.h"
-#include "include/VAO.h"
 #include "include/VBO.h"
 #include "include/lua-maintainer.h"
 #include "include/Texture.h"
@@ -95,7 +92,6 @@ int main() {
         return -1;
     }
 
-
     glEnable(GL_DEPTH_TEST);
 
     Shader lightShader(lightVertShaderPath, lightFragShaderPath);
@@ -104,19 +100,15 @@ int main() {
 
     Texture textures[] = {
 
-            Texture("resources\\textures\\container2.png", "diffuse", GL_TEXTURE0),
-            Texture("resources\\textures\\container2_specular.png", "specular", GL_TEXTURE1)
+            Texture("resources\\textures\\container2.png", "diffuse", GL_TEXTURE0, GL_UNSIGNED_BYTE),
+            Texture("resources\\textures\\container2_specular.png", "specular", GL_TEXTURE1, GL_UNSIGNED_BYTE)
 
     };
-
-    vector<Vertex> verts(vertices, vertices + sizeof(vertices) / sizeof(Vertex));
 
     vector<Vertex> vert(verts::cube, verts::cube + sizeof(verts::cube) / sizeof(Vertex));
     std::vector<Texture> tex(textures, textures + sizeof(textures) / sizeof(Texture));
     Mesh myMesh(vert, tex);
     Mesh light(vert, tex);
-
-
 
     IMGUI_CHECKVERSION();
     ImGui::CreateContext();
@@ -173,7 +165,7 @@ int main() {
             model = glm::rotate(model, glm::radians(angle), glm::vec3(1.0f, 0.3f, 0.5f));
             lightShader.setMat4("model", model);
 
-            light.Draw(lightShader, camera);
+            myMesh.Draw(lightShader, camera);
         }
 
 
