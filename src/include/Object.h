@@ -14,8 +14,10 @@ public:
 
     string& name;
     vec3 position;
-    PObject(string& n, vec3 pos);
-
+    Mesh* mesh;
+    Camera& camera;
+    PObject(string& n, vec3 pos, Camera c);
+    void meshDraw();
 };
 
 #endif

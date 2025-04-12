@@ -15,14 +15,17 @@ using namespace glm;
 class PLight : public PObject {
 private:
     Shader &objectToLight;
+    Shader &light;
     string type;
     unsigned int index;
     void drawPointLight();
-    void drawSpotLight(Camera cam);
+    void drawSpotLight();
     void drawDirLight();
 public:
-    PLight(string name, vec3 pos, Shader &shader, string type, unsigned int index);
-    void Draw(Shader& s,Camera camera);
+    PLight(string name, vec3 pos,Camera camera, Shader &shader,Shader& light, string type, unsigned int index);
+    void meshDraw();
+    void Draw();
+
 };
 
 

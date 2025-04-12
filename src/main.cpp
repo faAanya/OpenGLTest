@@ -105,10 +105,9 @@ int main() {
 
     };
 
-    vector<Vertex> vert(verts::cube, verts::cube + sizeof(verts::cube) / sizeof(Vertex));
     std::vector<Texture> tex(textures, textures + sizeof(textures) / sizeof(Texture));
-    Mesh myMesh(vert, tex);
-    Mesh light(vert, tex);
+    Mesh myMesh(verts::cube, tex);
+//    Mesh light(vert);
 
     IMGUI_CHECKVERSION();
     ImGui::CreateContext();
@@ -121,9 +120,9 @@ int main() {
     char inputText[256] = "";
     bool showMessage = false;
 
-    PLight light1("light 1", vec3(-0.2f, -1.0f, -0.3f), lightShader, "directional", 0);
-    PLight point("light 2", pointLightPositions[0], lightShader, "point", 0);
-    PLight spot("light 3", vec3(1, 1, 1), lightShader, "spot", 0);
+    PLight light1("light 1", vec3(-0.2f, -1.0f, -0.3f), camera, lightShader, lightSource, "directional", dirCount);
+    PLight point("light 2", pointLightPositions[1], camera, lightShader, lightSource, "point", pointCount);
+    PLight spot("light 3", pointLightPositions[1], camera, lightShader, lightSource, "spot", spotCount);
 
     while (!glfwWindowShouldClose(window)) {
 
@@ -145,9 +144,10 @@ int main() {
         lightShader.setVec3("viewPos", camera.Position);
         lightShader.setFloat("material.shininess", 32.0f);
 
-        light1.Draw(lightShader, camera);
-//        point.Draw(camera);
-//        spot.Draw(camera);
+
+        light1.Draw();
+        point.Draw();
+        spot.Draw();
 
         glm::mat4 projection = glm::perspective(glm::radians(camera.Zoom), (float) WIDTH / (float) HEIGHT, 0.1f,
                                                 100.0f);
@@ -173,19 +173,9 @@ int main() {
         lightSource.setMat4("projection", projection);
         lightSource.setMat4("view", view);
 
-
-//        for (unsigned int i = 0; i < 4; i++) {
-//            model = glm::mat4(1.0f);
-//            model = glm::translate(model, pointLightPositions[i]);
-//            model = glm::scale(model, glm::vec3(0.2f)); // Make it a smaller cube
-//            lightSource.setMat4("model", model);
-//        }
-        model = glm::mat4(1.0f);
-        model = glm::translate(model, pointLightPositions[0]);
-        model = glm::scale(model, glm::vec3(0.2f)); // Make it a smaller cube
-        lightSource.setMat4("model", model);
-        light.Draw(lightSource, camera);
-
+        point.meshDraw();
+        light1.meshDraw();
+        spot.meshDraw();
 
         ImGui::Begin("Window");
 
@@ -193,7 +183,6 @@ int main() {
 
         if (ImGui::Button("Submit")) {
             showMessage = true;
-
         }
 
 
@@ -219,7 +208,7 @@ int main() {
 
     lightShader.del();
     lightSource.del();
-//    glfwDestroyWindow(window);
+    glfwDestroyWindow(window);
     glfwTerminate();
     return 0;
 }

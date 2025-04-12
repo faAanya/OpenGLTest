@@ -1,32 +1,45 @@
 #include "include/LightManager.h"
 #include "include/shader.h"
-#include <cstdio>
 #include "include/Camera.h"
 #include "include/verts.h"
 #include <string>
 
-PLight::PLight(string name, vec3 pos, Shader &shader, string t, unsigned int index)
-        : PObject(name, pos),
+PLight::PLight(string name, vec3 pos, Camera cam, Shader &shader, Shader &light, string t, unsigned int index)
+        : PObject(name, pos, cam),
           objectToLight(shader),
+          light(light),
           type(t),
           index(index) {
+
+
+    mesh = new Mesh(verts::sphere(1.0f, 36,18));
 }
 
-void PLight::Draw(Shader& s,Camera cam) {
+void PLight::Draw() {
     if (type == "point") {
         drawPointLight();
     } else if (type == "spot") {
-        drawSpotLight(cam);
+        drawSpotLight();
     } else if (type == "directional") {
         drawDirLight();
     }
+
 }
 
+void PLight::meshDraw() {
+
+    glm::mat4 model = glm::mat4(1.0f);
+    model = glm::mat4(1.0f);
+    model = glm::translate(model, position);
+    model = glm::scale(model, glm::vec3(0.1f));
+    light.setMat4("model", model);
+
+    mesh->Draw(light, camera);
+}
 
 void PLight::drawPointLight() {
 
     string name = "pointLights[" + to_string(index) + "]";
-
     objectToLight.setVec3(name + ".position", position);
     objectToLight.setVec3(name + ".ambient", 0.05f, 0.05f, 0.05f);
     objectToLight.setVec3(name + ".diffuse", 0.8f, 0.8f, 0.8f);
@@ -38,11 +51,13 @@ void PLight::drawPointLight() {
 
 }
 
-void PLight::drawSpotLight(Camera cam) {
+void PLight::drawSpotLight() {
 
-    string name = "spotLights[" + to_string(0) + "]";
-    objectToLight.setVec3(name + ".position", cam.Position);
-    objectToLight.setVec3(name + ".direction", cam.Front);
+
+    string name = "spotLights[" + to_string(index) + "]";
+
+    objectToLight.setVec3(name + ".position", camera.Position);
+    objectToLight.setVec3(name + ".direction", camera.Front);
     objectToLight.setFloat(name + ".cutOff", glm::cos(glm::radians(12.5f)));
     objectToLight.setFloat(name + ".outerCutOff", glm::cos(glm::radians(15.0f)));
     objectToLight.setFloat(name + ".constant", 1.0f);
@@ -56,7 +71,7 @@ void PLight::drawSpotLight(Camera cam) {
 }
 
 void PLight::drawDirLight() {
-    string name = "dirLights[" + to_string(0) + "]";
+    string name = "dirLights[" + to_string(index) + "]";
     objectToLight.setVec3(name + ".direction", position);
     objectToLight.setVec3(name + ".ambient", 0.2f, 0.2f, 0.2f);
     objectToLight.setVec3(name + ".diffuse", 0.5f, 0.5f, 0.5f);
