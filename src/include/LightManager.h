@@ -18,13 +18,13 @@ private:
     Shader &light;
     string type;
     unsigned int index;
-    void drawPointLight();
-    void drawSpotLight();
-    void drawDirLight();
+    void drawPointLight(Shader& s, Camera& c);
+    void drawSpotLight(Shader& s,  Camera& c);
+    void drawDirLight(Shader& s, Camera& c);
 public:
     PLight(string name, vec3 pos,Camera camera, Shader &shader,Shader& light, string type, unsigned int index);
     void meshDraw();
-    void Draw();
+    void Draw(Shader& s, Camera& c);
 
 };
 

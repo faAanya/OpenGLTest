@@ -12,16 +12,16 @@ PLight::PLight(string name, vec3 pos, Camera cam, Shader &shader, Shader &light,
           index(index) {
 
 
-    mesh = new Mesh(verts::sphere(1.0f, 36,18));
+    mesh = new Mesh(verts::sphere(1.0f, 36, 18));
 }
 
-void PLight::Draw() {
+void PLight::Draw(Shader &s, Camera& c) {
     if (type == "point") {
-        drawPointLight();
+        drawPointLight(s,c);
     } else if (type == "spot") {
-        drawSpotLight();
+        drawSpotLight(s, c);
     } else if (type == "directional") {
-        drawDirLight();
+        drawDirLight(s,c);
     }
 
 }
@@ -37,44 +37,44 @@ void PLight::meshDraw() {
     mesh->Draw(light, camera);
 }
 
-void PLight::drawPointLight() {
+void PLight::drawPointLight(Shader &s, Camera& c) {
 
     string name = "pointLights[" + to_string(index) + "]";
-    objectToLight.setVec3(name + ".position", position);
-    objectToLight.setVec3(name + ".ambient", 0.05f, 0.05f, 0.05f);
-    objectToLight.setVec3(name + ".diffuse", 0.8f, 0.8f, 0.8f);
-    objectToLight.setVec3(name + ".specular", 1.0f, 1.0f, 1.0f);
-    objectToLight.setFloat(name + ".constant", 1.0f);
-    objectToLight.setFloat(name + ".linear", 0.09f);
-    objectToLight.setFloat(name + ".quadratic", 0.032f);
-    objectToLight.setBool(name + ".enabled", true);
+    s.setVec3(name + ".position", position);
+    s.setVec3(name + ".ambient", 0.05f, 0.05f, 0.05f);
+    s.setVec3(name + ".diffuse", 0.8f, 0.8f, 0.8f);
+    s.setVec3(name + ".specular", 1.0f, 1.0f, 1.0f);
+    s.setFloat(name + ".constant", 1.0f);
+    s.setFloat(name + ".linear", 0.09f);
+    s.setFloat(name + ".quadratic", 0.032f);
+    s.setBool(name + ".enabled", true);
 
 }
 
-void PLight::drawSpotLight() {
+void PLight::drawSpotLight(Shader &s,  Camera& c) {
 
 
     string name = "spotLights[" + to_string(index) + "]";
 
-    objectToLight.setVec3(name + ".position", camera.Position);
-    objectToLight.setVec3(name + ".direction", camera.Front);
-    objectToLight.setFloat(name + ".cutOff", glm::cos(glm::radians(12.5f)));
-    objectToLight.setFloat(name + ".outerCutOff", glm::cos(glm::radians(15.0f)));
-    objectToLight.setFloat(name + ".constant", 1.0f);
-    objectToLight.setFloat(name + ".linear", 0.09f);
-    objectToLight.setFloat(name + ".quadratic", 0.032f);
-    objectToLight.setVec3(name + ".ambient", 0.0f, 0.0f, 0.0f);
-    objectToLight.setVec3(name + ".diffuse", 1.0f, 1.0f, 1.0f);
-    objectToLight.setVec3(name + ".specular", 1.0f, 1.0f, 1.0f);
-    objectToLight.setBool(name + ".enabled", true);
+    s.setVec3(name + ".position", c.Position);
+    s.setVec3(name + ".direction", c.Front);
+    s.setFloat(name + ".cutOff", glm::cos(glm::radians(12.5f)));
+    s.setFloat(name + ".outerCutOff", glm::cos(glm::radians(15.0f)));
+    s.setFloat(name + ".constant", 1.0f);
+    s.setFloat(name + ".linear", 0.09f);
+    s.setFloat(name + ".quadratic", 0.032f);
+    s.setVec3(name + ".ambient", 0.05f, 0.05f, 0.05f);
+    s.setVec3(name + ".diffuse", 1.0f, 1.0f, 1.0f);
+    s.setVec3(name + ".specular", 1.0f, 1.0f, 1.0f);
+    s.setBool(name + ".enabled", true);
 
 }
 
-void PLight::drawDirLight() {
+void PLight::drawDirLight(Shader &s, Camera& c) {
     string name = "dirLights[" + to_string(index) + "]";
-    objectToLight.setVec3(name + ".direction", position);
-    objectToLight.setVec3(name + ".ambient", 0.2f, 0.2f, 0.2f);
-    objectToLight.setVec3(name + ".diffuse", 0.5f, 0.5f, 0.5f);
-    objectToLight.setVec3(name + ".specular", 1.0f, 1.0f, 1.0f);
-    objectToLight.setBool(name + ".enabled", true);
+    s.setVec3(name + ".direction", position);
+    s.setVec3(name + ".ambient", 0.2f, 0.2f, 0.2f);
+    s.setVec3(name + ".diffuse", 0.5f, 0.5f, 0.5f);
+    s.setVec3(name + ".specular", 1.0f, 1.0f, 1.0f);
+    s.setBool(name + ".enabled", true);
 }

@@ -122,7 +122,7 @@ int main() {
 
     PLight light1("light 1", vec3(-0.2f, -1.0f, -0.3f), camera, lightShader, lightSource, "directional", dirCount);
     PLight point("light 2", pointLightPositions[1], camera, lightShader, lightSource, "point", pointCount);
-    PLight spot("light 3", pointLightPositions[1], camera, lightShader, lightSource, "spot", spotCount);
+    PLight spot("light 3", camera.Position, camera, lightShader, lightSource, "spot", spotCount);
 
     while (!glfwWindowShouldClose(window)) {
 
@@ -145,9 +145,9 @@ int main() {
         lightShader.setFloat("material.shininess", 32.0f);
 
 
-        light1.Draw();
-        point.Draw();
-        spot.Draw();
+        light1.Draw(lightShader, camera);
+        point.Draw(lightShader, camera);
+        spot.Draw(lightShader, camera);
 
         glm::mat4 projection = glm::perspective(glm::radians(camera.Zoom), (float) WIDTH / (float) HEIGHT, 0.1f,
                                                 100.0f);
