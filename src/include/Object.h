@@ -14,10 +14,17 @@ public:
 
     string& name;
     vec3 position;
+    float angle;
+    vec3 scale;
     Mesh* mesh;
     Camera& camera;
-    PObject(string& n, vec3 pos, Camera c);
+    PObject(string &n, Camera& c, glm::vec3 pos, glm::vec3 scale,float angle);
     void meshDraw();
+
+    void moveTo(vec3 newPos);
+    void scaleTo(vec3 newScale);
+    void rotateTo(vec3 newAngle);
+
 };
 
 #endif

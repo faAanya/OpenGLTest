@@ -1,8 +1,8 @@
 #include "include/Texture.h"
 
-Texture::Texture(const char *image, const char* texType, GLenum slot, GLenum pixelType) {
+Texture::Texture(const char *image, const char* texType, GLenum slot) {
 
-    std::cout << image << " " << ID;
+    std::cout << image << " " << ID << "\n";
     type = texType;
     int width, height , nrChannels;
     stbi_set_flip_vertically_on_load(true);

@@ -4,6 +4,7 @@ add_executable(OpenGLTest ${SOURCES}
         lua-maintainer.cpp
         verts.cpp
         Object.cpp
+        FigureManager.cpp
 )
 
 target_include_directories(OpenGLTest PUBLIC ${CMAKE_CURRENT_SOURCE_DIR})

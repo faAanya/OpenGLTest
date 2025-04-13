@@ -71,7 +71,7 @@ void main()
 
     vec3 norm = normalize(Normal);
     vec3 viewDir = normalize(viewPos - FragPos);
-    vec3 result = vec3(1.0, 0.0, 0.0);
+    vec3 result = vec3(0.0, 0.0, 0.0);
     for(int i = 0; i < NR_DIR_LIGHTS; i++) {
            if(dirLights[i].enabled) {
                result += CalcDirLight(dirLights[i], norm, viewDir);

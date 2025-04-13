@@ -17,6 +17,7 @@
 #include "src/lua.hpp"
 #include "include/verts.h"
 #include "include/LightManager.h"
+#include "include/FigureManager.h"
 
 Camera camera(glm::vec3(0.0f, 0.0f, 3.0f));
 
@@ -59,13 +60,6 @@ glm::vec3 cubePositions[] = {
         glm::vec3(-1.3f, 1.0f, -1.5f)
 };
 
-glm::vec3 pointLightPositions[] = {
-        glm::vec3(0.7f, 0.2f, 2.0f),
-        glm::vec3(2.3f, -3.3f, -4.0f),
-        glm::vec3(-4.0f, 2.0f, -12.0f),
-        glm::vec3(0.0f, 0.0f, -3.0f)
-};
-
 int main() {
     glfwInit();
 
@@ -100,14 +94,13 @@ int main() {
 
     Texture textures[] = {
 
-            Texture("resources\\textures\\container2.png", "diffuse", GL_TEXTURE0, GL_UNSIGNED_BYTE),
-            Texture("resources\\textures\\container2_specular.png", "specular", GL_TEXTURE1, GL_UNSIGNED_BYTE)
+            Texture("resources\\textures\\container2.png", "diffuse", GL_TEXTURE0),
+            Texture("resources\\textures\\container2_specular.png", "specular", GL_TEXTURE1)
 
     };
 
     std::vector<Texture> tex(textures, textures + sizeof(textures) / sizeof(Texture));
     Mesh myMesh(verts::cube, tex);
-//    Mesh light(vert);
 
     IMGUI_CHECKVERSION();
     ImGui::CreateContext();
@@ -120,9 +113,27 @@ int main() {
     char inputText[256] = "";
     bool showMessage = false;
 
-    PLight light1("light 1", vec3(-0.2f, -1.0f, -0.3f), camera, lightShader, lightSource, "directional", dirCount);
-    PLight point("light 2", pointLightPositions[1], camera, lightShader, lightSource, "point", pointCount);
-    PLight spot("light 3", camera.Position, camera, lightShader, lightSource, "spot", spotCount);
+    PLight light1("light 1",
+                  camera,
+                  camera.Position,
+                  vec3(-0.2f, -1.0f, -0.3f),
+                  10,
+                  lightShader,
+                  lightSource,
+                  "spot",
+                  dirCount);
+
+    PFigure obj("cube 1",
+                camera,
+                vec3(1.0f, 1.0f, 1.0f),
+                vec3(1.0f, 2.0f, 1.0f),
+                20,
+                lightShader,
+                "type",
+                0);
+
+
+
 
     while (!glfwWindowShouldClose(window)) {
 
@@ -140,48 +151,16 @@ int main() {
         ImGui_ImplGlfw_NewFrame();
         ImGui::NewFrame();
 
-        lightShader.use();
-        lightShader.setVec3("viewPos", camera.Position);
-        lightShader.setFloat("material.shininess", 32.0f);
-
-
-        light1.Draw(lightShader, camera);
-        point.Draw(lightShader, camera);
-        spot.Draw(lightShader, camera);
-
-        glm::mat4 projection = glm::perspective(glm::radians(camera.Zoom), (float) WIDTH / (float) HEIGHT, 0.1f,
-                                                100.0f);
-        lightShader.setMat4("projection", projection);
-        glm::mat4 view = camera.GetViewMatrix();
-
-        lightShader.setMat4("view", view);
-        glm::mat4 model = glm::mat4(1.0f);
-        lightShader.setMat4("model", model);
-
-        for (unsigned int i = 0; i < 10; i++) {
-            glm::mat4 model = glm::mat4(1.0f);
-            model = glm::translate(model, cubePositions[i]);
-            float angle = 20.0f * i;
-            model = glm::rotate(model, glm::radians(angle), glm::vec3(1.0f, 0.3f, 0.5f));
-            lightShader.setMat4("model", model);
-
-            myMesh.Draw(lightShader, camera);
-        }
-
-
-        lightSource.use();
-        lightSource.setMat4("projection", projection);
-        lightSource.setMat4("view", view);
-
-        point.meshDraw();
+        light1.Draw();
         light1.meshDraw();
-        spot.meshDraw();
-
+//        spot.meshDraw();
+        obj.Draw(lightShader);
         ImGui::Begin("Window");
 
         ImGui::InputTextMultiline("Text", inputText, sizeof(inputText), ImVec2(250, 100));
 
         if (ImGui::Button("Submit")) {
+            light1.moveTo(vec3(1.0f, 2.0f, -0.5f));
             showMessage = true;
         }
 
