@@ -7,8 +7,6 @@
 #include "include/shader.h"
 #include "stb_image.h"
 #include <glm/glm.hpp>
-#include <glm/ext/matrix_transform.hpp>
-#include <glm/gtc/type_ptr.hpp>
 #include <include/Mesh.h>
 #include "include/Camera.h"
 #include "include/VBO.h"
@@ -18,6 +16,7 @@
 #include "include/verts.h"
 #include "include/LightManager.h"
 #include "include/FigureManager.h"
+#include "include/ImguiManager.h"
 
 Camera camera(glm::vec3(0.0f, 0.0f, 3.0f));
 
@@ -40,25 +39,13 @@ const char *lightSourceFragShaderPath = "resources\\shaders\\lightSource.frag";
 
 
 void framebuffer_size_callback(GLFWwindow *window, int width, int height);
+void initializeGlfw(GLFWwindow *window, int width, int height);
 
 void processInput(GLFWwindow *window);
 
 void mouse_callback(GLFWwindow *window, double xposIn, double yposIn);
 
 void scroll_callback(GLFWwindow *window, double xoffset, double yoffset);
-
-glm::vec3 cubePositions[] = {
-        glm::vec3(0.0f, 0.0f, 0.0f),
-        glm::vec3(2.0f, 5.0f, -15.0f),
-        glm::vec3(-1.5f, -2.2f, -2.5f),
-        glm::vec3(-3.8f, -2.0f, -12.3f),
-        glm::vec3(2.4f, -0.4f, -3.5f),
-        glm::vec3(-1.7f, 3.0f, -7.5f),
-        glm::vec3(1.3f, -2.0f, -2.5f),
-        glm::vec3(1.5f, 2.0f, -2.5f),
-        glm::vec3(1.5f, 0.2f, -1.5f),
-        glm::vec3(-1.3f, 1.0f, -1.5f)
-};
 
 int main() {
     glfwInit();
@@ -89,36 +76,32 @@ int main() {
     glEnable(GL_DEPTH_TEST);
 
     Shader lightShader(lightVertShaderPath, lightFragShaderPath);
+    Shader lightShader1(lightVertShaderPath, lightFragShaderPath);
     Shader lightSource(lightSourceVertShaderPath, lightSourceFragShaderPath);
 
 
     Texture textures[] = {
 
-            Texture("resources\\textures\\container2.png", "diffuse", GL_TEXTURE0),
+            Texture("resources\\textures\\popcat.jpg", "diffuse", GL_TEXTURE0),
             Texture("resources\\textures\\container2_specular.png", "specular", GL_TEXTURE1)
-
     };
+    Texture textures1[] = {
 
+            Texture("resources\\textures\\container2.jpg", "diffuse", GL_TEXTURE2),
+    };
     std::vector<Texture> tex(textures, textures + sizeof(textures) / sizeof(Texture));
-    Mesh myMesh(verts::cube, tex);
+    std::vector<Texture> tex1(textures1, textures1 + sizeof(textures1) / sizeof(Texture));
 
-    IMGUI_CHECKVERSION();
-    ImGui::CreateContext();
-    ImGuiIO &io = ImGui::GetIO();
-    (void) io;
-    ImGui::StyleColorsDark();
-    ImGui_ImplGlfw_InitForOpenGL(window, true);
-    ImGui_ImplOpenGL3_Init("#version 330");
 
-    char inputText[256] = "";
-    bool showMessage = false;
+    PImgui imgui(window);
+    imgui.initialize();
 
     PLight light1("light 1",
                   camera,
-                  camera.Position,
-                  vec3(-0.2f, -1.0f, -0.3f),
+                  vec3(0.0f, 1.0f, 1.0f),
+                  vec3(0.8f, 1.0f, 1.0f),
                   10,
-                  lightShader,
+                  lightShader1,
                   lightSource,
                   "spot",
                   dirCount);
@@ -128,11 +111,19 @@ int main() {
                 vec3(1.0f, 1.0f, 1.0f),
                 vec3(1.0f, 2.0f, 1.0f),
                 20,
-                lightShader,
+                lightShader1,
                 "type",
-                0);
-
-
+                0,
+                tex1);
+    PFigure obj1("cube 1",
+                 camera,
+                 vec3(2.0f, 2.0f, 2.0f),
+                 vec3(1.0f, 2.0f, 1.0f),
+                 20,
+                 lightShader1,
+                 "type",
+                 0,
+                 tex1);
 
 
     while (!glfwWindowShouldClose(window)) {
@@ -143,49 +134,25 @@ int main() {
 
         processInput(window);
 
-        glClearColor(0.1f, 0.1f, 0.1f, 1.0f);
+        glClearColor(1.0f, 0.1f, 0.1f, 1.0f);
 
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-        ImGui_ImplOpenGL3_NewFrame();
-        ImGui_ImplGlfw_NewFrame();
-        ImGui::NewFrame();
+        imgui.activeState();
 
         light1.Draw();
         light1.meshDraw();
-//        spot.meshDraw();
-        obj.Draw(lightShader);
-        ImGui::Begin("Window");
+        obj1.Draw(lightShader1);
+        obj.Draw(lightShader1);
 
-        ImGui::InputTextMultiline("Text", inputText, sizeof(inputText), ImVec2(250, 100));
-
-        if (ImGui::Button("Submit")) {
-            light1.moveTo(vec3(1.0f, 2.0f, -0.5f));
-            showMessage = true;
-        }
-
-
-        if (showMessage) {
-            ImGui::Text("You entered: %s", inputText);
-            if (ImGui::Button("Hide message")) {
-                showMessage = false;
-            }
-        }
-        ImGui::End();
-
-
-        ImGui::Render();
-        ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
 
         glfwSwapBuffers(window);
         glfwPollEvents();
     }
-//
-    ImGui_ImplOpenGL3_Shutdown();
-    ImGui_ImplGlfw_Shutdown();
-    ImGui::DestroyContext();
+    imgui.destroy();
 
     lightShader.del();
+    lightShader1.del();
     lightSource.del();
     glfwDestroyWindow(window);
     glfwTerminate();
@@ -197,13 +164,20 @@ void framebuffer_size_callback(GLFWwindow *window, int width, int height) {
 }
 
 void processInput(GLFWwindow *window) {
-    if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS) {
+    if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS)
         glfwSetWindowShouldClose(window, true);
-    }
+
+    if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS)
+        camera.ProcessKeyboard(FORWARD, deltaTime);
+    if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS)
+        camera.ProcessKeyboard(BACKWARD, deltaTime);
+    if (glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS)
+        camera.ProcessKeyboard(LEFT, deltaTime);
+    if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS)
+        camera.ProcessKeyboard(RIGHT, deltaTime);
 }
 
 void mouse_callback(GLFWwindow *window, double xposIn, double yposIn) {
-
     float xpos = static_cast<float>(xposIn);
     float ypos = static_cast<float>(yposIn);
 
@@ -216,29 +190,15 @@ void mouse_callback(GLFWwindow *window, double xposIn, double yposIn) {
     float xoffset = xpos - lastX;
     float yoffset = lastY - ypos;
 
-    if (glfwGetMouseButton(window, GLFW_MOUSE_BUTTON_MIDDLE)) {
-        if (abs(xoffset) > 1.0f) {
-            if (lastX < xpos)
-                camera.ProcessMovement(deltaTime, LEFT);
-            if (lastX > xpos)
-                camera.ProcessMovement(deltaTime, RIGHT);
-        }
-        if (abs(yoffset) > 1.0f) {
-            if (lastY < ypos)
-                camera.ProcessMovement(deltaTime, UP);
-            if (lastY > ypos)
-                camera.ProcessMovement(deltaTime, DOWN);
-        }
-    }
     lastX = xpos;
     lastY = ypos;
 
-    if (glfwGetMouseButton(window, GLFW_MOUSE_BUTTON_RIGHT)) {
-        camera.ProcessMouseRotation(xoffset, yoffset);
-    }
-
+    camera.ProcessMouseMovement(xoffset, yoffset);
 }
 
 void scroll_callback(GLFWwindow *window, double xoffset, double yoffset) {
-    camera.ProcessMouseScroll(yoffset);
+    camera.ProcessMouseScroll(static_cast<float>(yoffset));
+}
+void initializeGlfw(GLFWwindow *window, double xoffset, double yoffset) {
+    camera.ProcessMouseScroll(static_cast<float>(yoffset));
 }

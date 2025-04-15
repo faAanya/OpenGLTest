@@ -5,6 +5,7 @@ add_executable(OpenGLTest ${SOURCES}
         verts.cpp
         Object.cpp
         FigureManager.cpp
+        ImguiManager.cpp
 )
 
 target_include_directories(OpenGLTest PUBLIC ${CMAKE_CURRENT_SOURCE_DIR})

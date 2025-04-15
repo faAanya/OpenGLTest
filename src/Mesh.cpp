@@ -74,8 +74,9 @@ void Mesh::Draw(Shader &shader, Camera &camera) {
         } else if (type == "specular") {
             num = std::to_string(numSpecular++);
         }
-        textures[i].texUnit(shader, (type + num).c_str(), i);
         textures[i].Bind();
+        textures[i].texUnit(shader, (type + num).c_str(), i);
+        cout << shader.ID << " " << (type + num).c_str() << "\n";
     }
     shader.setVec3("viewPos", camera.Position.x, camera.Position.y, camera.Position.z);
 

@@ -22,6 +22,7 @@ public:
     void meshDraw();
 
     void moveTo(vec3 newPos);
+    void changeLightColor();
     void scaleTo(vec3 newScale);
     void rotateTo(vec3 newAngle);
 

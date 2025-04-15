@@ -42,6 +42,7 @@ void Texture::texUnit(Shader& shader, const char *uniform, GLuint unit) {
 }
 
 void Texture::Bind(){
+//    glActiveTexture(unit);
     glBindTexture(GL_TEXTURE_2D, ID);
 }
 
