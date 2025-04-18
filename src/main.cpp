@@ -1,19 +1,15 @@
 #include <glad/glad.h>
 #include <iostream>
-#include "imgui.h"
-#include "backends/imgui_impl_opengl3.h"
 #include "backends/imgui_impl_glfw.h"
 #include <GLFW/glfw3.h>
 #include "include/shader.h"
 #include "stb_image.h"
 #include <glm/glm.hpp>
-#include <include/Mesh.h>
 #include "include/Camera.h"
 #include "include/VBO.h"
 #include "include/lua-maintainer.h"
 #include "include/Texture.h"
 #include "src/lua.hpp"
-#include "include/verts.h"
 #include "include/LightManager.h"
 #include "include/FigureManager.h"
 #include "include/ImguiManager.h"
@@ -39,7 +35,6 @@ const char *lightSourceFragShaderPath = "resources\\shaders\\lightSource.frag";
 
 
 void framebuffer_size_callback(GLFWwindow *window, int width, int height);
-void initializeGlfw(GLFWwindow *window, int width, int height);
 
 void processInput(GLFWwindow *window);
 
@@ -127,24 +122,23 @@ int main() {
 
 
     while (!glfwWindowShouldClose(window)) {
-
         float currentFrame = static_cast<float>(glfwGetTime());
         deltaTime = currentFrame - lastFrame;
         lastFrame = currentFrame;
 
         processInput(window);
 
-        glClearColor(1.0f, 0.1f, 0.1f, 1.0f);
+        glClearColor(0.1f, 0.1f, 0.1f, 1.0f);
 
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-        imgui.activeState();
 
         light1.Draw();
         light1.meshDraw();
         obj1.Draw(lightShader1);
         obj.Draw(lightShader1);
 
+        imgui.activeState();
 
         glfwSwapBuffers(window);
         glfwPollEvents();
@@ -197,8 +191,5 @@ void mouse_callback(GLFWwindow *window, double xposIn, double yposIn) {
 }
 
 void scroll_callback(GLFWwindow *window, double xoffset, double yoffset) {
-    camera.ProcessMouseScroll(static_cast<float>(yoffset));
-}
-void initializeGlfw(GLFWwindow *window, double xoffset, double yoffset) {
     camera.ProcessMouseScroll(static_cast<float>(yoffset));
 }
