@@ -117,6 +117,7 @@ void PImgui::drawTopMenu() {
                 ImGui::MenuItem("Sphere");
                 ImGui::MenuItem("Cylinder");
                 ImGui::MenuItem("Pyramid");
+                ImGui::MenuItem("Plane");
                 ImGui::EndMenu();
             }
 

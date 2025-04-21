@@ -7,6 +7,7 @@
 namespace verts {
     extern Vertex cube[36];
     extern Vertex pyramid[18];
+    extern Vertex plane[6];
 
     extern Vertex* sphere(float radius, unsigned int stacks, unsigned int slices, size_t& outVertexCount);
 

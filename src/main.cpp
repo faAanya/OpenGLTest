@@ -98,7 +98,7 @@ int main() {
                   10,
                   objectShader,
                   lightShader,
-                  "spot",
+                  "directional",
                   dirCount);
 
     PFigure obj("cube 1",
