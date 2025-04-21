@@ -24,7 +24,7 @@ private:
 public:
     PLight(string name, Camera& cam, vec3 pos, vec3 scale, float angle, Shader &shader, Shader &light, string t,
            unsigned int index);
-    void meshDraw();
+    void drawMesh();
     void Draw();
 
 };

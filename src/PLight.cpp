@@ -21,17 +21,19 @@ PLight::PLight(string name, Camera &cam, vec3 pos, vec3 scale, float angle, Shad
 }
 
 void PLight::Draw() {
-    if (type == "point") {
-        drawPointLight();
-    } else if (type == "spot") {
-        drawSpotLight();
-    } else if (type == "directional") {
-        drawDirLight();
+    if(isDrawing){
+        if (type == "point") {
+            drawPointLight();
+        } else if (type == "spot") {
+            drawSpotLight();
+        } else if (type == "directional") {
+            drawDirLight();
+        }
+        drawMesh();
     }
-    meshDraw();
 }
 
-void PLight::meshDraw() {
+void PLight::drawMesh() {
 
     light.use();
     glm::mat4 projection = glm::perspective(glm::radians(camera.Zoom), (float) 1280 / (float) 720, 0.1f,

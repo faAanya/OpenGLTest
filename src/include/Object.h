@@ -18,8 +18,12 @@ public:
     vec3 scale;
     Mesh* mesh;
     Camera& camera;
+    bool isDrawing;
     PObject(string &n, Camera& c, glm::vec3 pos, glm::vec3 scale,float angle);
-    void meshDraw();
+
+    void drawMesh();
+    void deleteObj();
+
 
     void moveTo(vec3 newPos);
     void changeColor();

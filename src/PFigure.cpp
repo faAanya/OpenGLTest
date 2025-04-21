@@ -17,6 +17,9 @@ PObject(name, cam, pos, scale, angle),
 }
 
 void PFigure::Draw(Shader &s) {
+    if(isDrawing){
+
+
     s.use();
     s.setVec3("viewPos", camera.Position);
     s.setFloat("material.shininess", 32.0f);
@@ -38,4 +41,5 @@ void PFigure::Draw(Shader &s) {
     s.setMat4("model", model);
 
     mesh->Draw(s, camera);
+    }
 }

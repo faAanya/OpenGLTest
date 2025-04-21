@@ -8,6 +8,7 @@ PObject::PObject(string &n, Camera& c, glm::vec3 pos, glm::vec3 scale = vec3(1.0
     this->scale = scale;
     this->angle = angle;
 
+    isDrawing = true;
 }
 
 void PObject::moveTo(vec3 newPos) {
@@ -26,4 +27,7 @@ void PObject::rotateTo(float newAngle) {
     this->angle = newAngle;
 
     cout<<"rotate" << "\n";
+}
+void PObject::deleteObj() {
+    isDrawing = false;
 }
