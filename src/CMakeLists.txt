@@ -6,6 +6,7 @@ add_executable(OpenGLTest ${SOURCES}
         Object.cpp
         PFigure.cpp
         PImgui.cpp
+        AxisLines.cpp
 )
 
 target_include_directories(OpenGLTest PUBLIC ${CMAKE_CURRENT_SOURCE_DIR})

@@ -13,6 +13,7 @@
 #include "include/PLight.h"
 #include "include/PFigure.h"
 #include "include/PImgui.h"
+#include "include/AxisLines.h"
 
 Camera camera(glm::vec3(0.0f, 0.0f, 3.0f));
 
@@ -69,6 +70,7 @@ int main() {
     }
 
     glEnable(GL_DEPTH_TEST);
+    AxisLines axes;
 
     Shader objectShader(lightVertShaderPath, lightFragShaderPath);
     Shader lightShader(lightSourceVertShaderPath, lightSourceFragShaderPath);
@@ -104,7 +106,7 @@ int main() {
     PFigure obj("cube 1",
                 camera,
                 vec3(1.0f, 1.0f, 1.0f),
-                vec3(1.0f, 2.0f, 1.0f),
+                vec3(1.0f, 4.0f, 1.0f),
                 20,
                 objectShader,
                 "type",
@@ -132,11 +134,15 @@ int main() {
 
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-
+        glm::mat4 projection = glm::perspective(glm::radians(camera.Zoom), (float) 1280 / (float) 720, 0.1f,
+                                                100.0f);
         light1.Draw();
-        light1.meshDraw();
+        axes.Draw(camera.GetViewMatrix(), projection);
+
+
         obj1.Draw(objectShader);
         obj.Draw(objectShader);
+
 
         imgui.activeState();
 

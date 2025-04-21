@@ -28,7 +28,7 @@ void PLight::Draw() {
     } else if (type == "directional") {
         drawDirLight();
     }
-
+    meshDraw();
 }
 
 void PLight::meshDraw() {
@@ -84,7 +84,7 @@ void PLight::drawSpotLight() {
 
 void PLight::drawDirLight() {
     string name = "dirLights[" + to_string(index) + "]";
-    objectToLight.setVec3(name + ".direction", position);
+    objectToLight.setVec3(name + ".direction", camera.Front);
     objectToLight.setVec3(name + ".ambient", 0.2f, 0.2f, 0.2f);
     objectToLight.setVec3(name + ".diffuse", 0.5f, 0.5f, 0.5f);
     objectToLight.setVec3(name + ".specular", 1.0f, 1.0f, 1.0f);
