@@ -13,7 +13,11 @@ PLight::PLight(string name, Camera &cam, vec3 pos, vec3 scale, float angle, Shad
           index(index) {
 
 
-    mesh = new Mesh(verts::sphere(1.0f, 36, 18));
+//    size_t vertexCount = 0;
+//    Vertex* sphereVertices = verts::sphere(1.0f, 32, 32, vertexCount);
+//    vector<Vertex> vert(sphereVertices, sphereVertices + vertexCount);
+    vector<Vertex> vert(verts::pyramid, verts::pyramid + sizeof(verts::pyramid) / sizeof(Vertex));
+    mesh = new Mesh(vert);
 }
 
 void PLight::Draw() {

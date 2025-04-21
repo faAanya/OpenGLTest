@@ -5,9 +5,12 @@
 #include "include/VBO.h"
 
 namespace verts {
-    extern  std::vector<Vertex> cube;
+    extern Vertex cube[36];
+    extern Vertex pyramid[18];
 
-    extern std::vector<Vertex> sphere(float radius, unsigned int stacks, unsigned int slices);
+    extern Vertex* sphere(float radius, unsigned int stacks, unsigned int slices, size_t& outVertexCount);
+
+
 }
 
 #endif

@@ -12,7 +12,8 @@ PObject(name, cam, pos, scale, angle),
                     type(t),
                     textures(tex){
 
-    mesh = new Mesh(verts::cube, textures);
+    vector<Vertex> vert(verts::cube, verts::cube + sizeof(verts::cube) / sizeof(Vertex));
+    mesh = new Mesh(vert, textures);
 }
 
 void PFigure::Draw(Shader &s) {

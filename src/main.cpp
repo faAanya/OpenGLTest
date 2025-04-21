@@ -171,6 +171,8 @@ void processInput(GLFWwindow *window) {
 }
 
 void mouse_callback(GLFWwindow *window, double xposIn, double yposIn) {
+
+
     float xpos = static_cast<float>(xposIn);
     float ypos = static_cast<float>(yposIn);
 
@@ -185,8 +187,9 @@ void mouse_callback(GLFWwindow *window, double xposIn, double yposIn) {
 
     lastX = xpos;
     lastY = ypos;
-
+    if(glfwGetKey(window, GLFW_KEY_LEFT_ALT) == GLFW_PRESS){
     camera.ProcessMouseMovement(xoffset, yoffset);
+    }
 }
 
 void scroll_callback(GLFWwindow *window, double xoffset, double yoffset) {
