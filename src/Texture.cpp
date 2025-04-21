@@ -1,6 +1,6 @@
 #include "include/Texture.h"
 
-Texture::Texture(const char *image, const char* texType, GLenum slot) {
+Texture::Texture(const char *image, const char* texType, GLenum slot) : unit(slot) {
 
     std::cout << image << " " << ID << "\n";
     type = texType;
@@ -42,7 +42,7 @@ void Texture::texUnit(Shader& shader, const char *uniform, GLuint unit) {
 }
 
 void Texture::Bind(){
-//    glActiveTexture(unit);
+    glActiveTexture(unit);
     glBindTexture(GL_TEXTURE_2D, ID);
 }
 

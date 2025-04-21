@@ -13,9 +13,17 @@ PObject::PObject(string &n, Camera& c, glm::vec3 pos, glm::vec3 scale = vec3(1.0
 void PObject::moveTo(vec3 newPos) {
     this->position = newPos;
 
-    cout<<"move";
+    cout<<"move" << "\n";
 }
 
-void PObject::scaleTo(vec3 newScale) {}
+void PObject::scaleTo(vec3 newScale) {
+    this->scale = newScale;
 
-void PObject::rotateTo(vec3 newAngle) {}
+    cout<<"scale" << "\n";
+}
+
+void PObject::rotateTo(float newAngle) {
+    this->angle = newAngle;
+
+    cout<<"rotate" << "\n";
+}

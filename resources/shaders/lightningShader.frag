@@ -5,6 +5,8 @@ struct Material {
     sampler2D diffuse;
     sampler2D specular;
     float shininess;
+
+    vec3 color;
 };
 
 struct DirLight {
@@ -62,6 +64,8 @@ uniform PointLight pointLights[NR_POINT_LIGHTS];
 uniform SpotLight spotLights[NR_SPOT_LIGHTS];
 uniform Material material;
 
+uniform sampler2D tex;
+
 vec3 CalcDirLight(DirLight light, vec3 normal, vec3 viewDir);
 vec3 CalcPointLight(PointLight light, vec3 normal, vec3 fragPos, vec3 viewDir);
 vec3 CalcSpotLight(SpotLight light, vec3 normal, vec3 fragPos, vec3 viewDir);
@@ -89,8 +93,7 @@ void main()
                result += CalcSpotLight(spotLights[i], norm, FragPos, viewDir);
            }
        }
-
-
+    result += material.color;
     FragColor = vec4(result, 1.0);
 }
 

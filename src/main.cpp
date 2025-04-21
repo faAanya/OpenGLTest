@@ -70,19 +70,19 @@ int main() {
 
     glEnable(GL_DEPTH_TEST);
 
-    Shader lightShader(lightVertShaderPath, lightFragShaderPath);
-    Shader lightShader1(lightVertShaderPath, lightFragShaderPath);
-    Shader lightSource(lightSourceVertShaderPath, lightSourceFragShaderPath);
+    Shader objectShader(lightVertShaderPath, lightFragShaderPath);
+    Shader lightShader(lightSourceVertShaderPath, lightSourceFragShaderPath);
 
 
     Texture textures[] = {
 
-            Texture("resources\\textures\\popcat.jpg", "diffuse", GL_TEXTURE0),
+            Texture("resources\\textures\\container2.png", "diffuse", GL_TEXTURE0),
             Texture("resources\\textures\\container2_specular.png", "specular", GL_TEXTURE1)
     };
     Texture textures1[] = {
 
-            Texture("resources\\textures\\container2.jpg", "diffuse", GL_TEXTURE2),
+            Texture("resources\\textures\\cupcake.jpg", "diffuse", GL_TEXTURE0),
+//            Texture("resources\\textures\\cupcake.jpg", "specular", GL_TEXTURE1)
     };
     std::vector<Texture> tex(textures, textures + sizeof(textures) / sizeof(Texture));
     std::vector<Texture> tex1(textures1, textures1 + sizeof(textures1) / sizeof(Texture));
@@ -96,8 +96,8 @@ int main() {
                   vec3(0.0f, 1.0f, 1.0f),
                   vec3(0.8f, 1.0f, 1.0f),
                   10,
-                  lightShader1,
-                  lightSource,
+                  objectShader,
+                  lightShader,
                   "spot",
                   dirCount);
 
@@ -106,16 +106,16 @@ int main() {
                 vec3(1.0f, 1.0f, 1.0f),
                 vec3(1.0f, 2.0f, 1.0f),
                 20,
-                lightShader1,
+                objectShader,
                 "type",
                 0,
-                tex1);
+                tex);
     PFigure obj1("cube 1",
                  camera,
                  vec3(2.0f, 2.0f, 2.0f),
                  vec3(1.0f, 2.0f, 1.0f),
                  20,
-                 lightShader1,
+                 objectShader,
                  "type",
                  0,
                  tex1);
@@ -135,8 +135,8 @@ int main() {
 
         light1.Draw();
         light1.meshDraw();
-        obj1.Draw(lightShader1);
-        obj.Draw(lightShader1);
+        obj1.Draw(objectShader);
+        obj.Draw(objectShader);
 
         imgui.activeState();
 
@@ -145,9 +145,8 @@ int main() {
     }
     imgui.destroy();
 
+    objectShader.del();
     lightShader.del();
-    lightShader1.del();
-    lightSource.del();
     glfwDestroyWindow(window);
     glfwTerminate();
     return 0;

@@ -41,7 +41,6 @@ void PImgui::drawTopMenu() {
 
         ImGui::SetNextWindowSize(textWindowSize, ImGuiCond_FirstUseEver);
 
-        // Автоматическое позиционирование
         if (currentPinState != PIN_NONE)
         {
             ImVec2 viewportSize = ImGui::GetMainViewport()->Size;
