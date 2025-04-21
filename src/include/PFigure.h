@@ -1,8 +1,8 @@
-#ifndef TESTBUILD_FIGUREMANAGER_H
-#define TESTBUILD_FIGUREMANAGER_H
+#ifndef TESTBUILD_PFIGURE_H
+#define TESTBUILD_PFIGURE_H
 
 #include "include/Object.h"
-#include "include/LightManager.h"
+#include "include/PLight.h"
 
 class PFigure : public PObject {
 private:

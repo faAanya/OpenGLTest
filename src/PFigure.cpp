@@ -1,4 +1,4 @@
-#include "include/FigureManager.h"
+#include "include/PFigure.h"
 #include "include/verts.h"
 #include "glad/glad.h"
 #include "glm/glm.hpp"

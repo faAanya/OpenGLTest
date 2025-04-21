@@ -7,12 +7,12 @@
 #include <glm/glm.hpp>
 #include "include/Camera.h"
 #include "include/VBO.h"
-#include "include/lua-maintainer.h"
+#include "include/PLua.h"
 #include "include/Texture.h"
 #include "src/lua.hpp"
-#include "include/LightManager.h"
-#include "include/FigureManager.h"
-#include "include/ImguiManager.h"
+#include "include/PLight.h"
+#include "include/PFigure.h"
+#include "include/PImgui.h"
 
 Camera camera(glm::vec3(0.0f, 0.0f, 3.0f));
 

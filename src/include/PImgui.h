@@ -1,5 +1,5 @@
-#ifndef TESTBUILD_IMGUIMANAGER_H
-#define TESTBUILD_IMGUIMANAGER_H
+#ifndef TESTBUILD_PIMGUI_H
+#define TESTBUILD_PIMGUI_H
 #include "GLFW/glfw3.h"
 #include "backends/imgui_impl_opengl3.h"
 #include "backends/imgui_impl_glfw.h"
@@ -42,4 +42,4 @@ public:
 };
 
 
-#endif //TESTBUILD_IMGUIMANAGER_H
+#endif //TESTBUILD_PIMGUI_H

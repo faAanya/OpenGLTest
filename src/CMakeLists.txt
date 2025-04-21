@@ -1,11 +1,11 @@
 file (GLOB_RECURSE SOURCES "*.cpp")
 add_executable(OpenGLTest ${SOURCES}
         Mesh.cpp
-        lua-maintainer.cpp
+        PLua.cpp
         verts.cpp
         Object.cpp
-        FigureManager.cpp
-        ImguiManager.cpp
+        PFigure.cpp
+        PImgui.cpp
 )
 
 target_include_directories(OpenGLTest PUBLIC ${CMAKE_CURRENT_SOURCE_DIR})

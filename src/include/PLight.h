@@ -1,5 +1,5 @@
-#ifndef TESTBUILD_LIGHTMANAGER_H
-#define TESTBUILD_LIGHTMANAGER_H
+#ifndef TESTBUILD_PLIGHT_H
+#define TESTBUILD_PLIGHT_H
 
 #include "shader.h"
 #include "vector"
@@ -30,4 +30,4 @@ public:
 };
 
 
-#endif //TESTBUILD_LIGHTMANAGER_H
+#endif //TESTBUILD_PLIGHT_H

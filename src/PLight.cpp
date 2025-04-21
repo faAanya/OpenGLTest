@@ -1,4 +1,4 @@
-#include "include/LightManager.h"
+#include "include/PLight.h"
 #include "include/shader.h"
 #include "include/Camera.h"
 #include "include/verts.h"
