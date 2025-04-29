@@ -21,9 +21,8 @@ class ObjectManager {
 private:
     std::vector<std::unique_ptr<PFigure>> figures;
     std::vector<std::unique_ptr<PLight>> lights;
-    PObject* activeObject = nullptr;
+    PObject *activeObject = nullptr;
 
-    bool hasActiveObject = false;
     int lightCounter = 0;
 
 public:
@@ -32,34 +31,33 @@ public:
 
     ObjectManager() = default;
 
-    PObject* getActiveObject() const {
+    PObject *getActiveObject() const {
         return activeObject;
     }
-    bool selectObjectByName(const std::string& targetName) {
 
-        if(!hasActiveObject){
-            activeObject = nullptr;
-            for(auto& figure : figures) {
-                if(figure->name == targetName) {
-                    activeObject = figure.get();
-                    return true;
-                }
+    bool selectObjectByName(const std::string &targetName) {
+        activeObject = nullptr;
+        for (auto &figure: figures) {
+            if (figure->name == targetName) {
+                activeObject = figure.get();
+                return true;
             }
-
-            for(auto& light : lights) {
-                if(light->name== targetName) {
-                    activeObject = light.get();
-                    return true;
-                }
-            }
-
-            return false;
         }
 
+        for (auto &light: lights) {
+            if (light->name == targetName) {
+                activeObject = light.get();
+                return true;
+            }
+        }
+
+        return false;
+
     }
-    void createLight(std::string name, Camera& cam, glm::vec3 pos,
-                     glm::vec3 scale, float angle, Shader& shader,
-                     Shader& lightShader, std::string type) {
+
+    void createLight(std::string name, Camera &cam, glm::vec3 pos,
+                     glm::vec3 scale, float angle, Shader &shader,
+                     Shader &lightShader, std::string type) {
         lights.push_back(
                 std::make_unique<PLight>(name, cam, pos, scale, angle,
                                          shader, lightShader, type, lightCounter)
@@ -68,24 +66,24 @@ public:
     }
 
 
-    void createFigure(std::string name, Camera& cam, glm::vec3 pos,
-                      glm::vec3 scale, float angle, Shader& shader,
+    void createFigure(std::string name, Camera &cam, glm::vec3 pos,
+                      glm::vec3 scale, float angle, Shader &shader,
                       std::string type,
                       const std::vector<std::string> &texturePaths) {
         figures.push_back(
                 std::make_unique<PFigure>(name, cam, pos, scale, angle,
-                             shader, type, texturePaths));
+                                          shader, type, texturePaths));
     }
 
 
     void drawAll() {
 
-        if(!stopDrawingAll){
-            for(auto& figure : figures) {
+        if (!stopDrawingAll) {
+            for (auto &figure: figures) {
                 figure->Draw();
             }
 
-            for(auto& light : lights) {
+            for (auto &light: lights) {
                 light->Draw();
             }
         }
@@ -121,8 +119,18 @@ public:
         return false;
     }
 
-    void deleteAllObjects(){
-        stopDrawingAll = true;
+    void deleteAllObjects() {
+        for(auto& light : lights) {
+            light->deleteObj();
+        }
+
+        for(auto& figure : figures) {
+            figure->deleteObj();
+        }
+
+        lights.clear();
+        figures.clear();
+        activeObject = nullptr;
     }
 
 };
