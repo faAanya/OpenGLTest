@@ -10,16 +10,16 @@ using namespace glm;
 
 class PObject{
 public:
-    PObject(string n, vec3 pos, Mesh &mesh);
+    PObject() = default;
 
-    string& name;
+    string name;
     vec3 position;
     float angle;
     vec3 scale;
     Mesh* mesh;
     Camera& camera;
     bool isDrawing;
-    PObject(string &n, Camera& c, glm::vec3 pos, glm::vec3 scale,float angle);
+    PObject(string n, Camera& c, glm::vec3 pos, glm::vec3 scale,float angle);
 
     void drawMesh();
     void deleteObj();

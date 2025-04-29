@@ -14,6 +14,7 @@
 #include "include/PFigure.h"
 #include "include/PImgui.h"
 #include "include/AxisLines.h"
+#include "include/ObjectManager.h"
 
 Camera camera(glm::vec3(0.0f, 0.0f, 3.0f));
 
@@ -71,6 +72,9 @@ int main() {
 
     glEnable(GL_DEPTH_TEST);
     AxisLines axes;
+    ObjectManager manager;
+
+
 
     Shader objectShader(lightVertShaderPath, lightFragShaderPath);
     Shader lightShader(lightSourceVertShaderPath, lightSourceFragShaderPath);
@@ -93,35 +97,24 @@ int main() {
     PImgui imgui(window);
     imgui.initialize();
 
-    PLight light1("light 1",
-                  camera,
-                  vec3(0.0f, 1.0f, 1.0f),
-                  vec3(0.8f, 1.0f, 1.0f),
-                  10,
-                  objectShader,
-                  lightShader,
-                  "directional",
-                  dirCount);
 
-    PFigure obj("cube 1",
-                camera,
-                vec3(1.0f, 1.0f, 1.0f),
-                vec3(1.0f, 4.0f, 1.0f),
-                20,
-                objectShader,
-                "type",
-                0,
-                tex);
-    PFigure obj1("cube 1",
-                 camera,
-                 vec3(2.0f, 2.0f, 2.0f),
-                 vec3(1.0f, 2.0f, 1.0f),
-                 20,
-                 objectShader,
-                 "type",
-                 0,
-                 tex1);
+    manager.createLight("light 1",
+                        camera,
+                        vec3(0.0f, 1.0f, 1.0f),
+                        vec3(0.8f, 1.0f, 1.0f),
+                        10,
+                        objectShader,
+                        lightShader,
+                        "point");
 
+    manager.createFigure("cube 1",
+                         camera,
+                         vec3(1.0f, 1.0f, 1.0f),
+                         vec3(1.0f, 4.0f, 1.0f),
+                         20,
+                         objectShader,
+                         "type",
+                         tex);
 
     while (!glfwWindowShouldClose(window)) {
         float currentFrame = static_cast<float>(glfwGetTime());
@@ -136,13 +129,8 @@ int main() {
 
         glm::mat4 projection = glm::perspective(glm::radians(camera.Zoom), (float) 1280 / (float) 720, 0.1f,
                                                 100.0f);
-        light1.Draw();
+        manager.drawAll();
         axes.Draw(camera.GetViewMatrix(), projection);
-
-
-        obj1.Draw(objectShader);
-        obj.Draw(objectShader);
-
 
         imgui.activeState();
 

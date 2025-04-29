@@ -63,7 +63,7 @@ void PLight::drawPointLight() {
     objectToLight.setFloat(name + ".constant", 1.0f);
     objectToLight.setFloat(name + ".linear", 0.09f);
     objectToLight.setFloat(name + ".quadratic", 0.032f);
-    objectToLight.setBool(name + ".enabled", true);
+    objectToLight.setBool(name + ".enabled", isDrawing);
 
 }
 
@@ -80,7 +80,7 @@ void PLight::drawSpotLight() {
     objectToLight.setVec3(name + ".ambient", 0.05f, 0.05f, 0.05f);
     objectToLight.setVec3(name + ".diffuse", 1.0f, 1.0f, 1.0f);
     objectToLight.setVec3(name + ".specular", 1.0f, 1.0f, 1.0f);
-    objectToLight.setBool(name + ".enabled", true);
+    objectToLight.setBool(name + ".enabled", isDrawing);
 
 }
 
@@ -90,5 +90,5 @@ void PLight::drawDirLight() {
     objectToLight.setVec3(name + ".ambient", 0.2f, 0.2f, 0.2f);
     objectToLight.setVec3(name + ".diffuse", 0.5f, 0.5f, 0.5f);
     objectToLight.setVec3(name + ".specular", 1.0f, 1.0f, 1.0f);
-    objectToLight.setBool(name + ".enabled", true);
+    objectToLight.setBool(name + ".enabled", isDrawing);
 }

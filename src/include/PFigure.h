@@ -13,10 +13,9 @@ private:
     unsigned int index;
 
 public:
-    PFigure(string name, Camera& cam, vec3 pos, vec3 scale, float angle, Shader &shader, string t,
-            unsigned int index, vector<Texture> &tex);
+    PFigure(string name, Camera& cam, vec3 pos, vec3 scale, float angle, Shader &shader, string t,vector<Texture> &tex);
 
-    void Draw(Shader &s);
+    void Draw();
 };
 
 #endif
