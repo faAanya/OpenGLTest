@@ -11,14 +11,16 @@
 #include "include/VBO.h"
 #include "include/PLua.h"
 #include "include/Texture.h"
+#include <memory>
+#include <vector>
 
 using namespace std;
 
 class ObjectManager {
 
 private:
-    vector<PLight> lights;
-    vector<PFigure> figures;
+    std::vector<std::unique_ptr<PFigure>> figures;
+    std::vector<std::unique_ptr<PLight>> lights;
     PObject* activeObject = nullptr;
 
     bool hasActiveObject = false;
@@ -30,13 +32,38 @@ public:
 
     ObjectManager() = default;
 
+    PObject* getActiveObject() const {
+        return activeObject;
+    }
+    bool selectObjectByName(const std::string& targetName) {
 
+        if(!hasActiveObject){
+            activeObject = nullptr;
+            for(auto& figure : figures) {
+                if(figure->name == targetName) {
+                    activeObject = figure.get();
+                    return true;
+                }
+            }
+
+            for(auto& light : lights) {
+                if(light->name== targetName) {
+                    activeObject = light.get();
+                    return true;
+                }
+            }
+
+            return false;
+        }
+
+    }
     void createLight(std::string name, Camera& cam, glm::vec3 pos,
                      glm::vec3 scale, float angle, Shader& shader,
                      Shader& lightShader, std::string type) {
-        lights.emplace_back(name, cam, pos, scale, angle,
-                            shader, lightShader, type, lightCounter);
-
+        lights.push_back(
+                std::make_unique<PLight>(name, cam, pos, scale, angle,
+                                         shader, lightShader, type, lightCounter)
+        );
         lightCounter++;
     }
 
@@ -45,8 +72,9 @@ public:
                       glm::vec3 scale, float angle, Shader& shader,
                       std::string type,
                       const std::vector<std::string> &texturePaths) {
-        figures.emplace_back(name, cam, pos, scale, angle,
-                             shader, type, texturePaths);
+        figures.push_back(
+                std::make_unique<PFigure>(name, cam, pos, scale, angle,
+                             shader, type, texturePaths));
     }
 
 
@@ -54,40 +82,43 @@ public:
 
         if(!stopDrawingAll){
             for(auto& figure : figures) {
-                figure.Draw();
+                figure->Draw();
             }
 
             for(auto& light : lights) {
-                light.Draw();
+                light->Draw();
             }
         }
     }
 
-    PObject* getActiveObject() const {
-        return activeObject;
-    }
 
-    bool selectObjectByName(const std::string& targetName) {
+    bool deleteActiveObject() {
+        if (!activeObject) return false;
 
-        if(!hasActiveObject){
-            activeObject = nullptr;
-            for(auto& figure : figures) {
-                if(figure.name == targetName) {
-                    activeObject = &figure;
-                    return true;
-                }
+
+        for (auto it = figures.begin(); it != figures.end();) {
+            if (it->get() == activeObject) {
+                activeObject->deleteObj();
+                it = figures.erase(it);
+                activeObject = nullptr;
+                return true;
+            } else {
+                ++it;
             }
-
-            for(auto& light : lights) {
-                if(light.name== targetName) {
-                    activeObject = &light;
-                    return true;
-                }
-            }
-
-            return false;
         }
 
+        for (auto it = lights.begin(); it != lights.end();) {
+            if (it->get() == activeObject) {
+                activeObject->deleteObj();
+                it = lights.erase(it);
+                activeObject = nullptr;
+                return true;
+            } else {
+                ++it;
+            }
+        }
+
+        return false;
     }
 
     void deleteAllObjects(){

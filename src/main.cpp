@@ -6,12 +6,8 @@
 #include "stb_image.h"
 #include <glm/glm.hpp>
 #include "include/Camera.h"
-#include "include/VBO.h"
 #include "include/PLua.h"
-#include "include/Texture.h"
 #include "src/lua.hpp"
-#include "include/PLight.h"
-#include "include/PFigure.h"
 #include "include/PImgui.h"
 #include "include/AxisLines.h"
 #include "include/ObjectManager.h"
@@ -25,10 +21,6 @@ float lastX = 640, lastY = 360;
 float deltaTime = 0.0f;
 float lastFrame = 0.0f;
 bool isFirstMouse = true;
-
-unsigned int pointCount;
-unsigned int spotCount;
-unsigned int dirCount = 0;
 
 const char *lightVertShaderPath = "resources\\shaders\\lightningShader.vert";
 const char *lightFragShaderPath = "resources\\shaders\\lightningShader.frag";
@@ -80,20 +72,6 @@ int main() {
     Shader objectShader(lightVertShaderPath, lightFragShaderPath);
     Shader lightShader(lightSourceVertShaderPath, lightSourceFragShaderPath);
 
-
-    Texture textures[] = {
-
-            Texture("resources\\textures\\container2.png", "diffuse", GL_TEXTURE0),
-            Texture("resources\\textures\\container2_specular.png", "specular", GL_TEXTURE1)
-    };
-    Texture textures1[] = {
-
-            Texture("resources\\textures\\cupcake.jpg", "diffuse", GL_TEXTURE0),
-    };
-    std::vector<Texture> tex(textures, textures + sizeof(textures) / sizeof(Texture));
-    std::vector<Texture> tex1(textures1, textures1 + sizeof(textures1) / sizeof(Texture));
-
-
     PImgui imgui(window);
     imgui.initialize();
 
@@ -129,7 +107,7 @@ int main() {
 
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-        glm::mat4 projection = glm::perspective(glm::radians(camera.Zoom), (float) 1280 / (float) 720, 0.1f,
+        glm::mat4 projection = glm::perspective(glm::radians(camera.Zoom), (float) WIDTH / (float) HEIGHT, 0.1f,
                                                 100.0f);
         manager.drawAll();
         axes.Draw(camera.GetViewMatrix(), projection);
