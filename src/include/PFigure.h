@@ -13,7 +13,8 @@ private:
     unsigned int index;
 
 public:
-    PFigure(string name, Camera& cam, vec3 pos, vec3 scale, float angle, Shader &shader, string t,vector<Texture> &tex);
+    PFigure(string name, Camera &cam, vec3 pos, vec3 scale, float angle, Shader &shader, string t,
+            const std::vector<std::string> &texturePaths);
 
     void Draw();
 };

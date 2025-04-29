@@ -44,9 +44,9 @@ public:
     void createFigure(std::string name, Camera& cam, glm::vec3 pos,
                       glm::vec3 scale, float angle, Shader& shader,
                       std::string type,
-                      std::vector<Texture>& textures) {
+                      const std::vector<std::string> &texturePaths) {
         figures.emplace_back(name, cam, pos, scale, angle,
-                             shader, type, textures);
+                             shader, type, texturePaths);
     }
 
 

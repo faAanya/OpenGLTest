@@ -44,6 +44,8 @@ void mouse_callback(GLFWwindow *window, double xposIn, double yposIn);
 
 void scroll_callback(GLFWwindow *window, double xoffset, double yoffset);
 
+void setBackGroundColor(glm::vec3 color);
+
 int main() {
     glfwInit();
 
@@ -75,7 +77,6 @@ int main() {
     ObjectManager manager;
 
 
-
     Shader objectShader(lightVertShaderPath, lightFragShaderPath);
     Shader lightShader(lightSourceVertShaderPath, lightSourceFragShaderPath);
 
@@ -88,7 +89,6 @@ int main() {
     Texture textures1[] = {
 
             Texture("resources\\textures\\cupcake.jpg", "diffuse", GL_TEXTURE0),
-//            Texture("resources\\textures\\cupcake.jpg", "specular", GL_TEXTURE1)
     };
     std::vector<Texture> tex(textures, textures + sizeof(textures) / sizeof(Texture));
     std::vector<Texture> tex1(textures1, textures1 + sizeof(textures1) / sizeof(Texture));
@@ -114,7 +114,9 @@ int main() {
                          20,
                          objectShader,
                          "type",
-                         tex);
+                         {
+                                 "resources\\textures\\cupcake.jpg"
+                         });
 
     while (!glfwWindowShouldClose(window)) {
         float currentFrame = static_cast<float>(glfwGetTime());
@@ -123,7 +125,7 @@ int main() {
 
         processInput(window);
 
-        glClearColor(0.1f, 0.1f, 0.1f, 1.0f);
+        setBackGroundColor(vec3(0.1f, 0.1f, 0.1f));
 
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
@@ -181,11 +183,15 @@ void mouse_callback(GLFWwindow *window, double xposIn, double yposIn) {
 
     lastX = xpos;
     lastY = ypos;
-    if(glfwGetKey(window, GLFW_KEY_LEFT_ALT) == GLFW_PRESS){
-    camera.ProcessMouseMovement(xoffset, yoffset);
+    if (glfwGetKey(window, GLFW_KEY_LEFT_ALT) == GLFW_PRESS) {
+        camera.ProcessMouseMovement(xoffset, yoffset);
     }
 }
 
 void scroll_callback(GLFWwindow *window, double xoffset, double yoffset) {
     camera.ProcessMouseScroll(static_cast<float>(yoffset));
+}
+
+void setBackGroundColor(glm::vec3 color) {
+    glClearColor(color.x, color.y, color.z, 1.0f);
 }
