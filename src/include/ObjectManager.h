@@ -3,7 +3,6 @@
 
 #include "PFigure.h"
 #include "PLight.h"
-#include <GLFW/glfw3.h>
 #include "include/shader.h"
 #include "stb_image.h"
 #include <glm/glm.hpp>
@@ -19,17 +18,15 @@ using namespace std;
 class ObjectManager {
 
 private:
-    std::vector<std::unique_ptr<PFigure>> figures;
-    std::vector<std::unique_ptr<PLight>> lights;
+
     PObject *activeObject = nullptr;
 
     int lightCounter = 0;
 
 public:
-
+    std::vector<std::unique_ptr<PFigure>> figures;
+    std::vector<std::unique_ptr<PLight>> lights;
     bool stopDrawingAll = false;
-
-    ObjectManager() = default;
 
     PObject *getActiveObject() const {
         return activeObject;

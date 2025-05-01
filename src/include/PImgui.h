@@ -1,12 +1,14 @@
 #ifndef TESTBUILD_PIMGUI_H
 #define TESTBUILD_PIMGUI_H
-#include "GLFW/glfw3.h"
+
 #include "backends/imgui_impl_opengl3.h"
 #include "backends/imgui_impl_glfw.h"
+#include "ObjectManager.h"
 
 class PImgui {
 private:
-    GLFWwindow* window;
+    GLFWwindow *window;
+    ObjectManager *manager;
     bool show_about_window = false;
 
     char inputText[1024] = "";
@@ -23,21 +25,34 @@ private:
     };
 
     WindowPinState currentPinState = PIN_NONE;
+
     void CreatePrimitive_Cube();
+
     void CreatePrimitive_Sphere();
+
     void CreatePrimitive_Cylinder();
+
     void CreatePrimitive_Pyramid();
 
     void CreateLight_Directional();
+
     void CreateLight_Spot();
+
     void CreateLight_Point();
+
 public:
 
-    PImgui(GLFWwindow* win);
-   void initialize();
-   void activeState();
-   void drawTopMenu();
-   void destroy();
+    PImgui(GLFWwindow *win, ObjectManager* m);
+
+    void initialize();
+
+    void activeState();
+
+    void drawTopMenu();
+
+    void drawHierarchy();
+
+    void destroy();
 
 };
 

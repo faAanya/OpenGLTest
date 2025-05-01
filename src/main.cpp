@@ -72,7 +72,7 @@ int main() {
     Shader objectShader(lightVertShaderPath, lightFragShaderPath);
     Shader lightShader(lightSourceVertShaderPath, lightSourceFragShaderPath);
 
-    PImgui imgui(window);
+    PImgui imgui(window, &manager);
     imgui.initialize();
 
 
