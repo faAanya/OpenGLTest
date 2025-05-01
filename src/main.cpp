@@ -96,6 +96,7 @@ int main() {
                                  "resources\\textures\\cupcake.jpg"
                          });
 
+
     while (!glfwWindowShouldClose(window)) {
         float currentFrame = static_cast<float>(glfwGetTime());
         deltaTime = currentFrame - lastFrame;

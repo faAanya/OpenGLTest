@@ -25,10 +25,7 @@ public:
     void deleteObj();
 
 
-    void moveTo(vec3 newPos);
-    void changeColor();
-    void scaleTo(vec3 newScale);
-    void rotateTo(float newAngle);
+
 
 };
 

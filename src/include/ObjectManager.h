@@ -87,16 +87,34 @@ public:
     }
 
 
-    bool deleteActiveObject() {
-        if (!activeObject) return false;
+    void moveTo(vec3 newPos) {
+        activeObject->position = newPos;
+
+        cout << "move" << "\n";
+    }
+
+    void scaleTo(vec3 newScale) {
+        activeObject->scale = newScale;
+
+        cout << "scale" << "\n";
+    }
+
+    void rotateTo(float newAngle) {
+        activeObject->angle = newAngle;
+
+        cout << "rotate" << "\n";
+    }
+
+    void deleteObj() {
+        activeObject->isDrawing = false;
+        if (!activeObject) return;
 
 
         for (auto it = figures.begin(); it != figures.end();) {
             if (it->get() == activeObject) {
-                activeObject->deleteObj();
                 it = figures.erase(it);
                 activeObject = nullptr;
-                return true;
+                return;
             } else {
                 ++it;
             }
@@ -104,24 +122,22 @@ public:
 
         for (auto it = lights.begin(); it != lights.end();) {
             if (it->get() == activeObject) {
-                activeObject->deleteObj();
                 it = lights.erase(it);
                 activeObject = nullptr;
-                return true;
+                return;
             } else {
                 ++it;
             }
         }
-
-        return false;
     }
 
+
     void deleteAllObjects() {
-        for(auto& light : lights) {
+        for (auto &light: lights) {
             light->deleteObj();
         }
 
-        for(auto& figure : figures) {
+        for (auto &figure: figures) {
             figure->deleteObj();
         }
 

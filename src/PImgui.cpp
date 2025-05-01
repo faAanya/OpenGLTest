@@ -6,7 +6,7 @@
 #include "include/ObjectManager.h"
 
 
-PImgui::PImgui(GLFWwindow *win, ObjectManager* m) {
+PImgui::PImgui(GLFWwindow *win, ObjectManager *m) {
     this->window = win;
     this->manager = m;
 }
@@ -152,16 +152,20 @@ void PImgui::drawTopMenu() {
 
 void PImgui::drawHierarchy() {
     ImGuiWindowFlags flags = ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoResize;
+    ImVec2 viewportSize = ImGui::GetMainViewport()->Size;
+    ImGui::SetNextWindowPos(ImVec2(
+            viewportSize.x - textWindowSize.x,
+            ImGui::GetFrameHeight()), ImGuiCond_Always);
 
     ImGui::Begin("Hierarchy", nullptr, flags);
-    ImGui::SetNextWindowPos( ImVec2(0, ImGui::GetFrameHeight()), ImGuiCond_Always);
+
     if (ImGui::BeginTable("Hierarchy", 2, ImGuiTableFlags_Borders | ImGuiTableFlags_RowBg)) {
         ImGui::TableSetupColumn("Name");
         ImGui::TableSetupColumn("Position");
         ImGui::TableHeadersRow();
 
         if (manager) {
-            for (auto& figure : manager->figures) {
+            for (auto &figure: manager->figures) {
                 ImGui::TableNextRow();
                 ImGui::TableSetColumnIndex(0);
                 ImGui::Text("%s", figure->name.c_str());
@@ -171,7 +175,7 @@ void PImgui::drawHierarchy() {
                             figure->position.y,
                             figure->position.z);
             }
-            for (auto& figure : manager->lights) {
+            for (auto &figure: manager->lights) {
                 ImGui::TableNextRow();
                 ImGui::TableSetColumnIndex(0);
                 ImGui::Text("%s", figure->name.c_str());
