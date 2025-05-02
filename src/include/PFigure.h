@@ -1,7 +1,7 @@
 #ifndef TESTBUILD_PFIGURE_H
 #define TESTBUILD_PFIGURE_H
 
-#include "include/Object.h"
+#include "include/PObject.h"
 #include "include/PLight.h"
 
 class PFigure : public PObject {

@@ -91,7 +91,7 @@ int main() {
                          vec3(1.0f, 4.0f, 1.0f),
                          20,
                          objectShader,
-                         "type",
+                         "pyramid",
                          {
                                  "resources\\textures\\cupcake.jpg"
                          });

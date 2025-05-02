@@ -10,7 +10,7 @@ PFigure::PFigure(string name, Camera &cam, vec3 pos, vec3 scale, float angle, Sh
                  const std::vector<std::string> &texturePaths) :
         PObject(name, cam, pos, scale, angle),
         object(shader),
-        type(t){
+        type(t) {
 
     for (size_t i = 0; i < texturePaths.size(); ++i) {
         if (!texturePaths[i].empty()) {
@@ -28,9 +28,22 @@ PFigure::PFigure(string name, Camera &cam, vec3 pos, vec3 scale, float angle, Sh
             textures.emplace_back(texturePaths[i].c_str(), texType.c_str(), texUnit);
         }
     }
+    if (t == "plane") {
+        vector<Vertex> vert(verts::plane, verts::plane + sizeof(verts::plane) / sizeof(Vertex));
+        mesh = new Mesh(vert, textures);
+        return;
+    } else if (t == "cube") {
+        vector<Vertex> vert(verts::cube, verts::cube + sizeof(verts::cube) / sizeof(Vertex));
+        mesh = new Mesh(vert, textures);
+        return;
+    } else if (t == "pyramid") {
+        vector<Vertex> vert(verts::pyramid, verts::pyramid + sizeof(verts::pyramid) / sizeof(Vertex));
+        mesh = new Mesh(vert, textures);
+        return;
+    } else {
+        cout << "Wrong object type" << t;
+    }
 
-    vector<Vertex> vert(verts::cube, verts::cube + sizeof(verts::cube) / sizeof(Vertex));
-    mesh = new Mesh(vert, textures);
 }
 
 void PFigure::Draw() {

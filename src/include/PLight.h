@@ -4,7 +4,7 @@
 #include "shader.h"
 #include "vector"
 #include "string"
-#include "Object.h"
+#include "PObject.h"
 #include "glm/glm.hpp"
 #include "glm/ext/matrix_transform.hpp"
 #include "glm/gtc/type_ptr.hpp"

@@ -10,16 +10,16 @@ Mesh::Mesh(vector<Vertex> vertices, vector<unsigned int> indices, vector<Texture
     Mesh::indices = indices;
     Mesh::textures = textures;
 
-    VAO.bindVAO();
+    vao.bindVAO();
 
     VBO VBO(vertices);
     EBO EBO(indices);
 
-    VAO.LinkVBO(VBO, 0, 3, sizeof(Vertex), (void *) 0);
-    VAO.LinkVBO(VBO, 1, 3, sizeof(Vertex), (void *) (3 * (sizeof(float))));
-    VAO.LinkVBO(VBO, 2, 2, sizeof(Vertex), (void *) (6 * (sizeof(float))));
+    vao.LinkVBO(VBO, 0, 3, sizeof(Vertex), (void *) 0);
+    vao.LinkVBO(VBO, 1, 3, sizeof(Vertex), (void *) (3 * (sizeof(float))));
+    vao.LinkVBO(VBO, 2, 2, sizeof(Vertex), (void *) (6 * (sizeof(float))));
 
-    VAO.unBindVAO();
+    vao.unBindVAO();
     VBO.unBindVBO();
     EBO.unBindEBO();
 }
@@ -29,15 +29,15 @@ Mesh::Mesh(vector<Vertex> vertices, vector<Texture> &textures) {
     Mesh::vertices = vertices;
     Mesh::textures = textures;
 
-    VAO.bindVAO();
+    vao.bindVAO();
 
     VBO VBO(vertices);
 
-    VAO.LinkVBO(VBO, 0, 3, sizeof(Vertex), (void *) 0);
-    VAO.LinkVBO(VBO, 1, 3, sizeof(Vertex), (void *) (3 * (sizeof(float))));
-    VAO.LinkVBO(VBO, 2, 2, sizeof(Vertex), (void *) (6 * (sizeof(float))));
+    vao.LinkVBO(VBO, 0, 3, sizeof(Vertex), (void *) 0);
+    vao.LinkVBO(VBO, 1, 3, sizeof(Vertex), (void *) (3 * (sizeof(float))));
+    vao.LinkVBO(VBO, 2, 2, sizeof(Vertex), (void *) (6 * (sizeof(float))));
 
-    VAO.unBindVAO();
+    vao.unBindVAO();
     VBO.unBindVBO();
 }
 
@@ -45,22 +45,22 @@ Mesh::Mesh(vector<Vertex> vertices) {
 
     Mesh::vertices = vertices;
 
-    VAO.bindVAO();
+    vao.bindVAO();
 
     VBO VBO(vertices);
 
-    VAO.LinkVBO(VBO, 0, 3, sizeof(Vertex), (void *) 0);
-    VAO.LinkVBO(VBO, 1, 3, sizeof(Vertex), (void *) (3 * (sizeof(float))));
-    VAO.LinkVBO(VBO, 2, 2, sizeof(Vertex), (void *) (6 * (sizeof(float))));
+    vao.LinkVBO(VBO, 0, 3, sizeof(Vertex), (void *) 0);
+    vao.LinkVBO(VBO, 1, 3, sizeof(Vertex), (void *) (3 * (sizeof(float))));
+    vao.LinkVBO(VBO, 2, 2, sizeof(Vertex), (void *) (6 * (sizeof(float))));
 
-    VAO.unBindVAO();
+    vao.unBindVAO();
     VBO.unBindVBO();
 }
 
 void Mesh::Draw(Shader &shader, Camera &camera) {
     shader.use();
 
-    VAO.bindVAO();
+    vao.bindVAO();
 
     unsigned int numDiffuse = 0;
     unsigned int numSpecular = 0;

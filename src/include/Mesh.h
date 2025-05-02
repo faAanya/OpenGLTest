@@ -22,7 +22,7 @@ public:
     vector<Vertex> vertices;
     vector<unsigned int> indices;
     vector<Texture> textures;
-    VAO VAO;
+    VAO vao;
 
     Mesh(vector<Vertex> vertices, vector<unsigned int> indices,
          vector<Texture> &textures);

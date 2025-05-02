@@ -1,5 +1,5 @@
-#ifndef TESTBUILD_OBJECT_H
-#define TESTBUILD_OBJECT_H
+#ifndef TESTBUILD_POBJECT_H
+#define TESTBUILD_POBJECT_H
 #include "string"
 #include "glm/glm.hpp"
 #include "glm/ext/matrix_transform.hpp"
