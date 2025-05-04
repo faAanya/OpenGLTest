@@ -75,31 +75,11 @@ int main() {
 
     PLua lua(globals, manager);
     lua.registerFunctions();
-
     PImgui imgui(window, &manager);
     imgui.initialize();
 
 
-    manager.createLight("light 1",
-                        camera,
-                        vec3(0.0f, 1.0f, 1.0f),
-                        vec3(0.8f, 1.0f, 1.0f),
-                        10,
-                        objectShader,
-                        lightShader,
-                        "point");
-
-    manager.createFigure("cube 1",
-                         camera,
-                         vec3(1.0f, 1.0f, 1.0f),
-                         vec3(1.0f, 4.0f, 1.0f),
-                         20,
-                         objectShader,
-                         "cube",
-                         {
-                                 "resources\\textures\\cupcake.jpg"
-                         });
-
+    lua.loadScript("resources/luascripts/script.lua");
 
     while (!glfwWindowShouldClose(window)) {
         float currentFrame = static_cast<float>(glfwGetTime());
@@ -119,7 +99,6 @@ int main() {
 
         imgui.activeState();
 
-        globals.logGlobalInfo();
 
         glfwSwapBuffers(window);
         glfwPollEvents();

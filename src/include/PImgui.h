@@ -4,6 +4,7 @@
 #include "backends/imgui_impl_opengl3.h"
 #include "backends/imgui_impl_glfw.h"
 #include "ObjectManager.h"
+#include "PLua.h"
 
 class PImgui {
 private:
@@ -12,7 +13,7 @@ private:
     bool show_about_window = false;
 
     char inputText[1024] = "";
-    bool showMessage = false;
+    bool isChangingScene = false;
     ImGuiWindowFlags textWindowFlags = ImGuiWindowFlags_None;
     bool textWindowPinned = true;
     ImVec2 textWindowSize = ImVec2(500, 200);
@@ -26,19 +27,9 @@ private:
 
     WindowPinState currentPinState = PIN_NONE;
 
-    void CreatePrimitive_Cube();
+    void createFigure(const std::string& command, PLua& lua);
 
-    void CreatePrimitive_Sphere();
-
-    void CreatePrimitive_Cylinder();
-
-    void CreatePrimitive_Pyramid();
-
-    void CreateLight_Directional();
-
-    void CreateLight_Spot();
-
-    void CreateLight_Point();
+    void createLight();
 
 public:
 

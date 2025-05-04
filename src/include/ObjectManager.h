@@ -105,8 +105,8 @@ public:
     }
 
     void deleteObj() {
-        activeObject->isDrawing = false;
         if (!activeObject) return;
+        activeObject->isDrawing = false;
 
 
         for (auto it = figures.begin(); it != figures.end();) {

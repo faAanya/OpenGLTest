@@ -4,6 +4,7 @@
 #include "backends/imgui_impl_glfw.h"
 #include <GLFW/glfw3.h>
 #include "include/ObjectManager.h"
+#include "include/PLua.h"
 
 
 PImgui::PImgui(GLFWwindow *win, ObjectManager *m) {
@@ -95,13 +96,13 @@ void PImgui::drawTopMenu() {
                                       IM_ARRAYSIZE(inputText), ImVec2(-1, 100));
 
             if (ImGui::Button("Submit", ImVec2(-1, 0)))
-                showMessage = true;
+                isChangingScene = true;
 
-            if (showMessage) {
+            if (isChangingScene) {
                 ImGui::Separator();
                 ImGui::Text("You entered: %s", inputText);
                 if (ImGui::Button("Hide message"))
-                    showMessage = false;
+                    isChangingScene = false;
             }
 
             textWindowSize = ImGui::GetWindowSize();
@@ -149,7 +150,6 @@ void PImgui::drawTopMenu() {
 
 
 }
-
 void PImgui::drawHierarchy() {
     ImGuiWindowFlags flags = ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoResize;
     ImVec2 viewportSize = ImGui::GetMainViewport()->Size;
