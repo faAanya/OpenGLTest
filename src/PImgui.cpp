@@ -7,9 +7,10 @@
 #include "include/PLua.h"
 
 
-PImgui::PImgui(GLFWwindow *win, ObjectManager *m) {
+PImgui::PImgui(GLFWwindow *win, ObjectManager *m, PLua *l) {
     this->window = win;
     this->manager = m;
+    this->lua = l;
 }
 
 void PImgui::initialize() {
@@ -95,14 +96,16 @@ void PImgui::drawTopMenu() {
             ImGui::InputTextMultiline("##input", inputText,
                                       IM_ARRAYSIZE(inputText), ImVec2(-1, 100));
 
-            if (ImGui::Button("Submit", ImVec2(-1, 0)))
+            if (ImGui::Button("Submit", ImVec2(-1, 0))) {
                 isChangingScene = true;
+            }
 
             if (isChangingScene) {
                 ImGui::Separator();
                 ImGui::Text("You entered: %s", inputText);
-                if (ImGui::Button("Hide message"))
-                    isChangingScene = false;
+                lua->loadScriptFromTextBox(inputText);
+                isChangingScene = false;
+                inputText[0] = '\0';
             }
 
             textWindowSize = ImGui::GetWindowSize();
@@ -150,6 +153,7 @@ void PImgui::drawTopMenu() {
 
 
 }
+
 void PImgui::drawHierarchy() {
     ImGuiWindowFlags flags = ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoResize;
     ImVec2 viewportSize = ImGui::GetMainViewport()->Size;

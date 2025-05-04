@@ -141,8 +141,15 @@ public:
         luaL_openlibs(L);
     }
 
-    void loadScript(const std::string &filename) {
+    void loadScriptFromFile(const std::string &filename) {
         if (luaL_dofile(L, filename.c_str()) != LUA_OK) {
+            std::cerr << "Lua error: " << lua_tostring(L, -1) << std::endl;
+            lua_pop(L, 1);
+            return;
+        }
+    }
+    void loadScriptFromTextBox(const std::string &text) {
+        if (luaL_dostring(L, text.c_str()) != LUA_OK) {
             std::cerr << "Lua error: " << lua_tostring(L, -1) << std::endl;
             lua_pop(L, 1);
             return;

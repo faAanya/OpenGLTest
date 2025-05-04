@@ -75,11 +75,8 @@ int main() {
 
     PLua lua(globals, manager);
     lua.registerFunctions();
-    PImgui imgui(window, &manager);
+    PImgui imgui(window, &manager, &lua);
     imgui.initialize();
-
-
-    lua.loadScript("resources/luascripts/script.lua");
 
     while (!glfwWindowShouldClose(window)) {
         float currentFrame = static_cast<float>(glfwGetTime());

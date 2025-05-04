@@ -10,6 +10,7 @@ class PImgui {
 private:
     GLFWwindow *window;
     ObjectManager *manager;
+    PLua* lua;
     bool show_about_window = false;
 
     char inputText[1024] = "";
@@ -27,13 +28,13 @@ private:
 
     WindowPinState currentPinState = PIN_NONE;
 
-    void createFigure(const std::string& command, PLua& lua);
+    void createFigure(const std::string& command);
 
     void createLight();
 
 public:
 
-    PImgui(GLFWwindow *win, ObjectManager* m);
+    PImgui(GLFWwindow *win, ObjectManager* m, PLua* l);
 
     void initialize();
 
