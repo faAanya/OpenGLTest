@@ -83,7 +83,8 @@ int main() {
         deltaTime = currentFrame - lastFrame;
         lastFrame = currentFrame;
 
-        processInput(window);
+        if(!imgui.isInputActive)
+            processInput(window);
 
         setBackGroundColor(vec3(0.1f, 0.1f, 0.1f));
 

@@ -11,7 +11,8 @@ private:
     GLFWwindow *window;
     ObjectManager *manager;
     PLua* lua;
-    bool show_about_window = false;
+    bool showAboutWindow = false;
+
 
     char inputText[1024] = "";
     bool isChangingScene = false;
@@ -33,6 +34,7 @@ private:
     void createLight();
 
 public:
+    bool isInputActive;
 
     PImgui(GLFWwindow *win, ObjectManager* m, PLua* l);
 
@@ -43,6 +45,7 @@ public:
     void drawTopMenu();
 
     void drawHierarchy();
+    void checkInput();
 
     void destroy();
 

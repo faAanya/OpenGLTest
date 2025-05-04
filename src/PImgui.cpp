@@ -95,7 +95,7 @@ void PImgui::drawTopMenu() {
 
             ImGui::InputTextMultiline("##input", inputText,
                                       IM_ARRAYSIZE(inputText), ImVec2(-1, 100));
-
+            checkInput();
             if (ImGui::Button("Submit", ImVec2(-1, 0))) {
                 isChangingScene = true;
             }
@@ -134,14 +134,14 @@ void PImgui::drawTopMenu() {
         }
 
         if (ImGui::MenuItem("About")) {
-            show_about_window = true;
+            showAboutWindow = true;
         }
 
         ImGui::EndMainMenuBar();
     }
 
-    if (show_about_window) {
-        ImGui::Begin("About", &show_about_window, ImGuiWindowFlags_AlwaysAutoResize);
+    if (showAboutWindow) {
+        ImGui::Begin("About", &showAboutWindow, ImGuiWindowFlags_AlwaysAutoResize);
         ImGui::Text("3D Editor Application");
         ImGui::Separator();
         ImGui::Text("Version: 1.0.0");
@@ -195,6 +195,10 @@ void PImgui::drawHierarchy() {
     }
 
     ImGui::End();
+}
+
+void PImgui::checkInput() {
+    isInputActive = ImGui::IsItemActive();
 }
 
 void PImgui::destroy() {
