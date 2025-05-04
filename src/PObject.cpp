@@ -10,3 +10,6 @@ PObject::PObject(string n, Camera& c, glm::vec3 pos, glm::vec3 scale = vec3(1.0f
 
     isDrawing = true;
 }
+void PObject::deleteObj() {
+    isDrawing = false;
+}
