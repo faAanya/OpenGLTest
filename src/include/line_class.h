@@ -9,7 +9,7 @@
 #include "glm/ext/matrix_transform.hpp"
 #include <vector>
 #include "VAO.h"
-#include "shader.h"
+#include "Shader.h"
 #include "VBO.h"
 using namespace std;
 using glm::mat4;

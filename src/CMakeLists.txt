@@ -1,12 +1,12 @@
 file (GLOB_RECURSE SOURCES "*.cpp")
 add_executable(OpenGLTest ${SOURCES}
         Mesh.cpp
-        PLua.cpp
         verts.cpp
-        Object.cpp
+        PObject.cpp
         PFigure.cpp
         PImgui.cpp
         AxisLines.cpp
+        GlobalVars.cpp
 )
 
 target_include_directories(OpenGLTest PUBLIC ${CMAKE_CURRENT_SOURCE_DIR})

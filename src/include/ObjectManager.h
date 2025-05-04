@@ -3,12 +3,11 @@
 
 #include "PFigure.h"
 #include "PLight.h"
-#include "include/shader.h"
+#include "include/Shader.h"
 #include "stb_image.h"
 #include <glm/glm.hpp>
 #include "include/Camera.h"
 #include "include/VBO.h"
-#include "include/PLua.h"
 #include "include/Texture.h"
 #include <memory>
 #include <vector>

@@ -2,7 +2,7 @@
 #include <iostream>
 #include "backends/imgui_impl_glfw.h"
 #include <GLFW/glfw3.h>
-#include "include/shader.h"
+#include "include/Shader.h"
 #include "stb_image.h"
 #include <glm/glm.hpp>
 #include "include/Camera.h"
@@ -11,6 +11,8 @@
 #include "include/PImgui.h"
 #include "include/AxisLines.h"
 #include "include/ObjectManager.h"
+#include "include/GlobalVars.h"
+#include "include/PLua.h"
 
 Camera camera(glm::vec3(0.0f, 0.0f, 3.0f));
 
@@ -67,10 +69,12 @@ int main() {
     glEnable(GL_DEPTH_TEST);
     AxisLines axes;
     ObjectManager manager;
-
-
     Shader objectShader(lightVertShaderPath, lightFragShaderPath);
     Shader lightShader(lightSourceVertShaderPath, lightSourceFragShaderPath);
+    GlobalVars globals(camera, objectShader, lightShader);
+
+    PLua lua(globals, manager);
+    lua.registerFunctions();
 
     PImgui imgui(window, &manager);
     imgui.initialize();
@@ -91,7 +95,7 @@ int main() {
                          vec3(1.0f, 4.0f, 1.0f),
                          20,
                          objectShader,
-                         "pyramid",
+                         "cube",
                          {
                                  "resources\\textures\\cupcake.jpg"
                          });
@@ -114,6 +118,8 @@ int main() {
         axes.Draw(camera.GetViewMatrix(), projection);
 
         imgui.activeState();
+
+        globals.logGlobalInfo();
 
         glfwSwapBuffers(window);
         glfwPollEvents();
@@ -146,7 +152,6 @@ void processInput(GLFWwindow *window) {
 }
 
 void mouse_callback(GLFWwindow *window, double xposIn, double yposIn) {
-
 
     float xpos = static_cast<float>(xposIn);
     float ypos = static_cast<float>(yposIn);

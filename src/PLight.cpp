@@ -1,5 +1,5 @@
 #include "include/PLight.h"
-#include "include/shader.h"
+#include "include/Shader.h"
 #include "include/Camera.h"
 #include "include/verts.h"
 #include <string>

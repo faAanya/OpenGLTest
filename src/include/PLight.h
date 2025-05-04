@@ -1,7 +1,7 @@
 #ifndef TESTBUILD_PLIGHT_H
 #define TESTBUILD_PLIGHT_H
 
-#include "shader.h"
+#include "Shader.h"
 #include "vector"
 #include "string"
 #include "PObject.h"
