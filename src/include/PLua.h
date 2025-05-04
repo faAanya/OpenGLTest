@@ -119,6 +119,96 @@ private:
         return 0;
     }
 
+    static int lua_moveTo(lua_State *L) {
+        PLua *self = static_cast<PLua *>(lua_touserdata(L, lua_upvalueindex(1)));
+
+        if (lua_gettop(L) == 3) {
+
+            if (self->objectManager->getActiveObject()) {
+                glm::vec3 pos = {
+                        static_cast<float>(luaL_checknumber(L, 1)),
+                        static_cast<float>(luaL_checknumber(L, 2)),
+                        static_cast<float>(luaL_checknumber(L, 3))
+                };
+
+                self->objectManager->moveTo(pos);
+                return 0;
+            }
+            return luaL_error(L, "Need 1 args: name");
+        }
+        if (lua_gettop(L) == 4) {
+            const char *name = luaL_checkstring(L, 1);
+
+            glm::vec3 pos = {
+                    static_cast<float>(luaL_checknumber(L, 2)),
+                    static_cast<float>(luaL_checknumber(L, 3)),
+                    static_cast<float>(luaL_checknumber(L, 4))
+            };
+
+            self->objectManager->selectObjectByName(name);
+            self->objectManager->moveTo(pos);
+            return 0;
+        }
+        return 0;
+    }
+
+    static int lua_scaleTo(lua_State *L) {
+        PLua *self = static_cast<PLua *>(lua_touserdata(L, lua_upvalueindex(1)));
+
+        if (lua_gettop(L) == 3) {
+
+            if (self->objectManager->getActiveObject()) {
+                glm::vec3 scale = {
+                        static_cast<float>(luaL_checknumber(L, 1)),
+                        static_cast<float>(luaL_checknumber(L, 2)),
+                        static_cast<float>(luaL_checknumber(L, 3))
+                };
+
+                self->objectManager->scaleTo(scale);
+                return 0;
+            }
+            return luaL_error(L, "Need 1 args: name");
+        }
+        if (lua_gettop(L) == 4) {
+            const char *name = luaL_checkstring(L, 1);
+
+            glm::vec3 scale = {
+                    static_cast<float>(luaL_checknumber(L, 2)),
+                    static_cast<float>(luaL_checknumber(L, 3)),
+                    static_cast<float>(luaL_checknumber(L, 4))
+            };
+
+            self->objectManager->selectObjectByName(name);
+            self->objectManager->scaleTo(scale);
+            return 0;
+        }
+        return 0;
+    }
+
+    static int lua_rotateTo(lua_State *L) {
+        PLua *self = static_cast<PLua *>(lua_touserdata(L, lua_upvalueindex(1)));
+
+        if (lua_gettop(L) == 1) {
+
+            if (self->objectManager->getActiveObject()) {
+                float angle = static_cast<float>(luaL_checknumber(L, 1));
+
+                self->objectManager->rotateTo(angle);
+                return 0;
+            }
+            return luaL_error(L, "Need 1 args: name");
+        }
+        if (lua_gettop(L) == 2) {
+            const char *name = luaL_checkstring(L, 1);
+            float angle = static_cast<float>(luaL_checknumber(L, 1));
+
+            self->objectManager->selectObjectByName(name);
+            self->objectManager->rotateTo(angle);
+            return 0;
+        }
+        return 0;
+    }
+
     static int lua_deleteActiveObject(lua_State *L) {
         PLua *self = static_cast<PLua *>(lua_touserdata(L, lua_upvalueindex(1)));
 
@@ -148,6 +238,7 @@ public:
             return;
         }
     }
+
     void loadScriptFromTextBox(const std::string &text) {
         if (luaL_dostring(L, text.c_str()) != LUA_OK) {
             std::cerr << "Lua error: " << lua_tostring(L, -1) << std::endl;
@@ -168,6 +259,18 @@ public:
         lua_pushlightuserdata(L, this);
         lua_pushcclosure(L, &PLua::lua_pickActiveObject, 1);
         lua_setglobal(L, "pick_object");
+
+        lua_pushlightuserdata(L, this);
+        lua_pushcclosure(L, &PLua::lua_moveTo, 1);
+        lua_setglobal(L, "move_to");
+
+        lua_pushlightuserdata(L, this);
+        lua_pushcclosure(L, &PLua::lua_scaleTo, 1);
+        lua_setglobal(L, "scale_to");
+
+        lua_pushlightuserdata(L, this);
+        lua_pushcclosure(L, &PLua::lua_rotateTo, 1);
+        lua_setglobal(L, "rotate_to");
 
         lua_pushlightuserdata(L, this);
         lua_pushcclosure(L, &PLua::lua_deleteActiveObject, 1);
