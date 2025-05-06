@@ -54,6 +54,12 @@ public:
     void createLight(std::string name, Camera &cam, glm::vec3 pos,
                      glm::vec3 scale, float angle, Shader &shader,
                      Shader &lightShader, std::string type) {
+        for (auto &light: lights) {
+            if (light->name == name) {
+                return;
+            }
+        }
+
         lights.push_back(
                 std::make_unique<PLight>(name, cam, pos, scale, angle,
                                          shader, lightShader, type, lightCounter)
@@ -66,6 +72,12 @@ public:
                       glm::vec3 scale, float angle, Shader &shader,
                       std::string type,
                       const std::vector<std::string> &texturePaths) {
+        for (auto &figure: figures) {
+            if (figure->name == name) {
+                return;
+            }
+        }
+
         figures.push_back(
                 std::make_unique<PFigure>(name, cam, pos, scale, angle,
                                           shader, type, texturePaths));
