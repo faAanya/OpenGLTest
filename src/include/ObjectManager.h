@@ -104,6 +104,13 @@ public:
         cout << "rotate" << "\n";
     }
 
+    void changeColor(vec3 newColor) {
+        activeObject->color = newColor;
+
+
+        cout << "changeColor" << "\n";
+    }
+
     void deleteObj() {
         if (!activeObject) return;
         activeObject->isDrawing = false;

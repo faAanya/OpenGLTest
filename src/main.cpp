@@ -12,7 +12,6 @@
 #include "include/AxisLines.h"
 #include "include/ObjectManager.h"
 #include "include/GlobalVars.h"
-#include "include/PLua.h"
 
 Camera camera(glm::vec3(0.0f, 0.0f, 3.0f));
 

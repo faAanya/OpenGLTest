@@ -12,22 +12,34 @@ PFigure::PFigure(string name, Camera &cam, vec3 pos, vec3 scale, float angle, Sh
         object(shader),
         type(t) {
 
-    for (size_t i = 0; i < texturePaths.size(); ++i) {
-        if (!texturePaths[i].empty()) {
-            std::string texType;
-            GLenum texUnit;
+    if(texturePaths.size() == 0){
+        std::string texType;
+        GLenum texUnit;
 
-            if (i == 0) {
-                texType = "diffuse";
-                texUnit = GL_TEXTURE0;
-            } else if (i == 1) {
-                texType = "specular";
-                texUnit = GL_TEXTURE1;
+        texType = "diffuse";
+        texUnit = GL_TEXTURE0;
+
+        textures.emplace_back("resources/textures/pixel.png", texType.c_str(), texUnit);
+    }
+    else{
+        for (size_t i = 0; i < texturePaths.size(); ++i) {
+            if (!texturePaths[i].empty()) {
+                std::string texType;
+                GLenum texUnit;
+
+                if (i == 0) {
+                    texType = "diffuse";
+                    texUnit = GL_TEXTURE0;
+                } else if (i == 1) {
+                    texType = "specular";
+                    texUnit = GL_TEXTURE1;
+                }
+
+                textures.emplace_back(texturePaths[i].c_str(), texType.c_str(), texUnit);
             }
-
-            textures.emplace_back(texturePaths[i].c_str(), texType.c_str(), texUnit);
         }
     }
+
     if (t == "plane") {
         vector<Vertex> vert(verts::plane, verts::plane + sizeof(verts::plane) / sizeof(Vertex));
         mesh = new Mesh(vert, textures);
@@ -43,18 +55,16 @@ PFigure::PFigure(string name, Camera &cam, vec3 pos, vec3 scale, float angle, Sh
     } else {
         cout << "Wrong object type" << t;
     }
+    color = glm::vec3(0.0, 0.0, 0.0);
 
 }
 
 void PFigure::Draw() {
     if (isDrawing) {
-
-
         object.use();
         object.setVec3("viewPos", camera.Position);
+        object.setVec3("material.objectColor", color);
         object.setFloat("material.shininess", 32.0f);
-        object.setVec3("material.color", glm::vec3(0.0f, 0.0f, 0.0f));
-
 
         glm::mat4 projection = glm::perspective(glm::radians(camera.Zoom), (float) 1280 / (float) 720, 0.1f,
                                                 100.0f);

@@ -14,6 +14,7 @@ public:
 
     string name;
     vec3 position;
+    vec3 color;
     float angle;
     vec3 scale;
     Mesh* mesh;

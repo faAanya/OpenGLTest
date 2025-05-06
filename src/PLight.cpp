@@ -1,3 +1,4 @@
+#include <glm/glm.hpp>
 #include "include/PLight.h"
 #include "include/Shader.h"
 #include "include/Camera.h"
@@ -16,12 +17,13 @@ PLight::PLight(string name, Camera &cam, vec3 pos, vec3 scale, float angle, Shad
 //    size_t vertexCount = 0;
 //    Vertex* sphereVertices = verts::sphere(1.0f, 32, 32, vertexCount);
 //    vector<Vertex> vert(sphereVertices, sphereVertices + vertexCount);
+    color = glm::vec3(0.0, 0.0, 0.0);
     vector<Vertex> vert(verts::pyramid, verts::pyramid + sizeof(verts::pyramid) / sizeof(Vertex));
     mesh = new Mesh(vert);
 }
 
 void PLight::Draw() {
-    if(isDrawing){
+    if (isDrawing) {
         if (type == "point") {
             drawPointLight();
         } else if (type == "spot") {
@@ -41,6 +43,7 @@ void PLight::drawMesh() {
     glm::mat4 view = camera.GetViewMatrix();
     light.setMat4("projection", projection);
     light.setMat4("view", view);
+    light.setVec3("color", glm::vec3(1.0,1.0,1.0) - color);
 
     glm::mat4 model = glm::mat4(1.0f);
     model = glm::mat4(1.0f);
@@ -65,6 +68,7 @@ void PLight::drawPointLight() {
     objectToLight.setFloat(name + ".quadratic", 0.032f);
     objectToLight.setBool(name + ".enabled", isDrawing);
 
+    objectToLight.setVec3("material.lightColor", color);
 }
 
 void PLight::drawSpotLight() {
@@ -82,6 +86,7 @@ void PLight::drawSpotLight() {
     objectToLight.setVec3(name + ".specular", 1.0f, 1.0f, 1.0f);
     objectToLight.setBool(name + ".enabled", isDrawing);
 
+    objectToLight.setVec3("material.lightColor", color);
 }
 
 void PLight::drawDirLight() {
@@ -91,4 +96,6 @@ void PLight::drawDirLight() {
     objectToLight.setVec3(name + ".diffuse", 0.5f, 0.5f, 0.5f);
     objectToLight.setVec3(name + ".specular", 1.0f, 1.0f, 1.0f);
     objectToLight.setBool(name + ".enabled", isDrawing);
+
+    objectToLight.setVec3("material.lightColor", color);
 }

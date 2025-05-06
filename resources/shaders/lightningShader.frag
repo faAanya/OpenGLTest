@@ -6,7 +6,8 @@ struct Material {
     sampler2D specular;
     float shininess;
 
-    vec3 color;
+    vec3 objectColor;
+    vec3 lightColor;
 };
 
 struct DirLight {
@@ -75,25 +76,27 @@ void main()
 
     vec3 norm = normalize(Normal);
     vec3 viewDir = normalize(viewPos - FragPos);
-    vec3 result = vec3(0.0, 0.0, 0.0);
-    for(int i = 0; i < NR_DIR_LIGHTS; i++) {
-           if(dirLights[i].enabled) {
-               result += CalcDirLight(dirLights[i], norm, viewDir);
-           }
-       }
+    vec3 result = vec3(0.0,0.0,0.0);
+    result += material.objectColor;
+    result += material.lightColor;
+    for (int i = 0; i < NR_DIR_LIGHTS; i++) {
+        if (dirLights[i].enabled) {
+            result += CalcDirLight(dirLights[i], norm, viewDir);
+        }
+    }
 
-       for(int i = 0; i < NR_POINT_LIGHTS; i++) {
-           if(pointLights[i].enabled) {
-               result += CalcPointLight(pointLights[i], norm, FragPos, viewDir);
-           }
-       }
+    for (int i = 0; i < NR_POINT_LIGHTS; i++) {
+        if (pointLights[i].enabled) {
+            result += CalcPointLight(pointLights[i], norm, FragPos, viewDir);
+        }
+    }
 
-       for(int i = 0; i < NR_SPOT_LIGHTS; i++) {
-           if(spotLights[i].enabled) {
-               result += CalcSpotLight(spotLights[i], norm, FragPos, viewDir);
-           }
-       }
-    result += material.color;
+    for (int i = 0; i < NR_SPOT_LIGHTS; i++) {
+        if (spotLights[i].enabled) {
+            result += CalcSpotLight(spotLights[i], norm, FragPos, viewDir);
+        }
+    }
+
     FragColor = vec4(result, 1.0);
 }
 

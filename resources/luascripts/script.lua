@@ -12,7 +12,7 @@ create_figure(
         1.0, 4.0, 1.0,
         20,
         'cube',
-        { 'resources/textures/cupcake.jpg' }
+        { }
 )
 create_light(
         'light 1',
@@ -21,5 +21,8 @@ create_light(
         10,
         'point'
 )
+pick_object('cube 1')
+change_color(0.0,1.0,0.0)
+
 
 delete_all();

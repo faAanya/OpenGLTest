@@ -61,7 +61,9 @@ private:
                 type,
                 textures
         );
-
+        if (self->objectManager->selectObjectByName(name)) {
+            self->objectManager->getActiveObject();
+        }
         return 0;
     }
 
@@ -100,7 +102,9 @@ private:
                                          self->global->getObjectShader(),
                                          self->global->getLightShader(),
                                          type);
-
+        if (self->objectManager->selectObjectByName(name)) {
+            self->objectManager->getActiveObject();
+        }
         return 0;
     }
 
@@ -208,6 +212,38 @@ private:
         }
         return 0;
     }
+    static int lua_changeColor(lua_State *L) {
+        PLua *self = static_cast<PLua *>(lua_touserdata(L, lua_upvalueindex(1)));
+
+        if (lua_gettop(L) == 3) {
+
+            if (self->objectManager->getActiveObject()) {
+                glm::vec3 color = {
+                        static_cast<float>(luaL_checknumber(L, 1)),
+                        static_cast<float>(luaL_checknumber(L, 2)),
+                        static_cast<float>(luaL_checknumber(L, 3))
+                };
+
+                self->objectManager->changeColor(color);
+                return 0;
+            }
+            return luaL_error(L, "Need 1 args: name");
+        }
+        if (lua_gettop(L) == 4) {
+            const char *name = luaL_checkstring(L, 1);
+
+            glm::vec3 color = {
+                    static_cast<float>(luaL_checknumber(L, 2)),
+                    static_cast<float>(luaL_checknumber(L, 3)),
+                    static_cast<float>(luaL_checknumber(L, 4))
+            };
+
+            self->objectManager->selectObjectByName(name);
+            self->objectManager->changeColor(color);
+            return 0;
+        }
+        return 0;
+    }
 
     static int lua_deleteActiveObject(lua_State *L) {
         PLua *self = static_cast<PLua *>(lua_touserdata(L, lua_upvalueindex(1)));
@@ -271,6 +307,10 @@ public:
         lua_pushlightuserdata(L, this);
         lua_pushcclosure(L, &PLua::lua_rotateTo, 1);
         lua_setglobal(L, "rotate_to");
+
+        lua_pushlightuserdata(L, this);
+        lua_pushcclosure(L, &PLua::lua_changeColor, 1);
+        lua_setglobal(L, "change_color");
 
         lua_pushlightuserdata(L, this);
         lua_pushcclosure(L, &PLua::lua_deleteActiveObject, 1);
