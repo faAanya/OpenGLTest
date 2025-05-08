@@ -280,11 +280,9 @@ void PImgui::drawHierarchy() {
             viewportSize.x - textWindowSize.x,
             ImGui::GetFrameHeight()), ImGuiCond_Always);
 
-    string text = "Active object: ";
-    if(manager->getActiveObject())
-        text += manager->getActiveObject()->name.c_str();
     ImGui::Begin("Hierarchy", nullptr, flags);
-    ImGui::Text("%s",text.c_str());
+    if(manager->getActiveObject())
+        ImGui::Text("%s %s", "Active object:", manager->getActiveObject()->name.c_str());
 
     if (ImGui::BeginTable("Hierarchy", 2, ImGuiTableFlags_Borders | ImGuiTableFlags_RowBg)) {
         ImGui::TableSetupColumn("Name");
