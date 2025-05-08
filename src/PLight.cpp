@@ -18,7 +18,7 @@ PLight::PLight(string name, Camera &cam, vec3 pos, vec3 scale, float angle, Shad
 //    Vertex* sphereVertices = verts::sphere(1.0f, 32, 32, vertexCount);
 //    vector<Vertex> vert(sphereVertices, sphereVertices + vertexCount);
     color = glm::vec3(0.0, 0.0, 0.0);
-    vector<Vertex> vert(verts::pyramid, verts::pyramid + sizeof(verts::pyramid) / sizeof(Vertex));
+    vector<Vertex> vert(verts::sphere, verts::sphere + sizeof(verts::sphere) / sizeof(Vertex));
     mesh = new Mesh(vert);
 }
 

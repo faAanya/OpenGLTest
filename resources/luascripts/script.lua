@@ -11,8 +11,8 @@ create_figure(
         1.0, 1.0, 1.0,
         1.0, 4.0, 1.0,
         20,
-        'cube',
-        { }
+        'sphere',
+        {'resources/textures/cupcake.jpg' }
 )
 create_light(
         'light 1',

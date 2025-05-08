@@ -20,7 +20,9 @@ private:
 
     PObject *activeObject = nullptr;
 
-    int lightCounter = 0;
+    int pointLightCounter = 0;
+    int directLightCounter = 0;
+    int spotLightCounter = 0;
 
 public:
     std::vector<std::unique_ptr<PFigure>> figures;
@@ -59,12 +61,21 @@ public:
                 return;
             }
         }
-
+        int lightCounter = 0;
+        if (type == "spot") {
+            lightCounter = spotLightCounter;
+            spotLightCounter++;
+        } else if (type == "point") {
+            lightCounter = pointLightCounter;
+            pointLightCounter++;
+        } else if (type == "directional") {
+            lightCounter = directLightCounter;
+            directLightCounter++;
+        }
         lights.push_back(
                 std::make_unique<PLight>(name, cam, pos, scale, angle,
                                          shader, lightShader, type, lightCounter)
         );
-        lightCounter++;
     }
 
 
