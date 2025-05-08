@@ -9,7 +9,6 @@ private:
     Shader &object;
     std::vector<PLight> lights;
     std::vector<Texture> textures;
-    string type;
     unsigned int index;
 
 public:

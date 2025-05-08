@@ -13,6 +13,15 @@ public:
     PObject() = default;
 
     string name;
+    string type;
+    glm::vec3 direction;
+    glm::vec3 ambient;
+    glm::vec3 diffuse;
+    glm::vec3 specular;
+
+    float cutOff = 12.5f;
+    float outerCutOff = 15.0f;
+
     vec3 position;
     vec3 color;
     float angle;
@@ -20,7 +29,7 @@ public:
     Mesh* mesh;
     Camera& camera;
     bool isDrawing;
-    PObject(string n, Camera& c, glm::vec3 pos, glm::vec3 scale,float angle);
+    PObject(string n, Camera& c, glm::vec3 pos, glm::vec3 scale,float angle, string t);
 
     void drawMesh();
     void deleteObj();

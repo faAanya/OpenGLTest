@@ -1,4 +1,4 @@
-create_figure(
+figure(
         'robot',
         0.0, 1.5, -2.0,
         1.0, 1.0, 1.0,
@@ -6,20 +6,20 @@ create_figure(
         'cube',
         { 'resources/textures/cupcake.jpg' }
 )
-create_figure(
+figure(
         'cube 1',
+        0.0, 0.0, 0.0,
         1.0, 1.0, 1.0,
-        1.0, 4.0, 1.0,
         20,
-        'sphere',
+        'cube',
         {'resources/textures/cupcake.jpg' }
 )
-create_light(
+light(
         'light 1',
         0.0, 1.0, 1.0,
         0.8, 1.0, 1.0,
         10,
-        'point'
+        'spot'
 )
 pick_object('cube 1')
 change_color(0.0,1.0,0.0)

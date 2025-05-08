@@ -141,12 +141,131 @@ void PImgui::drawTopMenu() {
     }
 
     if (showAboutWindow) {
-        ImGui::Begin("About", &showAboutWindow, ImGuiWindowFlags_AlwaysAutoResize);
-        ImGui::Text("3D Editor Application");
-        ImGui::Separator();
-        ImGui::Text("Version: 1.0.0");
-        ImGui::Text("Basic scene manipulation tool");
-        ImGui::Separator();
+        ImGui::Begin("Library", &showAboutWindow, ImGuiWindowFlags_AlwaysAutoResize);
+        if (ImGui::CollapsingHeader("Object Creation", ImGuiTreeNodeFlags_DefaultOpen)) {
+            ImGui::BulletText("figure(name, pos_x, pos_y, pos_z, scale_x, scale_y, scale_z, angle, type, textures_table)");
+            ImGui::Indent();
+            ImGui::Text("Creates a new 3D figure with:");
+            ImGui::BulletText("name: string identifier");
+            ImGui::BulletText("position: x,y,z coordinates");
+            ImGui::BulletText("scale: x,y,z dimensions");
+            ImGui::BulletText("angle: rotation angle");
+            ImGui::BulletText("type: figure type (string)");
+            ImGui::BulletText("textures: array of texture paths");
+            ImGui::Unindent();
+
+            ImGui::Spacing();
+            ImGui::BulletText("light(name, pos_x, pos_y, pos_z, scale_x, scale_y, scale_z, angle, type)");
+            ImGui::Indent();
+            ImGui::Text("Creates a new light source with:");
+            ImGui::BulletText("name: string identifier");
+            ImGui::BulletText("position: x,y,z coordinates");
+            ImGui::BulletText("scale: x,y,z dimensions");
+            ImGui::BulletText("angle: rotation angle");
+            ImGui::BulletText("type: light type (\"spot\", \"point\" or \"directional\")");
+            ImGui::Unindent();
+        }
+
+        if (ImGui::CollapsingHeader("Object Selection")) {
+            ImGui::BulletText("pick_object(name)");
+            ImGui::Indent();
+            ImGui::Text("Selects an object by its name for subsequent operations");
+            ImGui::Unindent();
+        }
+
+        if (ImGui::CollapsingHeader("Transformations")) {
+            ImGui::BulletText("move_to(x, y, z)");
+            ImGui::Indent();
+            ImGui::Text("Moves currently selected object to position (x,y,z)");
+            ImGui::Unindent();
+
+            ImGui::BulletText("move_to(name, x, y, z)");
+            ImGui::Indent();
+            ImGui::Text("Moves specified object to position (x,y,z)");
+            ImGui::Unindent();
+
+            ImGui::Spacing();
+            ImGui::BulletText("scale_to(x, y, z)");
+            ImGui::Indent();
+            ImGui::Text("Scales currently selected object");
+            ImGui::Unindent();
+
+            ImGui::BulletText("scale_to(name, x, y, z)");
+            ImGui::Indent();
+            ImGui::Text("Scales specified object");
+            ImGui::Unindent();
+
+            ImGui::Spacing();
+            ImGui::BulletText("rotate_to(angle)");
+            ImGui::Indent();
+            ImGui::Text("Rotates currently selected object by angle");
+            ImGui::Unindent();
+
+            ImGui::BulletText("rotate_to(name, angle)");
+            ImGui::Indent();
+            ImGui::Text("Rotates specified object by angle");
+            ImGui::Unindent();
+        }
+
+        if (ImGui::CollapsingHeader("Light Properties")) {
+            ImGui::BulletText("set_direction(x, y, z)");
+            ImGui::Indent();
+            ImGui::Text("Sets light direction vector");
+            ImGui::Unindent();
+
+            ImGui::Spacing();
+            ImGui::BulletText("set_ambient(r, g, b)");
+            ImGui::Indent();
+            ImGui::Text("Sets ambient light color (RGB 0-1)");
+            ImGui::Unindent();
+
+            ImGui::Spacing();
+            ImGui::BulletText("set_diffuse(r, g, b)");
+            ImGui::Indent();
+            ImGui::Text("Sets diffuse light color (RGB 0-1)");
+            ImGui::Unindent();
+
+            ImGui::Spacing();
+            ImGui::BulletText("set_specular(r, g, b)");
+            ImGui::Indent();
+            ImGui::Text("Sets specular light color (RGB 0-1)");
+            ImGui::Unindent();
+
+            ImGui::Spacing();
+            ImGui::BulletText("set_radius(cutoff)");
+            ImGui::Indent();
+            ImGui::Text("Sets spotlight inner radius (cutoff angle)");
+            ImGui::Unindent();
+
+            ImGui::BulletText("set_radius_outer(outer_cutoff)");
+            ImGui::Indent();
+            ImGui::Text("Sets spotlight outer radius");
+            ImGui::Unindent();
+        }
+
+        if (ImGui::CollapsingHeader("Object Appearance")) {
+            ImGui::BulletText("set_color(r, g, b)");
+            ImGui::Indent();
+            ImGui::Text("Changes color of currently selected object (RGB 0-1)");
+            ImGui::Unindent();
+
+            ImGui::BulletText("set_color(name, r, g, b)");
+            ImGui::Indent();
+            ImGui::Text("Changes color of specified object");
+            ImGui::Unindent();
+        }
+
+        if (ImGui::CollapsingHeader("Object Management")) {
+            ImGui::BulletText("delete_object()");
+            ImGui::Indent();
+            ImGui::Text("Deletes currently selected object");
+            ImGui::Unindent();
+
+            ImGui::BulletText("delete_all()");
+            ImGui::Indent();
+            ImGui::Text("Deletes all objects in the scene");
+            ImGui::Unindent();
+        }
 
         ImGui::End();
     }

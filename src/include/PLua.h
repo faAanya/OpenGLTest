@@ -212,6 +212,7 @@ private:
         }
         return 0;
     }
+
     static int lua_changeColor(lua_State *L) {
         PLua *self = static_cast<PLua *>(lua_touserdata(L, lua_upvalueindex(1)));
 
@@ -242,6 +243,85 @@ private:
             self->objectManager->changeColor(color);
             return 0;
         }
+        return 0;
+    }
+
+    static int lua_setDirection(lua_State *L) {
+        PLua *self = static_cast<PLua *>(lua_touserdata(L, lua_upvalueindex(1)));
+        if (lua_gettop(L) != 3) {
+            return luaL_error(L, "Need 3 args: x,y,z");
+        }
+        glm::vec3 dir = {
+                static_cast<float>(luaL_checknumber(L, 1)),
+                static_cast<float>(luaL_checknumber(L, 2)),
+                static_cast<float>(luaL_checknumber(L, 3))
+        };
+        self->objectManager->setDirection(dir);
+
+        return 0;
+    }
+
+    static int lua_setAmbient(lua_State *L) {
+        PLua *self = static_cast<PLua *>(lua_touserdata(L, lua_upvalueindex(1)));
+        if (lua_gettop(L) != 3) {
+            return luaL_error(L, "Need 3 args: x,y,z");
+        }
+        glm::vec3 ambient = {
+                static_cast<float>(luaL_checknumber(L, 1)),
+                static_cast<float>(luaL_checknumber(L, 2)),
+                static_cast<float>(luaL_checknumber(L, 3))
+        };
+        self->objectManager->setLightAmbient(ambient);
+
+        return 0;
+    }
+
+    static int lua_setDiffuse(lua_State *L) {
+        PLua *self = static_cast<PLua *>(lua_touserdata(L, lua_upvalueindex(1)));
+        if (lua_gettop(L) != 3) {
+            return luaL_error(L, "Need 3 args: x,y,z");
+        }
+        glm::vec3 diffuse = {
+                static_cast<float>(luaL_checknumber(L, 1)),
+                static_cast<float>(luaL_checknumber(L, 2)),
+                static_cast<float>(luaL_checknumber(L, 3))
+        };
+        self->objectManager->setLightDiffuse(diffuse);
+
+        return 0;
+    }
+
+    static int lua_setSpecular(lua_State *L) {
+        PLua *self = static_cast<PLua *>(lua_touserdata(L, lua_upvalueindex(1)));
+        if (lua_gettop(L) != 3) {
+            return luaL_error(L, "Need 3 args: x,y,z");
+        }
+        glm::vec3 specular = {
+                static_cast<float>(luaL_checknumber(L, 1)),
+                static_cast<float>(luaL_checknumber(L, 2)),
+                static_cast<float>(luaL_checknumber(L, 3))
+        };
+        self->objectManager->setLightSpecular(specular);
+
+        return 0;
+    }
+
+    static int lua_setSpotLightRadius(lua_State *L) {
+        PLua *self = static_cast<PLua *>(lua_touserdata(L, lua_upvalueindex(1)));
+        if (lua_gettop(L) != 1) {
+            return luaL_error(L, "Need 1 args: radius");
+        }
+        float cut = static_cast<float>(luaL_checknumber(L, 1));
+        self->objectManager->setSpotLightCutOff(cut);
+        return 0;
+    }
+    static int lua_setSpotLightOuterRadius(lua_State *L) {
+        PLua *self = static_cast<PLua *>(lua_touserdata(L, lua_upvalueindex(1)));
+        if (lua_gettop(L) != 1) {
+            return luaL_error(L, "Need 1 args: radius");
+        }
+        float cut = static_cast<float>(luaL_checknumber(L, 1));
+        self->objectManager->setSpotLightOuterCutOff(cut);
         return 0;
     }
 
@@ -286,11 +366,11 @@ public:
     void registerFunctions() {
         lua_pushlightuserdata(L, this);
         lua_pushcclosure(L, &PLua::lua_createFigure, 1);
-        lua_setglobal(L, "create_figure");
+        lua_setglobal(L, "figure");
 
         lua_pushlightuserdata(L, this);
         lua_pushcclosure(L, &PLua::lua_createLight, 1);
-        lua_setglobal(L, "create_light");
+        lua_setglobal(L, "light");
 
         lua_pushlightuserdata(L, this);
         lua_pushcclosure(L, &PLua::lua_pickActiveObject, 1);
@@ -310,7 +390,31 @@ public:
 
         lua_pushlightuserdata(L, this);
         lua_pushcclosure(L, &PLua::lua_changeColor, 1);
-        lua_setglobal(L, "change_color");
+        lua_setglobal(L, "set_color");
+
+        lua_pushlightuserdata(L, this);
+        lua_pushcclosure(L, &PLua::lua_setDirection, 1);
+        lua_setglobal(L, "set_direction");
+
+        lua_pushlightuserdata(L, this);
+        lua_pushcclosure(L, &PLua::lua_setAmbient, 1);
+        lua_setglobal(L, "set_ambient");
+
+        lua_pushlightuserdata(L, this);
+        lua_pushcclosure(L, &PLua::lua_setDiffuse, 1);
+        lua_setglobal(L, "set_diffuse");
+
+        lua_pushlightuserdata(L, this);
+        lua_pushcclosure(L, &PLua::lua_setSpecular, 1);
+        lua_setglobal(L, "set_specular");
+
+        lua_pushlightuserdata(L, this);
+        lua_pushcclosure(L, &PLua::lua_setSpotLightRadius, 1);
+        lua_setglobal(L, "set_radius");
+
+        lua_pushlightuserdata(L, this);
+        lua_pushcclosure(L, &PLua::lua_setSpotLightOuterRadius, 1);
+        lua_setglobal(L, "set_radius_outer");
 
         lua_pushlightuserdata(L, this);
         lua_pushcclosure(L, &PLua::lua_deleteActiveObject, 1);

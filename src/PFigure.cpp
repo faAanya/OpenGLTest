@@ -8,9 +8,8 @@
 
 PFigure::PFigure(string name, Camera &cam, vec3 pos, vec3 scale, float angle, Shader &shader, string t,
                  const std::vector<std::string> &texturePaths) :
-        PObject(name, cam, pos, scale, angle),
-        object(shader),
-        type(t) {
+        PObject(name, cam, pos, scale, angle, t),
+        object(shader){
 
     if(texturePaths.size() == 0){
         std::string texType;

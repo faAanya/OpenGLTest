@@ -134,6 +134,30 @@ public:
         cout << "changeColor" << "\n";
     }
 
+    void setTextures(){
+
+    }
+
+    void setDirection(vec3 direction){
+        activeObject->direction = direction;
+    }
+
+    void setLightAmbient(vec3 ambient){
+        activeObject->ambient = ambient;
+    }
+    void setLightDiffuse(vec3 diffuse){
+        activeObject->diffuse = diffuse;
+    }
+    void setLightSpecular(vec3 specular){
+        activeObject->specular = specular;
+    }
+    void setSpotLightCutOff(float cutOff){
+        activeObject->cutOff = cutOff;
+    }
+    void setSpotLightOuterCutOff(float outerCutOff){
+        activeObject->outerCutOff = outerCutOff;
+    }
+
     void deleteObj() {
         if (!activeObject) return;
         activeObject->isDrawing = false;
