@@ -5,21 +5,21 @@
 #include "include/verts.h"
 #include <string>
 
-PLight::PLight(string name, Camera &cam, vec3 pos, vec3 scale, float angle, Shader &shader, Shader &light, string t,
+PLight::PLight(string name, Camera &cam, vec3 pos, vec3 scale, float angle, Shader &shader, Shader &light, string& t,
                unsigned int index)
-        : PObject(name, cam, pos, scale, angle, t),
+        : PObject(name, cam, pos,t, scale, angle),
           objectToLight(shader),
           light(light),
           index(index) {
 
     direction = glm::vec3(0, 0, 0);
+    ambient = glm::vec3(0.05f, 0.05f, 0.05f);
+    diffuse = glm::vec3(0.8f, 0.8f, 0.8f);
+    specular = glm::vec3(1.0f, 1.0f, 1.0f);
     color = glm::vec3(0.0, 0.0, 0.0);
     vector<Vertex> vert(verts::sphere, verts::sphere + sizeof(verts::sphere) / sizeof(Vertex));
     mesh = new Mesh(vert);
 
-    ambient = glm::vec3(0.05f, 0.05f, 0.05f);
-    diffuse = glm::vec3(0.8f, 0.8f, 0.8f);
-    specular = glm::vec3(1.0f, 1.0f, 1.0f);
 }
 
 void PLight::Draw() {
@@ -66,14 +66,13 @@ void PLight::drawPointLight() {
     objectToLight.setFloat(name + ".constant", 1.0f);
     objectToLight.setFloat(name + ".linear", 0.09f);
     objectToLight.setFloat(name + ".quadratic", 0.032f);
-
     objectToLight.setBool(name + ".enabled", isDrawing);
+
     objectToLight.setVec3("material.lightColor", color);
 }
 
 void PLight::drawSpotLight() {
     string name = "spotLights[" + to_string(index) + "]";
-    objectToLight.setVec3(name + ".position", camera.Position);
 
     objectToLight.setVec3(name + ".direction", direction - position);
     objectToLight.setFloat(name + ".cutOff", glm::cos(glm::radians(cutOff)));
