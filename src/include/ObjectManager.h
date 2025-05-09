@@ -144,12 +144,18 @@ public:
 
     void setLightAmbient(vec3 ambient){
         activeObject->ambient = ambient;
+
+        cout << "ambient" << "\n";
     }
     void setLightDiffuse(vec3 diffuse){
         activeObject->diffuse = diffuse;
+
+        cout << "diffuse" << "\n";
     }
     void setLightSpecular(vec3 specular){
         activeObject->specular = specular;
+
+        cout << "specular" << "\n";
     }
     void setSpotLightCutOff(float cutOff){
         activeObject->cutOff = cutOff;

@@ -74,6 +74,7 @@ void PLight::drawPointLight() {
 void PLight::drawSpotLight() {
     string name = "spotLights[" + to_string(index) + "]";
 
+    objectToLight.setVec3(name + ".position", position);
     objectToLight.setVec3(name + ".direction", direction - position);
     objectToLight.setFloat(name + ".cutOff", glm::cos(glm::radians(cutOff)));
     objectToLight.setFloat(name + ".outerCutOff", glm::cos(glm::radians(outerCutOff)));
