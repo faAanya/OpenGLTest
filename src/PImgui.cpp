@@ -99,7 +99,7 @@ void PImgui::drawTopMenu() {
 
             ImGui::InputTextMultiline("##input", inputText,
                                       IM_ARRAYSIZE(inputText), ImVec2(-1, 100));
-//            checkInput();
+            checkInput();
             if (ImGui::Button("Submit", ImVec2(-1, 0))) {
                 isChangingScene = true;
             }
@@ -115,44 +115,145 @@ void PImgui::drawTopMenu() {
             ImGui::End();
         }
 
+        if (ImGui::BeginMenu("Pick")) {
+            for (auto& figure : manager->figures) {
+                if (ImGui::MenuItem(figure->name.c_str())) {
+                    char buffer[256];
+                    snprintf(buffer, sizeof(buffer), "pick('%s')\n", figure->name.c_str());
+                    strcat(inputText, buffer);
+                }
+            }
+
+            for (auto& light : manager->lights) {
+                if (ImGui::MenuItem(light->name.c_str())) {
+                    char buffer[256];
+                    snprintf(buffer, sizeof(buffer), "pick('%s')\n", light->name.c_str());
+                    strcat(inputText, buffer);
+                }
+            }
+
+            ImGui::EndMenu();
+        }
+
         if (ImGui::BeginMenu("Create")) {
+            static int cubeCount = 1;
+            static int sphereCount = 1;
+            static int cylinderCount = 1;
+            static int pyramidCount = 1;
+            static int planeCount = 1;
+            static int directionalLightCount = 1;
+            static int spotLightCount = 1;
+            static int pointLightCount = 1;
 
             if (ImGui::BeginMenu("Primitive")) {
-                ImGui::MenuItem("Cube");
-                ImGui::MenuItem("Sphere");
-                ImGui::MenuItem("Cylinder");
-                ImGui::MenuItem("Pyramid");
-                ImGui::MenuItem("Plane");
+                char buffer[256];
+
+                if (ImGui::MenuItem("Cube")) {
+                    snprintf(buffer, sizeof(buffer),
+                             "figure('cube_%d', 0.0, 0.0, 0.0, 1.0, 1.0, 1.0, 0.0, 'cube', {})\n",
+                             cubeCount++);
+                    strcat(inputText, buffer);
+                }
+
+                if (ImGui::MenuItem("Sphere")) {
+                    snprintf(buffer, sizeof(buffer),
+                             "figure('sphere_%d', 0.0, 0.0, 0.0, 1.0, 1.0, 1.0, 0.0, 'sphere', {})\n",
+                             sphereCount++);
+                    strcat(inputText, buffer);
+                }
+
+                if (ImGui::MenuItem("Cylinder")) {
+                    snprintf(buffer, sizeof(buffer),
+                             "figure('cylinder_%d', 0.0, 0.0, 0.0, 1.0, 1.0, 1.0, 0.0, 'cylinder', {})\n",
+                             cylinderCount++);
+                    strcat(inputText, buffer);
+                }
+
+                if (ImGui::MenuItem("Pyramid")) {
+                    snprintf(buffer, sizeof(buffer),
+                             "figure('pyramid_%d', 0.0, 0.0, 0.0, 1.0, 1.0, 1.0, 0.0, 'pyramid', {})\n",
+                             pyramidCount++);
+                    strcat(inputText, buffer);
+                }
+
+                if (ImGui::MenuItem("Plane")) {
+                    snprintf(buffer, sizeof(buffer),
+                             "figure('plane_%d', 0.0, 0.0, 0.0, 1.0, 1.0, 1.0, 0.0, 'plane', {})\n",
+                             planeCount++);
+                    strcat(inputText, buffer);
+                }
+
                 ImGui::EndMenu();
             }
 
             if (ImGui::BeginMenu("Light")) {
-                ImGui::MenuItem("Directional");
-                ImGui::MenuItem("Spot");
-                ImGui::MenuItem("Point");
+                char buffer[256];
+
+                if (ImGui::MenuItem("Directional")) {
+                    snprintf(buffer, sizeof(buffer),
+                             "light('directional_light_%d', 0.0, 0.0, 0.0, 1.0, 1.0, 1.0, 0.0, 'directional')\n",
+                             directionalLightCount++);
+                    strcat(inputText, buffer);
+                }
+
+                if (ImGui::MenuItem("Spot")) {
+                    snprintf(buffer, sizeof(buffer),
+                             "light('spot_light_%d', 0.0, 0.0, 0.0, 1.0, 1.0, 1.0, 0.0, 'spot')\n",
+                             spotLightCount++);
+                    strcat(inputText, buffer);
+                }
+
+                if (ImGui::MenuItem("Point")) {
+                    snprintf(buffer, sizeof(buffer),
+                             "light('point_light_%d', 0.0, 0.0, 0.0, 1.0, 1.0, 1.0, 0.0, 'point')\n",
+                             pointLightCount++);
+                    strcat(inputText, buffer);
+                }
+
                 ImGui::EndMenu();
             }
 
             ImGui::EndMenu();
         }
 
+
         if (ImGui::BeginMenu("Modify")) {
 
             if (ImGui::BeginMenu("Transformation")) {
-                ImGui::MenuItem("Object Position");
-                ImGui::MenuItem("Object Scale");
-                ImGui::MenuItem("Object Rotation");
+                if (ImGui::MenuItem("Object Position")) {
+                    strcat(inputText, "move(x, y, z)\n");
+                }
+                if (ImGui::MenuItem("Object Scale")) {
+                    strcat(inputText, "scale(x, y, z)\n");
+                }
+                if (ImGui::MenuItem("Object Rotation")) {
+                    strcat(inputText, "rotate(angle)\n");
+                }
                 ImGui::EndMenu();
             }
 
             if (ImGui::BeginMenu("Properties")) {
-                ImGui::MenuItem("Object Color");
-                ImGui::MenuItem("Light Direction");
-                ImGui::MenuItem("Light Ambient");
-                ImGui::MenuItem("Light Diffuse");
-                ImGui::MenuItem("Light Specular");
-                ImGui::MenuItem("Light Cutoff");
-                ImGui::MenuItem("Light OuterCutoff");
+                if (ImGui::MenuItem("Object Color")) {
+                    strcat(inputText, "color(r, g, b)\n");
+                }
+                if (ImGui::MenuItem("Light Direction")) {
+                    strcat(inputText, "direction(x, y, z)\n");
+                }
+                if (ImGui::MenuItem("Light Ambient")) {
+                    strcat(inputText, "ambient(r, g, b)\n");
+                }
+                if (ImGui::MenuItem("Light Diffuse")) {
+                    strcat(inputText, "diffuse(r, g, b)\n");
+                }
+                if (ImGui::MenuItem("Light Specular")) {
+                    strcat(inputText, "specular(r, g, b)\n");
+                }
+                if (ImGui::MenuItem("Light Cutoff")) {
+                    strcat(inputText, "radius(cutoff)\n");
+                }
+                if (ImGui::MenuItem("Light OuterCutoff")) {
+                    strcat(inputText, "radius_outer(outer_cutoff)\n");
+                }
                 ImGui::EndMenu();
             }
 
@@ -160,7 +261,6 @@ void PImgui::drawTopMenu() {
         }
 
         if (ImGui::BeginMenu("About")) {
-//            showAboutWindow = true;
             ImGui::Begin("Library", &showAboutWindow, ImGuiWindowFlags_AlwaysAutoResize);
             if (ImGui::CollapsingHeader("Object Creation", ImGuiTreeNodeFlags_DefaultOpen)) {
                 ImGui::BulletText(
@@ -188,77 +288,77 @@ void PImgui::drawTopMenu() {
             }
 
             if (ImGui::CollapsingHeader("Object Selection")) {
-                ImGui::BulletText("pick_object(name)");
+                ImGui::BulletText("pick(name)");
                 ImGui::Indent();
                 ImGui::Text("Selects an object by its name for subsequent operations");
                 ImGui::Unindent();
             }
 
             if (ImGui::CollapsingHeader("Transformations")) {
-                ImGui::BulletText("move_to(x, y, z)");
+                ImGui::BulletText("move(x, y, z)");
                 ImGui::Indent();
                 ImGui::Text("Moves currently selected object to position (x,y,z)");
                 ImGui::Unindent();
 
-                ImGui::BulletText("move_to(name, x, y, z)");
+                ImGui::BulletText("move(name, x, y, z)");
                 ImGui::Indent();
                 ImGui::Text("Moves specified object to position (x,y,z)");
                 ImGui::Unindent();
 
                 ImGui::Spacing();
-                ImGui::BulletText("scale_to(x, y, z)");
+                ImGui::BulletText("scale(x, y, z)");
                 ImGui::Indent();
                 ImGui::Text("Scales currently selected object");
                 ImGui::Unindent();
 
-                ImGui::BulletText("scale_to(name, x, y, z)");
+                ImGui::BulletText("scale(name, x, y, z)");
                 ImGui::Indent();
                 ImGui::Text("Scales specified object");
                 ImGui::Unindent();
 
                 ImGui::Spacing();
-                ImGui::BulletText("rotate_to(angle)");
+                ImGui::BulletText("rotate(angle)");
                 ImGui::Indent();
                 ImGui::Text("Rotates currently selected object by angle");
                 ImGui::Unindent();
 
-                ImGui::BulletText("rotate_to(name, angle)");
+                ImGui::BulletText("rotate(name, angle)");
                 ImGui::Indent();
                 ImGui::Text("Rotates specified object by angle");
                 ImGui::Unindent();
             }
 
             if (ImGui::CollapsingHeader("Light Properties")) {
-                ImGui::BulletText("set_direction(x, y, z)");
+                ImGui::BulletText("direction(x, y, z)");
                 ImGui::Indent();
                 ImGui::Text("Sets light direction vector");
                 ImGui::Unindent();
 
                 ImGui::Spacing();
-                ImGui::BulletText("set_ambient(r, g, b)");
+                ImGui::BulletText("ambient(r, g, b)");
                 ImGui::Indent();
                 ImGui::Text("Sets ambient light color (RGB 0-1)");
                 ImGui::Unindent();
 
                 ImGui::Spacing();
-                ImGui::BulletText("set_diffuse(r, g, b)");
+                ImGui::BulletText("diffuse(r, g, b)");
                 ImGui::Indent();
                 ImGui::Text("Sets diffuse light color (RGB 0-1)");
                 ImGui::Unindent();
 
                 ImGui::Spacing();
-                ImGui::BulletText("set_specular(r, g, b)");
+                ImGui::BulletText("specular(r, g, b)");
                 ImGui::Indent();
                 ImGui::Text("Sets specular light color (RGB 0-1)");
                 ImGui::Unindent();
 
                 ImGui::Spacing();
-                ImGui::BulletText("set_radius(cutoff)");
+                ImGui::BulletText("radius(cutoff)");
                 ImGui::Indent();
                 ImGui::Text("Sets spotlight inner radius (cutoff angle)");
                 ImGui::Unindent();
 
-                ImGui::BulletText("set_radius_outer(outer_cutoff)");
+                ImGui::BulletText("radius_outer(outer_cutoff)");
                 ImGui::Indent();
                 ImGui::Text("Sets spotlight outer radius");
                 ImGui::Unindent();

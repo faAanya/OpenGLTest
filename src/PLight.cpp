@@ -85,7 +85,6 @@ void PLight::drawSpotLight() {
     objectToLight.setFloat(name + ".linear", 0.09f);
     objectToLight.setFloat(name + ".quadratic", 0.032f);
 
-    cout << ambient.x << " " << ambient.y << " " << ambient.z;
     objectToLight.setVec3(name + ".ambient", ambient);
     objectToLight.setVec3(name + ".diffuse", diffuse);
     objectToLight.setVec3(name + ".specular", specular);

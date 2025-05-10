@@ -90,8 +90,6 @@ int main() {
 
         glm::mat4 projection = glm::perspective(glm::radians(camera.Zoom), (float) WIDTH / (float) HEIGHT, 0.1f,
                                                 100.0f);
-
-        std::cout << "Rendering frame: " << glfwGetTime() << std::endl;
         manager.drawAll();
         axes.Draw(camera.GetViewMatrix(), projection);
 

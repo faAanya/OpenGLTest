@@ -374,47 +374,47 @@ public:
 
         lua_pushlightuserdata(L, this);
         lua_pushcclosure(L, &PLua::lua_pickActiveObject, 1);
-        lua_setglobal(L, "pick_object");
+        lua_setglobal(L, "pick");
 
         lua_pushlightuserdata(L, this);
         lua_pushcclosure(L, &PLua::lua_moveTo, 1);
-        lua_setglobal(L, "move_to");
+        lua_setglobal(L, "move");
 
         lua_pushlightuserdata(L, this);
         lua_pushcclosure(L, &PLua::lua_scaleTo, 1);
-        lua_setglobal(L, "scale_to");
+        lua_setglobal(L, "scale");
 
         lua_pushlightuserdata(L, this);
         lua_pushcclosure(L, &PLua::lua_rotateTo, 1);
-        lua_setglobal(L, "rotate_to");
+        lua_setglobal(L, "rotate");
 
         lua_pushlightuserdata(L, this);
         lua_pushcclosure(L, &PLua::lua_changeColor, 1);
-        lua_setglobal(L, "set_color");
+        lua_setglobal(L, "color");
 
         lua_pushlightuserdata(L, this);
         lua_pushcclosure(L, &PLua::lua_setDirection, 1);
-        lua_setglobal(L, "set_direction");
+        lua_setglobal(L, "direction");
 
         lua_pushlightuserdata(L, this);
         lua_pushcclosure(L, &PLua::lua_setAmbient, 1);
-        lua_setglobal(L, "set_ambient");
+        lua_setglobal(L, "ambient");
 
         lua_pushlightuserdata(L, this);
         lua_pushcclosure(L, &PLua::lua_setDiffuse, 1);
-        lua_setglobal(L, "set_diffuse");
+        lua_setglobal(L, "diffuse");
 
         lua_pushlightuserdata(L, this);
         lua_pushcclosure(L, &PLua::lua_setSpecular, 1);
-        lua_setglobal(L, "set_specular");
+        lua_setglobal(L, "specular");
 
         lua_pushlightuserdata(L, this);
         lua_pushcclosure(L, &PLua::lua_setSpotLightRadius, 1);
-        lua_setglobal(L, "set_radius");
+        lua_setglobal(L, "radius");
 
         lua_pushlightuserdata(L, this);
         lua_pushcclosure(L, &PLua::lua_setSpotLightOuterRadius, 1);
-        lua_setglobal(L, "set_radius_outer");
+        lua_setglobal(L, "radius_outer");
 
         lua_pushlightuserdata(L, this);
         lua_pushcclosure(L, &PLua::lua_deleteActiveObject, 1);

@@ -29,10 +29,6 @@ private:
 
     WindowPinState currentPinState = PIN_NONE;
 
-    void createFigure(const std::string& command);
-
-    void createLight();
-
 public:
     bool isInputActive;
 
