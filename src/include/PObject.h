@@ -13,7 +13,7 @@ public:
     PObject() = default;
 
     string name;
-    string& type;
+    string type;
     glm::vec3 direction;
     glm::vec3 ambient;
     glm::vec3 diffuse;

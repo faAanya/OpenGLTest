@@ -41,7 +41,7 @@ private:
 
 
         float angle = static_cast<float>(luaL_checknumber(L, 8));
-        const char *type = luaL_checkstring(L, 9);
+       string type = luaL_checkstring(L, 9);
 
         std::vector<std::string> textures;
         luaL_checktype(L, 10, LUA_TTABLE);
@@ -92,7 +92,7 @@ private:
 
 
         float angle = static_cast<float>(luaL_checknumber(L, 8));
-        const char *type = luaL_checkstring(L, 9);
+        string type = luaL_checkstring(L, 9);
 
         self->objectManager->createLight(name,
                                          self->global->getCamera(),

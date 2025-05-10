@@ -5,9 +5,11 @@
 #include "include/verts.h"
 #include <string>
 
-PLight::PLight(string name, Camera &cam, vec3 pos, vec3 scale, float angle, Shader &shader, Shader &light, string& t,
+
+
+PLight::PLight(string name, Camera &cam, vec3 pos, vec3 scale, float angle, Shader &shader, Shader &light, string t,
                unsigned int index)
-        : PObject(name, cam, pos,t, scale, angle),
+        : PObject(name, cam, pos, t, scale, angle),
           objectToLight(shader),
           light(light),
           index(index) {
@@ -83,6 +85,7 @@ void PLight::drawSpotLight() {
     objectToLight.setFloat(name + ".linear", 0.09f);
     objectToLight.setFloat(name + ".quadratic", 0.032f);
 
+    cout << ambient.x << " " << ambient.y << " " << ambient.z;
     objectToLight.setVec3(name + ".ambient", ambient);
     objectToLight.setVec3(name + ".diffuse", diffuse);
     objectToLight.setVec3(name + ".specular", specular);

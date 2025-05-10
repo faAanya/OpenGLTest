@@ -134,33 +134,37 @@ public:
         cout << "changeColor" << "\n";
     }
 
-    void setTextures(){
+    void setTextures() {
 
     }
 
-    void setDirection(vec3 direction){
+    void setDirection(vec3 direction) {
         activeObject->direction = direction;
     }
 
-    void setLightAmbient(vec3 ambient){
+    void setLightAmbient(vec3 ambient) {
         activeObject->ambient = ambient;
 
         cout << "ambient" << "\n";
     }
-    void setLightDiffuse(vec3 diffuse){
+
+    void setLightDiffuse(vec3 diffuse) {
         activeObject->diffuse = diffuse;
 
         cout << "diffuse" << "\n";
     }
-    void setLightSpecular(vec3 specular){
+
+    void setLightSpecular(vec3 specular) {
         activeObject->specular = specular;
 
         cout << "specular" << "\n";
     }
-    void setSpotLightCutOff(float cutOff){
+
+    void setSpotLightCutOff(float cutOff) {
         activeObject->cutOff = cutOff;
     }
-    void setSpotLightOuterCutOff(float outerCutOff){
+
+    void setSpotLightOuterCutOff(float outerCutOff) {
         activeObject->outerCutOff = outerCutOff;
     }
 
