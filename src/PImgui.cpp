@@ -396,17 +396,31 @@ void PImgui::drawTopMenu() {
     }
 
 }
-
 void PImgui::drawHierarchy() {
-    ImGuiWindowFlags flags = ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoResize;
+
     ImVec2 viewportSize = ImGui::GetMainViewport()->Size;
+
+    ImGuiWindowFlags flags = ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoResize;
+
+
     ImGui::SetNextWindowPos(ImVec2(
-            viewportSize.x - textWindowSize.x,
-            ImGui::GetFrameHeight()), ImGuiCond_Always);
+            viewportSize.x - hierarchyWidth,
+            ImGui::GetFrameHeight()
+    ), ImGuiCond_Always);
+
+
+    ImGui::SetNextWindowSize(ImVec2(
+            hierarchyWidth,
+            viewportSize.y - ImGui::GetFrameHeight()
+    ), ImGuiCond_Always);
+
 
     ImGui::Begin("Hierarchy", nullptr, flags);
+
+
     if (manager->getActiveObject())
         ImGui::Text("%s %s", "Active object:", manager->getActiveObject()->name.c_str());
+
 
     if (ImGui::BeginTable("Hierarchy", 2, ImGuiTableFlags_Borders | ImGuiTableFlags_RowBg)) {
         ImGui::TableSetupColumn("Name");
@@ -414,6 +428,7 @@ void PImgui::drawHierarchy() {
         ImGui::TableHeadersRow();
 
         if (manager) {
+
             for (auto &figure: manager->figures) {
                 ImGui::TableNextRow();
                 ImGui::TableSetColumnIndex(0);
@@ -424,6 +439,7 @@ void PImgui::drawHierarchy() {
                             figure->position.y,
                             figure->position.z);
             }
+
             for (auto &figure: manager->lights) {
                 ImGui::TableNextRow();
                 ImGui::TableSetColumnIndex(0);

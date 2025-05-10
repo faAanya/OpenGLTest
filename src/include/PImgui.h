@@ -12,7 +12,7 @@ private:
     ObjectManager *manager;
     PLua* lua;
     bool showAboutWindow = false;
-
+    float hierarchyWidth = 300.0f;
 
     char inputText[1024] = "";
     bool isChangingScene = false;
