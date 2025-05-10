@@ -233,28 +233,73 @@ void PImgui::drawTopMenu() {
             }
 
             if (ImGui::BeginMenu("Properties")) {
+                static bool showColorPicker = false;
+                static ImVec4 objectColor = ImVec4(1.0f, 1.0f, 1.0f, 1.0f);
+
                 if (ImGui::MenuItem("Object Color")) {
-                    strcat(inputText, "color(r, g, b)\n");
+                    if (manager->getActiveObject()) {
+
+                        glm::vec3 col = manager->getActiveObject()->color;
+                        objectColor = ImVec4(col.r, col.g, col.b, 1.0f);
+                        showColorPicker = true;
+                    }
+                    else {
+                        strcat(inputText, "color(r, g, b)\n");
+                    }
                 }
+
                 if (ImGui::MenuItem("Light Direction")) {
                     strcat(inputText, "direction(x, y, z)\n");
                 }
+
                 if (ImGui::MenuItem("Light Ambient")) {
                     strcat(inputText, "ambient(r, g, b)\n");
                 }
+
                 if (ImGui::MenuItem("Light Diffuse")) {
                     strcat(inputText, "diffuse(r, g, b)\n");
                 }
+
                 if (ImGui::MenuItem("Light Specular")) {
                     strcat(inputText, "specular(r, g, b)\n");
                 }
+
                 if (ImGui::MenuItem("Light Cutoff")) {
                     strcat(inputText, "radius(cutoff)\n");
                 }
+
                 if (ImGui::MenuItem("Light OuterCutoff")) {
                     strcat(inputText, "radius_outer(outer_cutoff)\n");
                 }
+
                 ImGui::EndMenu();
+
+
+                if (showColorPicker && manager->getActiveObject()) {
+                    ImGui::Begin("Color Picker", &showColorPicker, ImGuiWindowFlags_AlwaysAutoResize);
+
+                    if (ImGui::ColorPicker3("##picker", (float*)&objectColor)) {
+
+                        glm::vec3 newColor(objectColor.x, objectColor.y, objectColor.z);
+                        manager->getActiveObject()->color = newColor;
+                    }
+
+
+                    if (ImGui::Button("Generate Lua Command")) {
+                        char buffer[256];
+                        snprintf(buffer, sizeof(buffer), "set_color('%s', %.2f, %.2f, %.2f)\n",
+                                 manager->getActiveObject()->name.c_str(),
+                                 objectColor.x, objectColor.y, objectColor.z);
+                        strcat(inputText, buffer);
+                    }
+
+                    ImGui::SameLine();
+                    if (ImGui::Button("Close")) {
+                        showColorPicker = false;
+                    }
+
+                    ImGui::End();
+                }
             }
 
             ImGui::EndMenu();
