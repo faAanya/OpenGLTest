@@ -12,6 +12,7 @@
 #include "include/AxisLines.h"
 #include "include/ObjectManager.h"
 #include "include/GlobalVars.h"
+#include "stb_image_write.h"
 
 Camera camera(glm::vec3(0.0f, 0.0f, 3.0f));
 
@@ -38,7 +39,8 @@ void mouse_callback(GLFWwindow *window, double xposIn, double yposIn);
 void scroll_callback(GLFWwindow *window, double xoffset, double yoffset);
 
 void setBackGroundColor(glm::vec3 color);
-
+void saveFrameToPng(const char* filename, int width, int height);
+bool once  = true;
 int main() {
     glfwInit();
 
@@ -90,10 +92,16 @@ int main() {
 
         glm::mat4 projection = glm::perspective(glm::radians(camera.Zoom), (float) WIDTH / (float) HEIGHT, 0.1f,
                                                 100.0f);
-        manager.drawAll();
-        axes.Draw(camera.GetViewMatrix(), projection);
 
-        imgui.activeState();
+        manager.drawAll();
+
+        axes.Draw(camera.GetViewMatrix(), projection);
+        if (glfwGetKey(window, GLFW_KEY_1) == GLFW_PRESS && once){
+            saveFrameToPng("render.png", WIDTH,HEIGHT);
+        }
+
+        if(!imgui.stopRender)
+            imgui.activeState();
 
 
         glfwSwapBuffers(window);
@@ -145,6 +153,22 @@ void mouse_callback(GLFWwindow *window, double xposIn, double yposIn) {
     if (glfwGetKey(window, GLFW_KEY_LEFT_ALT) == GLFW_PRESS) {
         camera.ProcessMouseMovement(xoffset, yoffset);
     }
+}
+void saveFrameToPng(const char* filename, int width, int height) {
+    unsigned char* pixels = new unsigned char[3 * width * height];
+
+    glReadBuffer(GL_FRONT);
+    glReadPixels(0, 0, width, height, GL_RGB, GL_UNSIGNED_BYTE, pixels);
+
+    for (int j = 0; j < height / 2; ++j) {
+        for (int i = 0; i < width * 3; ++i) {
+            std::swap(pixels[j * width * 3 + i], pixels[(height - 1 - j) * width * 3 + i]);
+        }
+    }
+
+    stbi_write_png(filename, width, height, 3, pixels, width * 3);
+
+    delete[] pixels;
 }
 
 void scroll_callback(GLFWwindow *window, double xoffset, double yoffset) {

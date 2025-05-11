@@ -9,6 +9,7 @@ namespace verts {
     extern Vertex pyramid[18];
     extern Vertex plane[6];
     extern Vertex sphere[432];
+    extern Vertex cylinder[144];
 
 
 

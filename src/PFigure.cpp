@@ -56,7 +56,13 @@ PFigure::PFigure(string name, Camera &cam, vec3 pos, vec3 scale, float angle, Sh
         vector<Vertex> vert(verts::sphere, verts::sphere + sizeof(verts::sphere) / sizeof(Vertex));
         mesh = new Mesh(vert, textures);
         return;
-    }else {
+    }
+    else if (t == "cylinder") {
+        vector<Vertex> vert(verts::cylinder, verts::cylinder + sizeof(verts::cylinder) / sizeof(Vertex));
+        mesh = new Mesh(vert, textures);
+        return;
+    }
+    else {
         cout << "Wrong object type" << t;
     }
     color = glm::vec3(0.0, 0.0, 0.0);
