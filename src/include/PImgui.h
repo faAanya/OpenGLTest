@@ -28,7 +28,7 @@ private:
     };
 
     WindowPinState currentPinState = PIN_NONE;
-
+    ImVec4 objectColor = ImVec4(1.0f, 1.0f, 1.0f, 1.0f);
 public:
     bool isInputActive;
 
@@ -41,6 +41,7 @@ public:
     void drawTopMenu();
 
     void drawHierarchy();
+    void drawColorPicker();
     void checkInput();
 
     void destroy();
