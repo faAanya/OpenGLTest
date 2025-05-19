@@ -324,6 +324,20 @@ private:
         self->objectManager->setSpotLightOuterCutOff(cut);
         return 0;
     }
+    static int lua_addTexture(lua_State* L) {
+        PLua* self = static_cast<PLua*>(lua_touserdata(L, lua_upvalueindex(1)));
+
+        if (lua_gettop(L) != 3) {
+            return luaL_error(L, "Need 3 args: objectName, texturePath, textureType");
+        }
+
+        const char* objectName = luaL_checkstring(L, 1);
+        const char* texturePath = luaL_checkstring(L, 2);
+        const char* textureType = luaL_checkstring(L, 3);
+
+        self->objectManager->addTextureToObject(objectName, texturePath, textureType);
+        return 0;
+    }
 
     static int lua_deleteActiveObject(lua_State *L) {
         PLua *self = static_cast<PLua *>(lua_touserdata(L, lua_upvalueindex(1)));
@@ -415,6 +429,10 @@ public:
         lua_pushlightuserdata(L, this);
         lua_pushcclosure(L, &PLua::lua_setSpotLightOuterRadius, 1);
         lua_setglobal(L, "radius_outer");
+
+        lua_pushlightuserdata(L, this);
+        lua_pushcclosure(L, &PLua::lua_addTexture, 1);
+        lua_setglobal(L, "add_texture");
 
         lua_pushlightuserdata(L, this);
         lua_pushcclosure(L, &PLua::lua_deleteActiveObject, 1);

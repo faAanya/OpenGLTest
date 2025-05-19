@@ -1,3 +1,4 @@
+#include <algorithm>
 #include "include/PFigure.h"
 #include "include/Texture.h"
 #include "include/verts.h"
@@ -8,65 +9,57 @@
 
 PFigure::PFigure(string name, Camera &cam, vec3 pos, vec3 scale, float angle, Shader &shader, string t,
                  const std::vector<std::string> &texturePaths) :
-        PObject(name, cam, pos,t, scale, angle),
-        object(shader){
+        PObject(name, cam, pos, t, scale, angle),
+        object(shader) {
 
-    if(texturePaths.size() == 0){
-        std::string texType;
-        GLenum texUnit;
+    textures = createTexturesFromPaths(texturePaths);
+    createMesh(t);
 
-        texType = "diffuse";
-        texUnit = GL_TEXTURE0;
+    color = glm::vec3(0.0, 0.0, 0.0);
 
-        textures.emplace_back("resources/textures/pixel.png", texType.c_str(), texUnit);
+}
+void PFigure::updateMeshWithCurrentVertices() {
+    if (mesh) {
+        delete mesh;
     }
-    else{
-        for (size_t i = 0; i < texturePaths.size(); ++i) {
-            if (!texturePaths[i].empty()) {
-                std::string texType;
-                GLenum texUnit;
-
-                if (i == 0) {
-                    texType = "diffuse";
-                    texUnit = GL_TEXTURE0;
-                } else if (i == 1) {
-                    texType = "specular";
-                    texUnit = GL_TEXTURE1;
-                }
-
-                textures.emplace_back(texturePaths[i].c_str(), texType.c_str(), texUnit);
-            }
-        }
+    mesh = new Mesh(currentVertices, textures);
+}
+void PFigure::updateMesh(const std::vector<Vertex>& newVertices) {
+    if (mesh) {
+        delete mesh; // Удаляем старый меш
     }
+    mesh = new Mesh(newVertices, textures);
+}
 
+void PFigure::createMesh(string t) {
     if (t == "plane") {
         vector<Vertex> vert(verts::plane, verts::plane + sizeof(verts::plane) / sizeof(Vertex));
         mesh = new Mesh(vert, textures);
+        currentVertices = vert;
         return;
     } else if (t == "cube") {
         vector<Vertex> vert(verts::cube, verts::cube + sizeof(verts::cube) / sizeof(Vertex));
         mesh = new Mesh(vert, textures);
+        currentVertices = vert;
         return;
     } else if (t == "pyramid") {
         vector<Vertex> vert(verts::pyramid, verts::pyramid + sizeof(verts::pyramid) / sizeof(Vertex));
         mesh = new Mesh(vert, textures);
+        currentVertices = vert;
         return;
-    }
-    else if (t == "sphere") {
+    } else if (t == "sphere") {
         vector<Vertex> vert(verts::sphere, verts::sphere + sizeof(verts::sphere) / sizeof(Vertex));
         mesh = new Mesh(vert, textures);
+        currentVertices = vert;
         return;
-    }
-    else if (t == "cylinder") {
+    } else if (t == "cylinder") {
         vector<Vertex> vert(verts::cylinder, verts::cylinder + sizeof(verts::cylinder) / sizeof(Vertex));
         mesh = new Mesh(vert, textures);
+        currentVertices = vert;
         return;
-    }
-    else {
+    } else {
         cout << "Wrong object type" << t;
     }
-    color = glm::vec3(0.0, 0.0, 0.0);
-
 }
 
 void PFigure::Draw() {
@@ -92,4 +85,56 @@ void PFigure::Draw() {
 
         mesh->Draw(object, camera);
     }
+}
+
+std::vector<Texture> PFigure::createTexturesFromPaths(const std::vector<std::string> &texturePaths) {
+    std::vector<Texture> textures;
+
+    if (texturePaths.empty()) {
+        textures.emplace_back("resources/textures/pixel.png", "diffuse", GL_TEXTURE0);
+        return textures;
+    }
+
+    for (size_t i = 0; i < texturePaths.size(); ++i) {
+        if (!texturePaths[i].empty()) {
+            std::string texType;
+            GLenum texUnit;
+
+            if (i == 0) {
+                texType = "diffuse";
+                texUnit = GL_TEXTURE0;
+            } else if (i == 1) {
+                texType = "specular";
+                texUnit = GL_TEXTURE1;
+            }
+
+            textures.emplace_back(texturePaths[i].c_str(), texType.c_str(), texUnit);
+        }
+    }
+
+    return textures;
+}
+
+void PFigure::addTexture(const std::string& texturePath, const std::string& textureType) {
+    GLenum texUnit;
+    if (textureType == "diffuse") {
+        texUnit = GL_TEXTURE0;
+    } else if (textureType == "specular") {
+        texUnit = GL_TEXTURE1;
+    } else {
+        std::cerr << "Unknown texture type: " << textureType << std::endl;
+        return;
+    }
+
+    // Удаляем старую текстуру такого же типа, если есть
+    textures.erase(
+            std::remove_if(textures.begin(), textures.end(),
+                           [&textureType](const Texture& tex) {
+                               return tex.type == textureType;
+                           }),
+            textures.end()
+    );
+
+    textures.emplace_back(texturePath.c_str(), textureType.c_str(), texUnit);
+    updateMeshWithCurrentVertices(); // Обновляем меш
 }

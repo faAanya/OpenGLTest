@@ -193,7 +193,16 @@ public:
             }
         }
     }
+    void addTextureToObject(const std::string& objectName, const std::string& texturePath, const std::string& textureType) {
+        for (auto& figure : figures) {
+            if (figure->name == objectName) {
+                figure->addTexture(texturePath, textureType);
+                return;
+            }
+        }
 
+        std::cerr << "Object not found: " << objectName << std::endl;
+    }
 
     void deleteAllObjects() {
         for (auto &light: lights) {

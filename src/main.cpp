@@ -99,8 +99,7 @@ int main() {
         if (glfwGetKey(window, GLFW_KEY_1) == GLFW_PRESS && once){
             saveFrameToPng("render.png", WIDTH,HEIGHT);
         }
-
-        if(!imgui.stopRender)
+        
             imgui.activeState();
 
 
