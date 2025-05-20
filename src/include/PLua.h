@@ -339,6 +339,19 @@ private:
         return 0;
     }
 
+    static int lua_removeAllTextures(lua_State* L) {
+        PLua* self = static_cast<PLua*>(lua_touserdata(L, lua_upvalueindex(1)));
+
+        if (lua_gettop(L) != 1) {
+            return luaL_error(L, "Need 1 arg: objectName");
+        }
+
+        const char* objectName = luaL_checkstring(L, 1);
+
+        bool success = self->objectManager->removeAllTexturesFromObject(objectName);
+        lua_pushboolean(L, success);
+        return 1;
+    }
     static int lua_deleteActiveObject(lua_State *L) {
         PLua *self = static_cast<PLua *>(lua_touserdata(L, lua_upvalueindex(1)));
 

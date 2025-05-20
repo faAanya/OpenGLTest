@@ -39,8 +39,11 @@ void mouse_callback(GLFWwindow *window, double xposIn, double yposIn);
 void scroll_callback(GLFWwindow *window, double xoffset, double yoffset);
 
 void setBackGroundColor(glm::vec3 color);
-void saveFrameToPng(const char* filename, int width, int height);
-bool once  = true;
+
+void saveFrameToPng(const char *filename, int width, int height);
+
+bool once = true;
+
 int main() {
     glfwInit();
 
@@ -84,7 +87,7 @@ int main() {
         deltaTime = currentFrame - lastFrame;
         lastFrame = currentFrame;
 
-        if(!imgui.isInputActive)
+        if (!imgui.isInputActive)
             processInput(window);
 
         setBackGroundColor(vec3(0.1f, 0.1f, 0.1f));
@@ -95,12 +98,22 @@ int main() {
 
         manager.drawAll();
 
-        axes.Draw(camera.GetViewMatrix(), projection);
-        if (glfwGetKey(window, GLFW_KEY_1) == GLFW_PRESS && once){
-            saveFrameToPng("render.png", WIDTH,HEIGHT);
+        if(imgui.isActiveUI)
+            axes.Draw(camera.GetViewMatrix(), projection);
+        if(!imgui.isInputActive){
+            if (glfwGetKey(window, GLFW_KEY_R) == GLFW_PRESS && once) {
+                saveFrameToPng("render.png", WIDTH, HEIGHT);
+            }
+            if (glfwGetKey(window, GLFW_KEY_H) == GLFW_PRESS && imgui.isActiveUI) {
+                imgui.isActiveUI = false;
+            }
+            if (glfwGetKey(window, GLFW_KEY_J) == GLFW_PRESS && !imgui.isActiveUI) {
+                imgui.isActiveUI = true;
+            }
+
         }
-        
-            imgui.activeState();
+
+        imgui.activeState();
 
 
         glfwSwapBuffers(window);
@@ -153,10 +166,11 @@ void mouse_callback(GLFWwindow *window, double xposIn, double yposIn) {
         camera.ProcessMouseMovement(xoffset, yoffset);
     }
 }
-void saveFrameToPng(const char* filename, int width, int height) {
-    unsigned char* pixels = new unsigned char[3 * width * height];
 
-    glReadBuffer(GL_FRONT);
+void saveFrameToPng(const char *filename, int width, int height) {
+    unsigned char *pixels = new unsigned char[3 * width * height];
+
+    glReadBuffer(GL_BACK);
     glReadPixels(0, 0, width, height, GL_RGB, GL_UNSIGNED_BYTE, pixels);
 
     for (int j = 0; j < height / 2; ++j) {

@@ -22,13 +22,7 @@ void PFigure::updateMeshWithCurrentVertices() {
     if (mesh) {
         delete mesh;
     }
-    mesh = new Mesh(currentVertices, textures);
-}
-void PFigure::updateMesh(const std::vector<Vertex>& newVertices) {
-    if (mesh) {
-        delete mesh; // Удаляем старый меш
-    }
-    mesh = new Mesh(newVertices, textures);
+    createMesh(type);
 }
 
 void PFigure::createMesh(string t) {
@@ -126,7 +120,6 @@ void PFigure::addTexture(const std::string& texturePath, const std::string& text
         return;
     }
 
-    // Удаляем старую текстуру такого же типа, если есть
     textures.erase(
             std::remove_if(textures.begin(), textures.end(),
                            [&textureType](const Texture& tex) {
@@ -136,5 +129,12 @@ void PFigure::addTexture(const std::string& texturePath, const std::string& text
     );
 
     textures.emplace_back(texturePath.c_str(), textureType.c_str(), texUnit);
-    updateMeshWithCurrentVertices(); // Обновляем меш
+    updateMeshWithCurrentVertices();
+}
+
+void PFigure::removeAllTextures() {
+    if (!textures.empty()) {
+        textures.clear();
+        updateMeshWithCurrentVertices();
+    }
 }

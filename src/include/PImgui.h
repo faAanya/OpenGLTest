@@ -31,6 +31,7 @@ private:
     ImVec4 objectColor = ImVec4(1.0f, 1.0f, 1.0f, 1.0f);
 public:
     bool isInputActive;
+    bool isActiveUI = true;
 
     PImgui(GLFWwindow *win, ObjectManager* m, PLua* l);
 

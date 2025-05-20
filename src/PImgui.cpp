@@ -25,28 +25,22 @@ void PImgui::initialize() {
 
 void PImgui::activeState() {
 
-    ImGui_ImplOpenGL3_NewFrame();
-    ImGui_ImplGlfw_NewFrame();
-    ImGui::NewFrame();
+    if(isActiveUI){
+        ImGui_ImplOpenGL3_NewFrame();
+        ImGui_ImplGlfw_NewFrame();
+        ImGui::NewFrame();
 
-    drawTopMenu();
-    drawHierarchy();
-    drawColorPicker();
-    ImGui::Render();
-    ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
+        drawTopMenu();
+        drawHierarchy();
+        drawColorPicker();
+        ImGui::Render();
+        ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
+    }
 }
 
 void PImgui::drawTopMenu() {
 
     if (ImGui::BeginMainMenuBar()) {
-        if (ImGui::BeginMenu("File")) {
-            ImGui::MenuItem("Save");
-            ImGui::MenuItem("Open");
-            ImGui::MenuItem("Render");
-
-            ImGui::EndMenu();
-        }
-
         ImGui::SetNextWindowSize(textWindowSize, ImGuiCond_FirstUseEver);
 
         if (currentPinState != PIN_NONE) {
@@ -237,6 +231,9 @@ void PImgui::drawTopMenu() {
                 if (ImGui::MenuItem("Object Color")) {
                     strcat(inputText, "color(r, g, b)\n");
                 }
+                if (ImGui::MenuItem("Object Texture")) {
+                    strcat(inputText, "add_texture(name, path, textureType)\n");
+                }
                 if (ImGui::MenuItem("Light Direction")) {
                     strcat(inputText, "direction(x, y, z)\n");
                 }
@@ -263,6 +260,16 @@ void PImgui::drawTopMenu() {
 
         if (ImGui::BeginMenu("About")) {
             ImGui::Begin("Library", &showAboutWindow, ImGuiWindowFlags_AlwaysAutoResize);
+
+            if (ImGui::CollapsingHeader("Hotkeys", ImGuiTreeNodeFlags_DefaultOpen)) {
+                ImGui::BulletText("H: Hide UI");
+                ImGui::BulletText("J: Show UI");
+                ImGui::BulletText("R: Save screenshot (render.png)");
+                ImGui::BulletText("ALT + Mouse: Rotate camera");
+                ImGui::BulletText("WASD: Move camera");
+                ImGui::BulletText("Mouse Scroll: Zoom in/out");
+            }
+
             if (ImGui::CollapsingHeader("Object Creation", ImGuiTreeNodeFlags_DefaultOpen)) {
                 ImGui::BulletText(
                         "figure(name, pos_x, pos_y, pos_z, scale_x, scale_y, scale_z, angle, type, textures_table)");
@@ -374,6 +381,11 @@ void PImgui::drawTopMenu() {
                 ImGui::BulletText("set_color(name, r, g, b)");
                 ImGui::Indent();
                 ImGui::Text("Changes color of specified object");
+                ImGui::Unindent();
+
+                ImGui::BulletText("add_texture(path)");
+                ImGui::Indent();
+                ImGui::Text("Adds a new texture from file path to the selected object");
                 ImGui::Unindent();
             }
 

@@ -204,6 +204,16 @@ public:
         std::cerr << "Object not found: " << objectName << std::endl;
     }
 
+    bool removeAllTexturesFromObject(const std::string& objectName) {
+        for (auto& figure : figures) {
+            if (figure->name == objectName) {
+                figure->removeAllTextures();
+                return true;
+            }
+        }
+        std::cerr << "Object not found: " << objectName << std::endl;
+        return false;
+    }
     void deleteAllObjects() {
         for (auto &light: lights) {
             light->deleteObj();
