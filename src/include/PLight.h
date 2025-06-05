@@ -26,7 +26,7 @@ private:
     void drawDirLight();
 
 public:
-    PLight(string name, Camera &cam, vec3 pos, vec3 scale, float angle, Shader &shader, Shader &light,string t,
+    PLight(string name, Camera &cam, vec3 pos, vec3 scale, vec3 angle, Shader &shader, Shader &light,string t,
            unsigned int index);
 
     void drawMesh();

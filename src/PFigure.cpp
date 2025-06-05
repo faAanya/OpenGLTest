@@ -7,7 +7,7 @@
 #include "glm/ext/matrix_transform.hpp"
 #include "glm/gtc/type_ptr.hpp"
 
-PFigure::PFigure(string name, Camera &cam, vec3 pos, vec3 scale, float angle, Shader &shader, string t,
+PFigure::PFigure(string name, Camera &cam, vec3 pos, vec3 scale, vec3 angle, Shader &shader, string t,
                  const std::vector<std::string> &texturePaths) :
         PObject(name, cam, pos, t, scale, angle),
         object(shader) {
@@ -74,7 +74,9 @@ void PFigure::Draw() {
         model = glm::mat4(1.0f);
         model = glm::translate(model, position);
         model = glm::scale(model, scale);
-        model = glm::rotate(model, glm::radians(angle), glm::vec3(1.0f, 1.0f, 1.0f));
+        model = glm::rotate(model, glm::radians(angle.x), glm::vec3(1.0f, 0.0f, 0.0f)); // Вращение по X
+        model = glm::rotate(model, glm::radians(angle.y), glm::vec3(0.0f, 1.0f, 0.0f)); // Вращение по Y
+        model = glm::rotate(model, glm::radians(angle.z), glm::vec3(0.0f, 0.0f, 1.0f)); // Вращение по Z
         object.setMat4("model", model);
 
         mesh->Draw(object, camera);

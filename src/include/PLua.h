@@ -20,8 +20,8 @@ private:
         PLua *self = static_cast<PLua *>(lua_touserdata(L, lua_upvalueindex(1)));
 
 
-        if (lua_gettop(L) != 10) {
-            return luaL_error(L, "Need 10 args: name, pos, scale, angle, type, textures");
+        if (lua_gettop(L) != 12) {
+            return luaL_error(L, "Need 12 args: name, pos, scale, angle, type, textures");
         }
 
 
@@ -40,13 +40,17 @@ private:
         };
 
 
-        float angle = static_cast<float>(luaL_checknumber(L, 8));
-       string type = luaL_checkstring(L, 9);
+        vec3 angle = {
+                static_cast<float>(luaL_checknumber(L, 8)),
+                static_cast<float>(luaL_checknumber(L, 9)),
+                static_cast<float>(luaL_checknumber(L, 10))
+        };
+       string type = luaL_checkstring(L, 11);
 
         std::vector<std::string> textures;
-        luaL_checktype(L, 10, LUA_TTABLE);
-        for (int i = 1; i <= lua_rawlen(L, 10); i++) {
-            lua_rawgeti(L, 10, i);
+        luaL_checktype(L, 12, LUA_TTABLE);
+        for (int i = 1; i <= lua_rawlen(L, 12); i++) {
+            lua_rawgeti(L, 12, i);
             textures.push_back(luaL_checkstring(L, -1));
             lua_pop(L, 1);
         }
@@ -73,7 +77,7 @@ private:
 
 
         if (lua_gettop(L) != 9) {
-            return luaL_error(L, "Need 9 args: name, pos, scale, angle, type");
+            return luaL_error(L, "Need 11 args: name, pos, scale, angle, type");
         }
 
         const char *name = luaL_checkstring(L, 1);
@@ -91,8 +95,12 @@ private:
         };
 
 
-        float angle = static_cast<float>(luaL_checknumber(L, 8));
-        string type = luaL_checkstring(L, 9);
+        vec3 angle = {
+                static_cast<float>(luaL_checknumber(L, 8)),
+                static_cast<float>(luaL_checknumber(L, 9)),
+                static_cast<float>(luaL_checknumber(L, 10))
+        };
+        string type = luaL_checkstring(L, 11);
 
         self->objectManager->createLight(name,
                                          self->global->getCamera(),
@@ -156,6 +164,39 @@ private:
         return 0;
     }
 
+    static int lua_moveOn(lua_State *L) {
+        PLua *self = static_cast<PLua *>(lua_touserdata(L, lua_upvalueindex(1)));
+
+        if (lua_gettop(L) == 3) {
+
+            if (self->objectManager->getActiveObject()) {
+                glm::vec3 pos = {
+                        static_cast<float>(luaL_checknumber(L, 1)),
+                        static_cast<float>(luaL_checknumber(L, 2)),
+                        static_cast<float>(luaL_checknumber(L, 3))
+                };
+
+                self->objectManager->moveOn(pos);
+                return 0;
+            }
+            return luaL_error(L, "Need 1 args: name");
+        }
+        if (lua_gettop(L) == 4) {
+            const char *name = luaL_checkstring(L, 1);
+
+            glm::vec3 pos = {
+                    static_cast<float>(luaL_checknumber(L, 2)),
+                    static_cast<float>(luaL_checknumber(L, 3)),
+                    static_cast<float>(luaL_checknumber(L, 4))
+            };
+
+            self->objectManager->selectObjectByName(name);
+            self->objectManager->moveOn(pos);
+            return 0;
+        }
+        return 0;
+    }
+
     static int lua_scaleTo(lua_State *L) {
         PLua *self = static_cast<PLua *>(lua_touserdata(L, lua_upvalueindex(1)));
 
@@ -188,26 +229,98 @@ private:
         }
         return 0;
     }
+    static int lua_scaleOn(lua_State *L) {
+        PLua *self = static_cast<PLua *>(lua_touserdata(L, lua_upvalueindex(1)));
+
+        if (lua_gettop(L) == 3) {
+
+            if (self->objectManager->getActiveObject()) {
+                glm::vec3 scale = {
+                        static_cast<float>(luaL_checknumber(L, 1)),
+                        static_cast<float>(luaL_checknumber(L, 2)),
+                        static_cast<float>(luaL_checknumber(L, 3))
+                };
+
+                self->objectManager->scaleOn(scale);
+                return 0;
+            }
+            return luaL_error(L, "Need 1 args: name");
+        }
+        if (lua_gettop(L) == 4) {
+            const char *name = luaL_checkstring(L, 1);
+
+            glm::vec3 scale = {
+                    static_cast<float>(luaL_checknumber(L, 2)),
+                    static_cast<float>(luaL_checknumber(L, 3)),
+                    static_cast<float>(luaL_checknumber(L, 4))
+            };
+
+            self->objectManager->selectObjectByName(name);
+            self->objectManager->scaleOn(scale);
+            return 0;
+        }
+        return 0;
+    }
 
     static int lua_rotateTo(lua_State *L) {
         PLua *self = static_cast<PLua *>(lua_touserdata(L, lua_upvalueindex(1)));
 
-        if (lua_gettop(L) == 1) {
+        if (lua_gettop(L) == 3) {
 
             if (self->objectManager->getActiveObject()) {
-                float angle = static_cast<float>(luaL_checknumber(L, 1));
+                glm::vec3 angle = {
+                        static_cast<float>(luaL_checknumber(L, 1)),
+                        static_cast<float>(luaL_checknumber(L, 2)),
+                        static_cast<float>(luaL_checknumber(L, 3))
+                };
 
                 self->objectManager->rotateTo(angle);
                 return 0;
             }
             return luaL_error(L, "Need 1 args: name");
         }
-        if (lua_gettop(L) == 2) {
+        if (lua_gettop(L) == 4) {
             const char *name = luaL_checkstring(L, 1);
-            float angle = static_cast<float>(luaL_checknumber(L, 1));
+            glm::vec3 angle = {
+                    static_cast<float>(luaL_checknumber(L, 2)),
+                    static_cast<float>(luaL_checknumber(L, 3)),
+                    static_cast<float>(luaL_checknumber(L, 4))
+            };
 
             self->objectManager->selectObjectByName(name);
             self->objectManager->rotateTo(angle);
+            return 0;
+        }
+        return 0;
+    }
+
+    static int lua_rotateOn(lua_State *L) {
+        PLua *self = static_cast<PLua *>(lua_touserdata(L, lua_upvalueindex(1)));
+
+        if (lua_gettop(L) == 3) {
+
+            if (self->objectManager->getActiveObject()) {
+                glm::vec3 angle = {
+                        static_cast<float>(luaL_checknumber(L, 1)),
+                        static_cast<float>(luaL_checknumber(L, 2)),
+                        static_cast<float>(luaL_checknumber(L, 3))
+                };
+
+                self->objectManager->rotateOn(angle);
+                return 0;
+            }
+            return luaL_error(L, "Need 1 args: name");
+        }
+        if (lua_gettop(L) == 4) {
+            const char *name = luaL_checkstring(L, 1);
+            glm::vec3 angle = {
+                    static_cast<float>(luaL_checknumber(L, 2)),
+                    static_cast<float>(luaL_checknumber(L, 3)),
+                    static_cast<float>(luaL_checknumber(L, 4))
+            };
+
+            self->objectManager->selectObjectByName(name);
+            self->objectManager->rotateOn(angle);
             return 0;
         }
         return 0;
@@ -414,6 +527,18 @@ public:
         lua_pushlightuserdata(L, this);
         lua_pushcclosure(L, &PLua::lua_rotateTo, 1);
         lua_setglobal(L, "rotate");
+
+        lua_pushlightuserdata(L, this);
+        lua_pushcclosure(L, &PLua::lua_moveOn, 1);
+        lua_setglobal(L, "moveOn");
+
+        lua_pushlightuserdata(L, this);
+        lua_pushcclosure(L, &PLua::lua_scaleOn, 1);
+        lua_setglobal(L, "scaleOn");
+
+        lua_pushlightuserdata(L, this);
+        lua_pushcclosure(L, &PLua::lua_rotateOn, 1);
+        lua_setglobal(L, "rotateOn");
 
         lua_pushlightuserdata(L, this);
         lua_pushcclosure(L, &PLua::lua_changeColor, 1);

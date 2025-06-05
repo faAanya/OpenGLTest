@@ -7,7 +7,7 @@
 
 
 
-PLight::PLight(string name, Camera &cam, vec3 pos, vec3 scale, float angle, Shader &shader, Shader &light, string t,
+PLight::PLight(string name, Camera &cam, vec3 pos, vec3 scale, vec3 angle, Shader &shader, Shader &light, string t,
                unsigned int index)
         : PObject(name, cam, pos, t, scale, angle),
           objectToLight(shader),
@@ -51,7 +51,9 @@ void PLight::drawMesh() {
     model = glm::mat4(1.0f);
     model = glm::translate(model, position);
     model = glm::scale(model, glm::vec3(0.1f));
-    model = glm::rotate(model, glm::radians(angle), glm::vec3(1.0f, 1.0f, 1.0f));
+    model = glm::rotate(model, glm::radians(angle.x), glm::vec3(1.0f, 0.0f, 0.0f));
+    model = glm::rotate(model, glm::radians(angle.y), glm::vec3(0.0f, 1.0f, 0.0f));
+    model = glm::rotate(model, glm::radians(angle.z), glm::vec3(0.0f, 0.0f, 1.0f));
     light.setMat4("model", model);
 
     mesh->Draw(light, camera);

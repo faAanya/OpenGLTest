@@ -54,7 +54,7 @@ public:
     }
 
     void createLight(std::string name, Camera &cam, glm::vec3 pos,
-                     glm::vec3 scale, float angle, Shader &shader,
+                     glm::vec3 scale, vec3 angle, Shader &shader,
                      Shader &lightShader, std::string type) {
         for (auto &light: lights) {
             if (light->name == name) {
@@ -80,7 +80,7 @@ public:
 
 
     void createFigure(std::string name, Camera &cam, glm::vec3 pos,
-                      glm::vec3 scale, float angle, Shader &shader,
+                      glm::vec3 scale, vec3 angle, Shader &shader,
                       std::string type,
                       const std::vector<std::string> &texturePaths) {
         for (auto &figure: figures) {
@@ -121,8 +121,26 @@ public:
         cout << "scale" << "\n";
     }
 
-    void rotateTo(float newAngle) {
+    void rotateTo(vec3 newAngle) {
         activeObject->angle = newAngle;
+
+        cout << "rotate" << "\n";
+    }
+
+    void moveOn(vec3 deltaPos) {
+        activeObject->position += deltaPos;
+
+        cout << "move" << "\n";
+    }
+
+    void scaleOn(vec3 deltaScale) {
+        activeObject->scale += deltaScale;
+
+        cout << "scale" << "\n";
+    }
+
+    void rotateOn(vec3 deltaAngle) {
+        activeObject->angle += deltaAngle;
 
         cout << "rotate" << "\n";
     }

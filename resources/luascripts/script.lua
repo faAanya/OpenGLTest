@@ -12,7 +12,7 @@ figure(
         1.0, 1.0, 1.0,
         20,
         'cube',
-        {'resources/textures/cupcake.jpg' }
+        {'resources/textures/container2.png' }
 )
 light(
         'light 1',

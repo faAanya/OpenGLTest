@@ -145,35 +145,35 @@ void PImgui::drawTopMenu() {
 
                 if (ImGui::MenuItem("Cube")) {
                     snprintf(buffer, sizeof(buffer),
-                             "figure('cube_%d', 0.0, 0.0, 0.0, 1.0, 1.0, 1.0, 0.0, 'cube', {})\n",
+                             "figure('cube_%d', 0.0, 0.0, 0.0, 1.0, 1.0, 1.0, 0.0, 0.0, 0.0, 'cube', {})\n",
                              cubeCount++);
                     strcat(inputText, buffer);
                 }
 
                 if (ImGui::MenuItem("Sphere")) {
                     snprintf(buffer, sizeof(buffer),
-                             "figure('sphere_%d', 0.0, 0.0, 0.0, 1.0, 1.0, 1.0, 0.0, 'sphere', {})\n",
+                             "figure('sphere_%d', 0.0, 0.0, 0.0, 1.0, 1.0, 1.0, 0.0, 0.0, 0.0, 'sphere', {})\n",
                              sphereCount++);
                     strcat(inputText, buffer);
                 }
 
                 if (ImGui::MenuItem("Cylinder")) {
                     snprintf(buffer, sizeof(buffer),
-                             "figure('cylinder_%d', 0.0, 0.0, 0.0, 1.0, 1.0, 1.0, 0.0, 'cylinder', {})\n",
+                             "figure('cylinder_%d',0.0, 0.0, 0.0, 1.0, 1.0, 1.0, 0.0, 0.0, 0.0, 'cylinder', {})\n",
                              cylinderCount++);
                     strcat(inputText, buffer);
                 }
 
                 if (ImGui::MenuItem("Pyramid")) {
                     snprintf(buffer, sizeof(buffer),
-                             "figure('pyramid_%d', 0.0, 0.0, 0.0, 1.0, 1.0, 1.0, 0.0, 'pyramid', {})\n",
+                             "figure('pyramid_%d',0.0, 0.0, 0.0, 1.0, 1.0, 1.0, 0.0, 0.0, 0.0, 'pyramid', {})\n",
                              pyramidCount++);
                     strcat(inputText, buffer);
                 }
 
                 if (ImGui::MenuItem("Plane")) {
                     snprintf(buffer, sizeof(buffer),
-                             "figure('plane_%d', 0.0, 0.0, 0.0, 1.0, 1.0, 1.0, 0.0, 'plane', {})\n",
+                             "figure('plane_%d', 0.0, 0.0, 0.0, 1.0, 1.0, 1.0, 0.0, 0.0, 0.0,'plane', {})\n",
                              planeCount++);
                     strcat(inputText, buffer);
                 }
@@ -186,21 +186,21 @@ void PImgui::drawTopMenu() {
 
                 if (ImGui::MenuItem("Directional")) {
                     snprintf(buffer, sizeof(buffer),
-                             "light('directional_light_%d', 0.0, 0.0, 0.0, 1.0, 1.0, 1.0, 0.0, 'directional')\n",
+                             "light('directional_light_%d', 0.0, 0.0, 0.0, 1.0, 1.0, 1.0, 0.0, 0.0, 0.0, 'directional')\n",
                              directionalLightCount++);
                     strcat(inputText, buffer);
                 }
 
                 if (ImGui::MenuItem("Spot")) {
                     snprintf(buffer, sizeof(buffer),
-                             "light('spot_light_%d', 0.0, 0.0, 0.0, 1.0, 1.0, 1.0, 0.0, 'spot')\n",
+                             "light('spot_light_%d',0.0, 0.0, 0.0, 1.0, 1.0, 1.0, 0.0, 0.0, 0.0, 'spot')\n",
                              spotLightCount++);
                     strcat(inputText, buffer);
                 }
 
                 if (ImGui::MenuItem("Point")) {
                     snprintf(buffer, sizeof(buffer),
-                             "light('point_light_%d', 0.0, 0.0, 0.0, 1.0, 1.0, 1.0, 0.0, 'point')\n",
+                             "light('point_light_%d', 0.0, 0.0, 0.0, 1.0, 1.0, 1.0, 0.0, 0.0, 0.0, 'point')\n",
                              pointLightCount++);
                     strcat(inputText, buffer);
                 }
@@ -222,7 +222,16 @@ void PImgui::drawTopMenu() {
                     strcat(inputText, "scale(x, y, z)\n");
                 }
                 if (ImGui::MenuItem("Object Rotation")) {
-                    strcat(inputText, "rotate(angle)\n");
+                    strcat(inputText, "rotate(x, y, z)\n");
+                }
+                if (ImGui::MenuItem("Object Position (Relative)")) {
+                    strcat(inputText, "moveOn(dx, dy, dz)\n");
+                }
+                if (ImGui::MenuItem("Object Scale (Relative)")) {
+                    strcat(inputText, "scaleOn(dx, dy, dz)\n");
+                }
+                if (ImGui::MenuItem("Object Rotation (Relative)")) {
+                    strcat(inputText, "rotateOn(dx, dy, dz)\n");
                 }
                 ImGui::EndMenu();
             }
@@ -333,6 +342,36 @@ void PImgui::drawTopMenu() {
                 ImGui::BulletText("rotate(name, angle)");
                 ImGui::Indent();
                 ImGui::Text("Rotates specified object by angle");
+                ImGui::Unindent();
+
+                ImGui::BulletText("moveOn(dx, dy, dz)");
+                ImGui::Indent();
+                ImGui::Text("Moves currently selected object by offset (dx,dy,dz)");
+                ImGui::Unindent();
+
+                ImGui::BulletText("moveOn(name, dx, dy, dz)");
+                ImGui::Indent();
+                ImGui::Text("Moves specified object by offset");
+                ImGui::Unindent();
+
+                ImGui::BulletText("scaleOn(dx, dy, dz)");
+                ImGui::Indent();
+                ImGui::Text("Scales currently selected object by offset");
+                ImGui::Unindent();
+
+                ImGui::BulletText("scaleOn(name, dx, dy, dz)");
+                ImGui::Indent();
+                ImGui::Text("Scales specified object by offset");
+                ImGui::Unindent();
+
+                ImGui::BulletText("rotateOn(angle_x, angle_y, angle_z)");
+                ImGui::Indent();
+                ImGui::Text("Rotates currently selected object by angles (degrees)");
+                ImGui::Unindent();
+
+                ImGui::BulletText("rotateOn(name, angle_x, angle_y, angle_z)");
+                ImGui::Indent();
+                ImGui::Text("Rotates specified object by angles");
                 ImGui::Unindent();
             }
 

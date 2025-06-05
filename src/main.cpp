@@ -90,7 +90,7 @@ int main() {
         if (!imgui.isInputActive)
             processInput(window);
 
-        setBackGroundColor(vec3(0.1f, 0.1f, 0.1f));
+        setBackGroundColor(vec3(1.0f, 1.0f, 1.0f));
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
         glm::mat4 projection = glm::perspective(glm::radians(camera.Zoom), (float) WIDTH / (float) HEIGHT, 0.1f,

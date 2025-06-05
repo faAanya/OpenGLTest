@@ -23,12 +23,12 @@ public:
 
     vec3 position;
     vec3 color;
-    float angle;
+    vec3 angle;
     vec3 scale;
     Mesh* mesh;
     Camera& camera;
     bool isDrawing;
-    PObject(string n, Camera& c, glm::vec3 pos,string& t, glm::vec3 scale,float angle);
+    PObject(string n, Camera& c, glm::vec3 pos,string& t, glm::vec3 scale,vec3 angle);
 
     void drawMesh();
     void deleteObj();
