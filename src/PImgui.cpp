@@ -412,14 +412,19 @@ void PImgui::drawTopMenu() {
             }
 
             if (ImGui::CollapsingHeader("Object Appearance")) {
-                ImGui::BulletText("set_color(r, g, b)");
+                ImGui::BulletText("color(r, g, b)");
                 ImGui::Indent();
                 ImGui::Text("Changes color of currently selected object (RGB 0-1)");
                 ImGui::Unindent();
 
-                ImGui::BulletText("set_color(name, r, g, b)");
+                ImGui::BulletText("color(name, r, g, b)");
                 ImGui::Indent();
                 ImGui::Text("Changes color of specified object");
+                ImGui::Unindent();
+
+                ImGui::BulletText("color_bg(r, g, b)");
+                ImGui::Indent();
+                ImGui::Text("Changes color of the background");
                 ImGui::Unindent();
 
                 ImGui::BulletText("add_texture(path)");

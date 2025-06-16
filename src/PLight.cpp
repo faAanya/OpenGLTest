@@ -45,7 +45,7 @@ void PLight::drawMesh() {
     glm::mat4 view = camera.GetViewMatrix();
     light.setMat4("projection", projection);
     light.setMat4("view", view);
-    light.setVec3("color", glm::vec3(1.0, 1.0, 1.0) - color);
+    light.setVec3("color", glm::vec3(1.0, 1.0, 0.0) - color);
 
     glm::mat4 model = glm::mat4(1.0f);
     model = glm::mat4(1.0f);

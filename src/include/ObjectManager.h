@@ -24,11 +24,12 @@ private:
     int directLightCounter = 0;
     int spotLightCounter = 0;
 
+
 public:
     std::vector<std::unique_ptr<PFigure>> figures;
     std::vector<std::unique_ptr<PLight>> lights;
     bool stopDrawingAll = false;
-
+    vec3 bgColor = vec3(1,1,1);
     PObject *getActiveObject() const {
         return activeObject;
     }
@@ -108,6 +109,9 @@ public:
         }
     }
 
+    void changeBgColor(vec3 newColor){
+        this->bgColor = newColor;
+    }
 
     void moveTo(vec3 newPos) {
         activeObject->position = newPos;

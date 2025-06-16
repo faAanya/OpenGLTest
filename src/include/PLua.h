@@ -45,7 +45,7 @@ private:
                 static_cast<float>(luaL_checknumber(L, 9)),
                 static_cast<float>(luaL_checknumber(L, 10))
         };
-       string type = luaL_checkstring(L, 11);
+        string type = luaL_checkstring(L, 11);
 
         std::vector<std::string> textures;
         luaL_checktype(L, 12, LUA_TTABLE);
@@ -76,7 +76,7 @@ private:
         PLua *self = static_cast<PLua *>(lua_touserdata(L, lua_upvalueindex(1)));
 
 
-        if (lua_gettop(L) != 9) {
+        if (lua_gettop(L) != 11) {
             return luaL_error(L, "Need 11 args: name, pos, scale, angle, type");
         }
 
@@ -229,6 +229,7 @@ private:
         }
         return 0;
     }
+
     static int lua_scaleOn(lua_State *L) {
         PLua *self = static_cast<PLua *>(lua_touserdata(L, lua_upvalueindex(1)));
 
@@ -322,6 +323,21 @@ private:
             self->objectManager->selectObjectByName(name);
             self->objectManager->rotateOn(angle);
             return 0;
+        }
+        return 0;
+    }
+
+    static int lua_changeColorBG(lua_State *L) {
+        PLua *self = static_cast<PLua *>(lua_touserdata(L, lua_upvalueindex(1)));
+
+        if (lua_gettop(L) == 3) {
+            glm::vec3 color = {
+                    static_cast<float>(luaL_checknumber(L, 1)),
+                    static_cast<float>(luaL_checknumber(L, 2)),
+                    static_cast<float>(luaL_checknumber(L, 3))
+            };
+
+            self->objectManager->changeBgColor(color);
         }
         return 0;
     }
@@ -428,6 +444,7 @@ private:
         self->objectManager->setSpotLightCutOff(cut);
         return 0;
     }
+
     static int lua_setSpotLightOuterRadius(lua_State *L) {
         PLua *self = static_cast<PLua *>(lua_touserdata(L, lua_upvalueindex(1)));
         if (lua_gettop(L) != 1) {
@@ -437,34 +454,36 @@ private:
         self->objectManager->setSpotLightOuterCutOff(cut);
         return 0;
     }
-    static int lua_addTexture(lua_State* L) {
-        PLua* self = static_cast<PLua*>(lua_touserdata(L, lua_upvalueindex(1)));
+
+    static int lua_addTexture(lua_State *L) {
+        PLua *self = static_cast<PLua *>(lua_touserdata(L, lua_upvalueindex(1)));
 
         if (lua_gettop(L) != 3) {
             return luaL_error(L, "Need 3 args: objectName, texturePath, textureType");
         }
 
-        const char* objectName = luaL_checkstring(L, 1);
-        const char* texturePath = luaL_checkstring(L, 2);
-        const char* textureType = luaL_checkstring(L, 3);
+        const char *objectName = luaL_checkstring(L, 1);
+        const char *texturePath = luaL_checkstring(L, 2);
+        const char *textureType = luaL_checkstring(L, 3);
 
         self->objectManager->addTextureToObject(objectName, texturePath, textureType);
         return 0;
     }
 
-    static int lua_removeAllTextures(lua_State* L) {
-        PLua* self = static_cast<PLua*>(lua_touserdata(L, lua_upvalueindex(1)));
+    static int lua_removeAllTextures(lua_State *L) {
+        PLua *self = static_cast<PLua *>(lua_touserdata(L, lua_upvalueindex(1)));
 
         if (lua_gettop(L) != 1) {
             return luaL_error(L, "Need 1 arg: objectName");
         }
 
-        const char* objectName = luaL_checkstring(L, 1);
+        const char *objectName = luaL_checkstring(L, 1);
 
         bool success = self->objectManager->removeAllTexturesFromObject(objectName);
         lua_pushboolean(L, success);
         return 1;
     }
+
     static int lua_deleteActiveObject(lua_State *L) {
         PLua *self = static_cast<PLua *>(lua_touserdata(L, lua_upvalueindex(1)));
 
@@ -543,6 +562,10 @@ public:
         lua_pushlightuserdata(L, this);
         lua_pushcclosure(L, &PLua::lua_changeColor, 1);
         lua_setglobal(L, "color");
+
+        lua_pushlightuserdata(L, this);
+        lua_pushcclosure(L, &PLua::lua_changeColorBG, 1);
+        lua_setglobal(L, "color_bg");
 
         lua_pushlightuserdata(L, this);
         lua_pushcclosure(L, &PLua::lua_setDirection, 1);
